@@ -1,0 +1,132 @@
+<% include('../layouts/header.ejs') %> 
+
+   <style>
+    body {
+      background: linear-gradient(to right, #4A148C, #880E4F);
+    }
+
+    .center-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  </style>
+
+  <!-- <div class="container center-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 mt-5 bg-white p-4 rounded">
+        <h1 class="text-center">User Registration Form</h1>
+
+        <form action="" method="post">
+
+
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <br>
+            <input type="text" class="form-control" name="name" placeholder="Name" required
+              pattern="^[A-Za-z][A-Za-z\s]*[A-Za-z]$">
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="email" class="form-label">email:</label>
+            <br>
+            <input type="email" class="form-control" name="email" placeholder="Email" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="mobile" class="form-label">mobile:</label>
+            <br>
+            <input type="number" class="form-control" name="mobile" placeholder="Mobile Number" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <br>
+            <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+          </div>
+
+          <br><br>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password:</label>
+            <br>
+            <input type="confirmPassword" class="form-control" name="confirmPassword" placeholder="confirmPassword"
+              required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <input type="submit" class="btn btn-success" value="Register"> 
+            
+
+          </div>
+          <br><br>
+        </form>
+        <a href="/login"><input type="submit" value="Back To Login"></a>
+        <% if (typeof message !=='undefined' ) { %>
+          <p class="text-success">
+            <%= message %>
+          </p>
+          <% } %>
+
+      </div>
+    </div>
+  </div>  -->
+  <div class="container center-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 mt-5 bg-white p-4 rounded">
+        <h1 class="text-center">User Registration Form</h1>
+        <form id="registrationForm" action="/newUser" method="post">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <br>
+            <input type="text" class="form-control" name="name" placeholder="Name" required pattern="^[A-Za-z][A-Za-z\s]*[A-Za-z]$">
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <br>
+            <input type="email" class="form-control" name="email" placeholder="Email" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="mobile" class="form-label">Mobile:</label>
+            <br>
+            <input type="number" class="form-control" name="mobile" placeholder="Mobile Number" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <br>
+            <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password:</label>
+            <br>
+            <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" required>
+          </div>
+          <br><br>
+          <div class="mb-3">
+            <input type="submit" onclick="submitFormAndRedirectToOTP()" class="btn btn-success" value="Register">
+          </div>
+          <br><br>
+        </form>
+        <a href="/login"><input type="button" value="Back To Login" class="btn btn-primary"></a>
+        <% if (typeof message !== 'undefined') { %>
+          <p class="text-success">
+            <%= message %>
+          </p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <!-- <script>
+    function submitFormAndRedirectToOTP() {
+      document.getElementById("registrationForm").submit(); // Submit the form
+      window.location.href = "/otp"; // Redirect to the OTP page
+    }
+    </script>
+       -->
+
+  <% include('../layouts/footer.ejs') %>
