@@ -1,19 +1,13 @@
 const Admin = require('../model/adminModel')
 const googleSignIn = require('../model/googleSignIn')
-
-
 const User = require('../model/userModel')
-
-
+const Category = require('../model/categoryModel')
 const bcrypt = require('bcrypt')
-
-
 const mongoose = require('mongoose')
-
 const ObjectId = mongoose.Types.ObjectId
 
 
-
+// for the passwording hashing security
 const securePassword = async (req, res) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -36,10 +30,10 @@ const loginPage = async (req, res) => {
 }
 
 // logout from admin
-const logout=async(req,res)=>{
+const logout = async (req, res) => {
   try {
-    req.session.destroy()
-    res.redirect('admin/login')
+   
+    res.redirect('/admin/login')
   } catch (error) {
     console.log('error logging out');
   }
@@ -50,7 +44,7 @@ const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log(email,password);
+    console.log(email, password);
 
     const adminData = await Admin.findOne({ email: email });
 
@@ -82,7 +76,7 @@ const verifyLogin = async (req, res) => {
 };
 
 //loading admin dashboard
-const loadDasboard=async(req,res)=>{
+const loadDasboard = async (req, res) => {
   try {
     res.render('dashboard')
   } catch (error) {
@@ -91,10 +85,11 @@ const loadDasboard=async(req,res)=>{
   }
 }
 
+// to display the users in admin dahboard
 const allUsers = async (req, res) => {
   try {
     res.set('Cache-control', 'no-store');
-    
+
     // Fetch users from the existing User model
     const regularUsers = await User.find({});
     console.log('1');
@@ -113,42 +108,141 @@ const allUsers = async (req, res) => {
   }
 }
 
-// const userBlock=async(req,res)=>{
-// try {
-//     const user_id=req.body.user_id;
-   
-//     const userData=await User.findOne({_id:user_id})
-
-//     if(!userData.is_blocked){
-//       await User.findByIdAndUpdate({_id:user_id},{$set:{is_blocked:true}})
-//     }else{
-//       await User.findByIdAndUpdate({_id:user_id},{$set:{is_blocked:false}})
-//     }
-//     res.json({res:true})
-
-// } catch (error) {
-
-//   console.log('error changing blocking status ');
-//   console.log(error);
-// }
-// }
+//for blocking and unblocking user 
 const userBlock = async (req, res) => {
   try {
-      const user_id = req.body.user_id;
-      const userData = await User.findOne({_id: user_id});
+    const user_id = req.body.user_id;
+    const userData = await User.findById(user_id);
 
-      // Toggle is_blocked field
-      userData.is_blocked = !userData.is_blocked;
-      await userData.save();
+    userData.is_blocked = !userData.is_blocked;
+    await userData.save();
 
-      res.json({res: true, is_blocked: userData.is_blocked});
+    res.json({ res: true, is_blocked: userData.is_blocked });
 
   } catch (error) {
-      console.log('error changing blocking status');
-      console.log(error);
-      res.status(500).json({res: false, error: 'Internal server error'});
+    console.log('error changing blocking status');
+    console.log(error);
+    res.status(500).json({ res: false, error: 'Internal server error' });
   }
 }
+// to showcase all the categories
+const allCategory = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    console.log('its here');
+    res.render('allCategories', { categories });
+  } catch (error) {
+    console.log('Error loading categories:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+// to render add category page
+const addCategory = async (req, res) => {
+  try {
+    console.log('started');
+    return res.render('addCategory')
+    console.log('finished');
+  } catch (error) {
+    console.log('error adding category');
+  }
+}
+//to add a new category
+// const addCat = async (req, res) => {
+//   try {
+//     console.log("req",req.body);
+//     let { catName, description } = req.body
+//     console.log(catName, description);
+//     const regexPattern = new RegExp(`^${catName}$`, 'i')
+//     const alreadyExist = await Category.find({ catName: regexPattern });
+
+//     console.log(alreadyExist);
+//     if(alreadyExist.length>0){
+//       res.redirect('/admin/addCategory')
+//     }
+//       const newCategory= new Category({
+//         catName:catName,
+//         description:description
+//       })
+//       const save=await newCategory.save()
+//       console.log(newCategory);
+
+//       if(save){
+//         res.redirect('/admin/allcategory')
+//       }else{
+//         console.log('error in returning');
+//       }
+    
+    
+//   } catch (error) {
+//     console.log('error in adding category');
+//     console.log(error);
+//   }
+
+// }
+const addCat = async (req, res) => {
+  try {
+    console.log("req", req.body, req.file); // Check if file is properly received
+    let { catName, description } = req.body;
+
+    // Check if category name already exists
+    const regexPattern = new RegExp(`^${catName}$`, 'i');
+    const alreadyExist = await Category.find({ catName: regexPattern });
+
+    if (alreadyExist.length > 0) {
+      return res.redirect('/admin/addCategory');
+    }
+
+    // Create new category instance
+    const newCategory = new Category({
+      catName: catName,
+      description: description,
+      imageUrl: req.file ? req.file.path : null // Store image path if file is uploaded
+    });
+
+    // Save the new category to the database
+    const save = await newCategory.save();
+
+    if (save) {
+      return res.redirect('/admin/allcategory');
+    } else {
+      console.log('error in returning');
+      return res.status(500).json({ error: 'Error in adding category' });
+    }
+  } catch (error) {
+    console.log('error in adding category');
+    console.log(error);
+    return res.status(500).json({ error: 'Error in adding category' });
+  }
+}
+
+
+// to block and unblock categories
+const catBlock = async (req, res) => {
+  try {
+      const categoryId = req.params.cat_id;
+      const action = req.body.action;
+
+      // Find the category by ID
+      const category = await Category.findById(categoryId);
+      
+      // Toggle the is_Blocked property based on the action
+      category.is_Blocked = action === "unblock" ? false : true;
+
+      // Save the updated category
+      const updatedCategory = await category.save();
+      
+      res.status(200).json({ success: true, category: updatedCategory });
+  } catch (error) {
+      console.log('Error in blocking/unblocking category:', error);
+      res.status(500).json({ success: false, error: 'Error in blocking/unblocking category' });
+  }
+}
+
+
+
+ // Note the route parameter :cat_id
+
+
 
 module.exports = {
   loginPage,
@@ -156,5 +250,10 @@ module.exports = {
   loadDasboard,
   logout,
   allUsers,
-  userBlock
+  userBlock,
+  allCategory,
+  addCategory,
+  addCat,
+  catBlock,
+  
 }

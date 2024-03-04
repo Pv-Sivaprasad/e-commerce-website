@@ -1,5 +1,8 @@
 const express=require('express')
 const adminRoute=express()
+const multer=require('multer')
+const path=require('path')
+const fs = require('fs');
 const session =require('express-session')
 const config=require('../config/config')
 const adminController=require('../controller/adminCon')
@@ -13,13 +16,37 @@ adminRoute.use(express.static('public'))
 
 
 
+const storage=multer.diskStorage({
+    destination:function(req,file,cb){
+       cb(null,path.join(__dirname,'../public/userImages'))
+    },
+    filename:function(req,file,cb){
+        const name=Date.now()+'-'+file.originalname;
+        cb(null,name)
+    }
+ })
+   
+      const upload=multer({storage:storage })
+
+
     
 adminRoute.get('/', adminController.loginPage);
-adminRoute.post('/logout',adminController.logout)
+adminRoute.get('/login',adminController.loginPage)
+
+adminRoute.get('/logoout',adminController.logout)
 adminRoute.post('/',adminController.verifyLogin)
 adminRoute.get('/dashboard',adminController.loadDasboard)
 adminRoute.get('/users',adminController.allUsers)
 adminRoute.patch('/blockAndUnblock', adminController.userBlock);
+
+adminRoute.get('/allcategory',adminController.allCategory)
+
+adminRoute.get('/addcategory',adminController.addCategory)
+
+adminRoute.post('/addcategory',upload.single('image'),adminController.addCat)
+
+adminRoute.patch('/catblock/:cat_id', adminController.catBlock);
+
 
 
 

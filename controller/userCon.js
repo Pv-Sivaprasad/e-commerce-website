@@ -121,8 +121,8 @@ const createUser = async (req, res) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
         const mobileRegex = /^\d{3}$/;    //chang e it to 10
-        // const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{3}$/;
-        // change it to 8
+        const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{3}$/;
+        
 
 
         console.log(name, email, mobile, password, confirmPassword);
@@ -133,12 +133,12 @@ const createUser = async (req, res) => {
             console.log('Invalid password');
             res.json('Invalid password');
         }
-        // else if (!passwordRegex.test(password)) {
+        else if (!passwordRegex.test(password)) {
 
-        //     console.log('Invalid password format');
-        //     res.json('Invalid password format');
+            console.log('Invalid password format');
+            res.json('Invalid password format');
 
-        // }
+        }
         else if (!mobileRegex.test(mobile)) {
             console.log('Invalid mobile number');
             res.json('Invalid mobile number');
@@ -327,7 +327,7 @@ const verifyLogin=async (req,res)=>{
 
                         const loginStatus=req.session.loginStatus
                         res.set('Cache-control','no-store')
-                        res.redirect('/')
+                        res.redirect('/gg')
                     }else{
                         console.log('is_verified error');
                         req.session.login_error='Account Does Not Exsist'
@@ -358,7 +358,7 @@ const verifyLogin=async (req,res)=>{
 // to load homepage after login
 const loginHome=async(req,res)=>{
     try {
-        res.render('users/test')
+        res.render('users/gg')
     } catch (error) {
         console.log(`erron in loading home after login`);
     }

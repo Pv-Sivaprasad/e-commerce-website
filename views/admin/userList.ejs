@@ -8,7 +8,7 @@
     </div>
     <div class="card mb-4">
         <div class="card-body">
-            <table class="table "id='reloadDiv'>
+            <table class="table" id="reloadDiv">
                 <thead>
                     <tr>
                         <th>S No</th>
@@ -22,26 +22,20 @@
                 <tbody>
                     <% if (users.length > 0) { %>
                         <% users.forEach((user, i) => { %>
-                            <tr>
+                            <tr data-user-id="<%= user._id %>">
                                 <td><%= i + 1 %></td>
-                                <td><%= users[i].name %></td>
+                                <td><%= user.name %></td>
                                 <td><b><%= user.email %></b></td>
                                 <td><%= user.mobile %></td>
                                 <td>
-                                    <span class="badge rounded-pill alert-warning">
-                                        <% if (user.is_verified === 1) { %>
-                                            verified
-                                        <% } else { %>
-                                            not verified
-                                        <% } %>
+                                    <span class="badge rounded-pill status-badge <%= user.is_blocked ? 'alert-warning' : 'alert-success' %>">
+                                        <%= user.is_blocked ? 'not verified' : 'verified' %>
                                     </span>
                                 </td>
                                 <td>
-                                    <% if (user.is_blocked === 1) { %>
-                                        <a style="color: red;" class="block-unblock" data-user-id="<%= user._id %>" data-action="block">Block</a>
-                                    <% } else { %>
-                                        <a style="color: green;" class="block-unblock" data-user-id="<%= user._id %>" data-action="unblock">Unblock</a>
-                                    <% } %>
+                                    <a style="color: <%= user.is_blocked ? 'green' : 'red' %>;" class="block-unblock" data-user-id="<%= user._id %>" onclick="blockUnblock('<%= user._id %>')">
+                                        <%= user.is_blocked ? 'Unblock' : 'Block' %>
+                                    </a>
                                 </td>
                             </tr>
                         <% }) %>
@@ -65,26 +59,9 @@
         </nav>
     </div>
 </section>
-</main>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm Block/Unblock</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                Are you sure you want to block/unblock this user?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="modalAction">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
+<%- include('../layouts/adminFooter') %>
+
 <script>
     function blockUnblock(user_id) {
         fetch('/admin/blockAndUnblock', {
@@ -118,7 +95,3 @@
         })   
     }
 </script>
-
-<%- include('../layouts/adminFooter') %>
-
-
