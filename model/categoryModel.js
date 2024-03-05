@@ -16,7 +16,12 @@ const categorySchema=mongoose.Schema({
     is_Blocked:{
         type:String,
         default:false
-    }
+    },
+    image:{
+        type:String,
+       
+ },
+ 
 
 })
 

@@ -32,7 +32,7 @@ const loginPage = async (req, res) => {
 // logout from admin
 const logout = async (req, res) => {
   try {
-   
+
     res.redirect('/admin/login')
   } catch (error) {
     console.log('error logging out');
@@ -129,7 +129,7 @@ const userBlock = async (req, res) => {
 const allCategory = async (req, res) => {
   try {
     const categories = await Category.find();
-    console.log('its here');
+    
     res.render('allCategories', { categories });
   } catch (error) {
     console.log('Error loading categories:', error);
@@ -147,38 +147,6 @@ const addCategory = async (req, res) => {
   }
 }
 //to add a new category
-// const addCat = async (req, res) => {
-//   try {
-//     console.log("req",req.body);
-//     let { catName, description } = req.body
-//     console.log(catName, description);
-//     const regexPattern = new RegExp(`^${catName}$`, 'i')
-//     const alreadyExist = await Category.find({ catName: regexPattern });
-
-//     console.log(alreadyExist);
-//     if(alreadyExist.length>0){
-//       res.redirect('/admin/addCategory')
-//     }
-//       const newCategory= new Category({
-//         catName:catName,
-//         description:description
-//       })
-//       const save=await newCategory.save()
-//       console.log(newCategory);
-
-//       if(save){
-//         res.redirect('/admin/allcategory')
-//       }else{
-//         console.log('error in returning');
-//       }
-    
-    
-//   } catch (error) {
-//     console.log('error in adding category');
-//     console.log(error);
-//   }
-
-// }
 const addCat = async (req, res) => {
   try {
     console.log("req", req.body, req.file); // Check if file is properly received
@@ -191,12 +159,12 @@ const addCat = async (req, res) => {
     if (alreadyExist.length > 0) {
       return res.redirect('/admin/addCategory');
     }
-
+    console.log("files",req.file);
     // Create new category instance
     const newCategory = new Category({
       catName: catName,
       description: description,
-      imageUrl: req.file ? req.file.path : null // Store image path if file is uploaded
+      image: req.file ? req.file.filename : null // Store image path if file is uploaded
     });
 
     // Save the new category to the database
@@ -215,33 +183,83 @@ const addCat = async (req, res) => {
   }
 }
 
+//to render edit category page
+const editCategory=async(req,res)=>{
+  try {
+    console.log('editing start');
+    const id=req.query.id
+    console.log(id);
+    const catData=await Category.findById({_id:id})
+    console.log(catData);
+    if(catData){
+      res.render('editCategory',{category:catData})
+    }else{
+      res.redirect('/admin/allCategory')
+    }
+   
+  } catch (error) {
+    console.log('error loading edit cat page');
+    console.log(error);
+  }
+}
+
+const editCat = async (req, res) => {
+  try {
+    const { catName, description } = req.body;
+    const image = req.file ? req.file.filename : req.body.image; // Get the filename if a new image is uploaded
+
+    // Check if a category with the updated name already exists
+    const existing = await Category.findOne({ catName: catName });
+
+    if (existing) {
+      console.log('Category with this name already exists');
+      return res.redirect('/admin/allCategory');
+    }
+
+    // Update the category with the new data
+    const catData = await Category.findByIdAndUpdate(
+      { _id: req.body.id },
+      {
+        $set: {
+          catName: catName,
+          description: description,
+          image: image // Update the image field with the new filename
+        }
+      },
+      { new: true } // Return the updated document
+    );
+
+    console.log('Updated category:', catData);
+    console.log('Category updated successfully');
+    res.redirect('/admin/allCategory');
+  } catch (error) {
+    console.log('Error editing category:', error);
+    res.status(500).send('Error editing category');
+  }
+};
+
 
 // to block and unblock categories
 const catBlock = async (req, res) => {
   try {
-      const categoryId = req.params.cat_id;
-      const action = req.body.action;
+    const categoryId = req.params.cat_id;
+    const action = req.body.action;
 
-      // Find the category by ID
-      const category = await Category.findById(categoryId);
-      
-      // Toggle the is_Blocked property based on the action
-      category.is_Blocked = action === "unblock" ? false : true;
+    // Find the category by ID
+    const category = await Category.findById(categoryId);
 
-      // Save the updated category
-      const updatedCategory = await category.save();
-      
-      res.status(200).json({ success: true, category: updatedCategory });
+    // Toggle the is_Blocked property based on the action
+    category.is_Blocked = action === "unblock" ? false : true;
+
+    // Save the updated category
+    const updatedCategory = await category.save();
+
+    res.status(200).json({ success: true, category: updatedCategory });
   } catch (error) {
-      console.log('Error in blocking/unblocking category:', error);
-      res.status(500).json({ success: false, error: 'Error in blocking/unblocking category' });
+    console.log('Error in blocking/unblocking category:', error);
+    res.status(500).json({ success: false, error: 'Error in blocking/unblocking category' });
   }
 }
-
-
-
- // Note the route parameter :cat_id
-
 
 
 module.exports = {
@@ -255,5 +273,7 @@ module.exports = {
   addCategory,
   addCat,
   catBlock,
+  editCategory,
+  editCat
   
 }

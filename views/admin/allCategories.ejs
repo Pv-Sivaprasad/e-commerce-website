@@ -11,6 +11,7 @@
                             <th scope="col">S no</th>
                             <th scope="col">Category Name</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Edit</th>
                         </tr>
                     </thead>
@@ -26,8 +27,13 @@
                                         <a id="block-unblock-<%= categories[i]._id %>" style="color: red;" class="block-unblock" data-category-id="<%= categories[i]._id %>" data-action="block" onclick="toggleBlockUnblock(this)">Block</a>
                                     <% } %>
                                 </td>
+                                <td>
+                                    <img src="userImages/<%= categories[i].image %>" alt="not " width="100px" height="100px">
+                                </td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-primary" onclick="editCategory('<%= categories[i]._id %>')">Edit</button>
+                                    <a href="/admin/editcategory?id=<%=categories[i]._id%>">
+                                        <button type="button" class="btn btn-primary" onclick="editCategory('<%=categories[i]._id%>')">Edit</button>
+                                    </a>
                                 </td>
                             </tr>
                         <% } %>
@@ -88,6 +94,6 @@
 
     function editCategory(categoryId) {
         // Redirect to the edit category page with the category ID
-        window.location.href = `/admin/editCategory/${categoryId}`;
+        window.location.href = `/admin/editCategory?id=${categoryId}`;
     }
 </script>
