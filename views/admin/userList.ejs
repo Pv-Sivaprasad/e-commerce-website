@@ -6,6 +6,11 @@
             <h2 class="content-title card-title">Customers List</h2>
         </div>
     </div>
+    <form>
+        <input type="text" placeholder="Search name,email,mobile" name="Search">
+        <input type="submit" value="Search">
+    </form>
+</form>
     <div class="card mb-4">
         <div class="card-body">
             <table class="table" id="reloadDiv">
@@ -33,7 +38,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a style="color: <%= user.is_blocked ? 'green' : 'red' %>;" class="block-unblock" data-user-id="<%= user._id %>" onclick="blockUnblock('<%= user._id %>')">
+                                    <a style="color: <%= user.is_blocked ? 'green' : 'red' %>" class="block-unblock" data-user-id="<%= user._id %>" onclick="blockUnblock('<%= user._id %>')">
                                         <%= user.is_blocked ? 'Unblock' : 'Block' %>
                                     </a>
                                 </td>
@@ -44,6 +49,7 @@
             </table>
         </div>
     </div>
+
     <div class="pagination-area mt-30 mb-50">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">

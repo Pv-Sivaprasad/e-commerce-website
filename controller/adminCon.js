@@ -78,6 +78,7 @@ const verifyLogin = async (req, res) => {
 //loading admin dashboard
 const loadDasboard = async (req, res) => {
   try {
+   
     res.render('dashboard')
   } catch (error) {
     console.log(error);
@@ -90,16 +91,11 @@ const allUsers = async (req, res) => {
   try {
     res.set('Cache-control', 'no-store');
 
-    // Fetch users from the existing User model
     const regularUsers = await User.find({});
     console.log('1');
-    // Fetch users from GoogleSignIn model
-    // const googleUsers = await googleSignIn.find({});
-    // console.log('11');
-    // Fetch users from FacebookUser model
-    // const facebookUsers = await facebookUsers.find({});
+    
     console.log('111');
-    // Render the userList template with all user data
+    
     res.render('userList', { users: regularUsers });
     console.log('112');
   } catch (error) {

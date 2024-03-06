@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt')
 
 const config = require('../config/config')
 
+const Category = require('../model/categoryModel')
+
+const Product = require('../model/productModel')
+
 const nodemailer = require('nodemailer')
 
 const speakeasy = require('speakeasy');
@@ -93,9 +97,6 @@ const userRegistration = async (req, res) => {
     }
 }
 
-
-
-
 //node mailer Transporter
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -120,7 +121,7 @@ const createUser = async (req, res) => {
         const confirmPassword = req.body.confirmPassword;
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
-        const mobileRegex = /^\d{3}$/;    //chang e it to 10
+        const mobileRegex = /^\d{10}$/;    //chang e it to 10
         const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{3}$/;
         
 
@@ -303,7 +304,6 @@ const resendOtp = async (req, res) => {
     }
 }
 
-
 //to verify the user login
 const verifyLogin=async (req,res)=>{
     try {
@@ -364,7 +364,16 @@ const loginHome=async(req,res)=>{
     }
 }
 
-
+const allProducts = async (req, res) => {
+    try {
+        const products = await Product.find({});
+        res.render('users/gg', { products: products });
+    } catch (error) {
+        console.log('Error loading all products');
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
 
 
 module.exports =
@@ -378,7 +387,8 @@ module.exports =
     loginHome,
     logout,
     verifyLogin,
-    resendOtp
+    resendOtp,
+    allProducts
 
 }
 

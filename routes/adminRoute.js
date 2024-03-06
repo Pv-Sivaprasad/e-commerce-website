@@ -37,7 +37,7 @@ adminRoute.get('/', adminController.loginPage);
 adminRoute.get('/login', adminController.loginPage)
 adminRoute.get('/logoout', adminController.logout)
 adminRoute.post('/', adminController.verifyLogin)
-adminRoute.get('/dashboard', adminController.loadDasboard)
+adminRoute.get('/dashboard', adminController.loadDasboard)   
 adminRoute.post('/dashboard', adminController.loadDasboard)
 adminRoute.get('/users', adminController.allUsers)
 adminRoute.patch('/blockAndUnblock', adminController.userBlock);

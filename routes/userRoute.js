@@ -64,9 +64,3 @@ userRoute.get('/auth/facebook/callback',
 
 
 module.exports = userRoute;
-
-
-
-
-
-

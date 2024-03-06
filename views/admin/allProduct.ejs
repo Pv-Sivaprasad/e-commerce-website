@@ -1,38 +1,85 @@
 <%- include('../layouts/adminHeader') %>
 
-<section class="content-main">
-    <div class="content-header">
-        <div>
-            <h2 class="content-title card-title">Products</h2>
-            <p>Here are the products.</p>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Products</h2>
+                <p>Here are the products.</p>
+            </div>
+            <div>
+                <a type="button" class="btn btn-primary" href="/admin/addProduct">Add Product</a>
+            </div>
         </div>
-        <div>
-            <a type="button" class="btn btn-primary" href="/admin/addProduct">Add Product</a>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table id="reloadPart" class="table table-hover">
-                            <% if(products.length > 0) { %>
-                                <thead>
-                                    <tr>
-                                        <th>S no</th>
-                                        <th>Image</th>
-                                        <th>Product Name</th>
-                                        <th>Quantity</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th>Color</th>
-                                        <th>Status</th>
-                                        <th>Edit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% products.forEach((product, i) => { %>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table id="reloadPart" class="table table-hover">
+                                <% if(products.length> 0) { %>
+                                    <thead>
+                                        <tr>
+                                            <th>S no</th>
+                                            <th>Image</th>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Color</th>
+                                            <th>Status</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% products.forEach((product, i)=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= i + 1 %>
+                                                </td>
+                                                <td><img width="90px" height="90px" class="rounded-3"
+                                                        src="userImages/<%= product.images[0] %>" alt="not "></td>
+                                                <td>
+                                                    <%= product.productName %>
+                                                </td>
+                                                <td>
+                                                    <%= product.quantity %>
+                                                </td>
+
+                                                <td>
+                                                    <%= product.categoryId.catName %>
+                                                </td>
+
+
+                                                <td>
+                                                    <%= product.price %>
+                                                </td>
+                                                <td>
+                                                    <%= product.color %>
+                                                </td>
+                                                <td class="text-center">
+                                                    <% if(product.is_blocked) { %>
+                                                        <a id="block-unblock-<%= product._id %>" style="color: green;"
+                                                            class="block-unblock" data-product-id="<%= product._id %>"
+                                                            data-action="unblock"
+                                                            onclick="toggleBlockUnblock(this)">Unblock</a>
+                                                        <% } else { %>
+                                                            <a id="block-unblock-<%= product._id %>" style="color: red;"
+                                                                class="block-unblock"
+                                                                data-product-id="<%= product._id %>" data-action="block"
+                                                                onclick="toggleBlockUnblock(this)">Block</a>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <a href="/admin/editProduct?id=<%= product._id %>"
+                                                        class="badge rounded-pill alert-dark">Edit</a>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+
+                                    <!-- <tbody>
+                                    <% products.forEach((product, i) => { %>    
                                         <tr>
                                             <td><%= i + 1 %></td>
                                             <td><img width="90px" height="90px" class="rounded-3" src="userImages/<%= product.images[0] %>" alt="not "></td>
@@ -54,62 +101,62 @@
                                             </td>    
                                         </tr>
                                     <% }) %>
-                                </tbody>
-                            <% } else { %>
-                                <h4 class="text-center">No products to list</h4>
-                            <% } %>
-                        </table>
+                                </tbody> -->
+                                    <% } else { %>
+                                        <h4 class="text-center">No products to list</h4>
+                                        <% } %>
+                            </table>
+                        </div>
                     </div>
+                    <!-- .col// -->
                 </div>
-                <!-- .col// -->
+                <!-- .row // -->
             </div>
-            <!-- .row // -->
+            <!-- card body .// -->
         </div>
-        <!-- card body .// -->
-    </div>
-    <!-- card .// -->
-</section>
+        <!-- card .// -->
+    </section>
 
-<br>
-<br>
+    <br>
+    <br>
 
-<%- include('../layouts/adminFooter') %>
+    <%- include('../layouts/adminFooter') %>
 
-<script>
-    async function toggleBlockUnblock(element) {
-        var productId = element.getAttribute('data-product-id');
-        var action = element.getAttribute('data-action');
+        <script>
+            async function toggleBlockUnblock(element) {
+                var productId = element.getAttribute('data-product-id');
+                var action = element.getAttribute('data-action');
 
-        try {
-            const response = await fetch(`/admin/blockProduct/${productId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ action: action })
-            });
+                try {
+                    const response = await fetch(`/admin/blockProduct/${productId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ action: action })
+                    });
 
-            if (!response.ok) {
-                throw new Error('Failed to update product');
-            }
+                    if (!response.ok) {
+                        throw new Error('Failed to update product');
+                    }
 
-            const responseData = await response.json();
-            if (responseData.success) {
-                if (action === "unblock") {
-                    element.setAttribute('data-action', 'block');
-                    element.innerText = "Block";
-                    element.style.color = "red";
-                } else {
-                    element.setAttribute('data-action', 'unblock');
-                    element.innerText = "Unblock";
-                    element.style.color = "green";
+                    const responseData = await response.json();
+                    if (responseData.success) {
+                        if (action === "unblock") {
+                            element.setAttribute('data-action', 'block');
+                            element.innerText = "Block";
+                            element.style.color = "red";
+                        } else {
+                            element.setAttribute('data-action', 'unblock');
+                            element.innerText = "Unblock";
+                            element.style.color = "green";
+                        }
+                    } else {
+                        throw new Error(responseData.error);
+                    }
+                } catch (error) {
+                    console.error('Error updating product:', error);
+                    // Handle errors
                 }
-            } else {
-                throw new Error(responseData.error);
             }
-        } catch (error) {
-            console.error('Error updating product:', error);
-            // Handle errors
-        }
-    }
-</script>
+        </script>

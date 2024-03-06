@@ -32,7 +32,18 @@ const isLogout=async(req,res,next)=>{
         console.log(error.message);
     }
     }
+    const socialLogin=async(req,res,next)=>{
+        try {
+            req.session='hii'
+        res.redirect('/')
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+        }
+
 module.exports = {
     isLogin,
-    isLogout
+    isLogout,
+    socialLogin
 }
