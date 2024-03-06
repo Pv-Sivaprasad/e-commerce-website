@@ -206,9 +206,9 @@ const editCategory=async(req,res)=>{
 const editCat = async (req, res) => {
   try {
     const { catName, description } = req.body;
-    const image = req.file ? req.file.filename : req.body.image; // Get the filename if a new image is uploaded
+    const image = req.file ? req.file.filename : req.body.image; 
 
-    // Check if a category with the updated name already exists
+ 
     const existing = await Category.findOne({ catName: catName });
 
     if (existing) {
@@ -216,17 +216,17 @@ const editCat = async (req, res) => {
       return res.redirect('/admin/allCategory');
     }
 
-    // Update the category with the new data
+    
     const catData = await Category.findByIdAndUpdate(
       { _id: req.body.id },
       {
         $set: {
           catName: catName,
           description: description,
-          image: image // Update the image field with the new filename
+          image: image 
         }
       },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     console.log('Updated category:', catData);

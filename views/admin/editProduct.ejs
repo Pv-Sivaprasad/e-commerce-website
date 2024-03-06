@@ -1,0 +1,112 @@
+<%- include('../layouts/adminHeader') %>
+
+
+
+
+
+<form action="/admin/editProduct" method="post" enctype="multipart/form-data" id="addproductform">
+    <section class="content-main">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Edit Product</h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+                        </div>
+                        <div class="row gx-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="color" class="form-label">Color</label>
+                                <input type="text" class="form-control" id="color" name="color"value="<%= product.color %>" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity"value="<%= product.quantity %>" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" class="form-control" rows="4" name="description"value="<%= product.description %>" id="formdescription"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                         <div> 
+                           
+                            <label class="form-label">Images</label>
+                            <input class="form-control" type="file" name="images" multiple id="formimages"/>
+
+                        </div>
+                         
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="visibility" id="formvisibility">
+                                <option value="active">active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
+                        </div>
+                        <label for="categoryId" class="form-label">Category:</label>
+                        <select name="categoryId" id="categoryId" class="form-select">
+                            <option value="">--select category--</option>
+                            <% categories.forEach((category)=> { %>
+                            <option value="<%= category._id %>"><%= category.catName %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <button type="submit" class="btn btn-primary">Edit Product</button>
+    <input type="hidden" name="id" value="<%=product._id %>">
+    
+</form>
+
+
+<br><br>
+<%- include('../layouts/adminFooter') %>
+
+<script>
+    console.log(`<%=product._id %>`);
+    document.getElementById('image-input').addEventListener('change', function(event) {
+      const preview = document.getElementById('image-preview');
+      preview.innerHTML = '';
+    
+      const files = event.target.files;
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) { continue; }
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.width = '150px';
+        img.style.height = '150px';
+        img.style.objectFit = 'cover';
+        img.style.marginRight = '10px';
+        img.style.marginBottom = '10px';
+        preview.appendChild(img);
+      }
+    });
+        </script>
