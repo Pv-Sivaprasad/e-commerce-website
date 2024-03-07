@@ -36,6 +36,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(noCache());
 
 // Connect to MongoDB using environment variable

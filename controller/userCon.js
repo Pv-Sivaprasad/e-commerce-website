@@ -1,31 +1,16 @@
-// const User = require('../model/userModel')
 const User = require('../model/userModel')
-
 const bcrypt = require('bcrypt')
-
 const config = require('../config/config')
-
 const Category = require('../model/categoryModel')
-
 const Product = require('../model/productModel')
-
 const nodemailer = require('nodemailer')
-
 const speakeasy = require('speakeasy');
-
 const otpGenerator = require('otp-generator')
-
 const OTP = require('../model/otpModel')
-
 const otpModel = require('../model/otpModel')
-
 require('dotenv').config()
-
 const mongoose = require('mongoose');
-
 const ObjectId = mongoose.Types.ObjectId;
-
-
 const randomString = require('randomstring')
 
 
@@ -47,8 +32,13 @@ const securePassword = async (password) => {
 // for loading the home page
 const home = async (req, res) => {
     try {
-
-        res.render('users/home')
+   if(req.session.user_id){
+    res.render('users/userhome')
+   }else{
+    res.render('users/home')
+   }
+   
+ 
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
@@ -70,9 +60,10 @@ const login = async (req, res) => {
 // to logout 
 const logout = async (req, res) => {
     try {
-        res.render('users/home')
+      req.session.user_id=false
+        res.redirect('/')
     } catch (error) {
-        console.log('error logging out');
+        console.log('error louserhomeing out');
     }
 }
 
@@ -97,6 +88,8 @@ const userRegistration = async (req, res) => {
     }
 }
 
+
+
 //node mailer Transporter
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -105,9 +98,9 @@ const transporter = nodemailer.createTransport({
         pass: process.env.PASSWORD,
     },
 });
-
 // otp creating 
 const secret = speakeasy.generateSecret({ length: 20 })
+
 
 
 // Function to create a new user
@@ -122,7 +115,7 @@ const createUser = async (req, res) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
         const mobileRegex = /^\d{10}$/;    //chang e it to 10
-        const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{3}$/;
+        const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{8}$/;
         
 
 
@@ -153,7 +146,7 @@ const createUser = async (req, res) => {
             if (existingUser) {
                 console.log('Existing email');
                 res.json('Email already exists');
-            } else if (name.includes(" ") || email.includes(" ") || mobile.includes(" ")) {
+            } else if ( email.includes(" ") || mobile.includes(" ")) {
                 console.log("Please Avoid Spaces");
                 res.json("Please avoid spaces");
             } else {
@@ -323,11 +316,11 @@ const verifyLogin=async (req,res)=>{
                  if(!userData.is_blocked){
                     if(userData.is_verified){
                         console.log('success-log in');
-                        req.session.loginStatus=true
+                        req.session.user_id=userData._id
 
-                        const loginStatus=req.session.loginStatus
+                        // const loginStatus=req.session.loginStatus
                         res.set('Cache-control','no-store')
-                        res.redirect('/gg')
+                        res.redirect('/userhome')
                     }else{
                         console.log('is_verified error');
                         req.session.login_error='Account Does Not Exsist'
@@ -350,24 +343,25 @@ const verifyLogin=async (req,res)=>{
             res.redirect('/login')
           }
     } catch (error) {
-        console.log('error logging in with user details');
+        console.log('error louserhomeing in with user details');
 
     }
 }
 
 // to load homepage after login
-const loginHome=async(req,res)=>{
+const loginHome=async(req,res)=>{       
     try {
-        res.render('users/gg')
+        res.render('users/userhome')
     } catch (error) {
         console.log(`erron in loading home after login`);
     }
 }
 
+// to load login product listed page
 const allProducts = async (req, res) => {
     try {
         const products = await Product.find({});
-        res.render('users/gg', { products: products });
+        res.render('users/userhome', { products: products });
     } catch (error) {
         console.log('Error loading all products');
         console.log(error);
@@ -375,6 +369,23 @@ const allProducts = async (req, res) => {
     }
 }
 
+// to load all the product details from products
+const loadProductDetails=async(req,res)=>{
+    try {
+        const id=req.params.id
+
+        const proData = await Product.findById({_id:id})
+   console.log('proData',proData);
+        if(proData){
+            res.render('users/productDetails',{product:proData})
+        }
+
+
+    } catch (error) {
+        console.log('error in loading product details page');
+        console.log('error');
+    }
+}
 
 module.exports =
 {
@@ -388,7 +399,8 @@ module.exports =
     logout,
     verifyLogin,
     resendOtp,
-    allProducts
+    allProducts,
+    loadProductDetails
 
 }
 

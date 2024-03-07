@@ -30,7 +30,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity"value="<%= product.quantity %>" required>
+                                <input type="number" class="form-control" id="quantity" name="quantity"     value="<%= product.quantity %>" required>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <div>
                             <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control" rows="4" name="description"value="<%= product.description %>" id="formdescription"></textarea>
+                            <textarea placeholder="Type here" class="form-control" rows="4" name="description" value="" id="formdescription"><%= product.description %></textarea>
                         </div>
                     </div>
                 </div>
@@ -49,8 +49,11 @@
                     <div class="card-body">
                          <div> 
                            
-                            <label class="form-label">Images</label>
-                            <input class="form-control" type="file" name="images" multiple id="formimages"/>
+                            <div>
+                                <label class="form-label">Images</label>
+                                <input class="form-control" type="file" name="images" multiple id="formimages" onchange="previewImages(event)"/>
+                                <div id="imagePreview" style="display: flex; flex-wrap: wrap;"></div>  
+                            </div>
 
                         </div>
                          
@@ -91,22 +94,29 @@
 <%- include('../layouts/adminFooter') %>
 
 <script>
-    console.log(`<%=product._id %>`);
-    document.getElementById('image-input').addEventListener('change', function(event) {
-      const preview = document.getElementById('image-preview');
-      preview.innerHTML = '';
-    
-      const files = event.target.files;
-      for (const file of files) {
-        if (!file.type.startsWith('image/')) { continue; }
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.style.width = '150px';
-        img.style.height = '150px';
-        img.style.objectFit = 'cover';
-        img.style.marginRight = '10px';
-        img.style.marginBottom = '10px';
-        preview.appendChild(img);
-      }
-    });
-        </script>
+    function previewImages(event) {
+        var preview = document.getElementById('imagePreview');
+        preview.innerHTML = '';
+        var files = event.target.files;
+
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '90px';
+                img.style.height = '90px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                img.style.objectFit = 'cover';
+                var container = document.createElement('div');
+                container.appendChild(img);
+                preview.appendChild(container);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

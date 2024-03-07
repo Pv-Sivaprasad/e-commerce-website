@@ -5,7 +5,8 @@ const Category = require('../model/categoryModel')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
-
+const validoator=require('validator')      
+   
 
 // for the passwording hashing security
 const securePassword = async (req, res) => {
@@ -22,8 +23,11 @@ const securePassword = async (req, res) => {
 const loginPage = async (req, res) => {
   try {
     res.set("Cache-control", "no-store")
-    console.log("admin login page")
+  //  if( req.session.admin_id){
+  //   console.log("admin login page")
     res.render('login')
+  //  }
+   
   } catch (error) {
     console.log(error);
   }
@@ -32,10 +36,11 @@ const loginPage = async (req, res) => {
 // logout from admin
 const logout = async (req, res) => {
   try {
-
+  req.session.admin_id=false
+  
     res.redirect('/admin/login')
   } catch (error) {
-    console.log('error logging out');
+    console.log('error logging admin out');
   }
 }
 
@@ -56,7 +61,7 @@ const verifyLogin = async (req, res) => {
 
       if (passwordMatch) {
         res.set('Cache-control', 'no-store');
-        req.session.adminId = true;
+        req.session.admin_id =adminData.admin_id;
         return res.redirect('/admin/dashboard'); // Redirect if password matches
       } else {
         req.session.loginError = 'Invalid password';
@@ -199,6 +204,7 @@ const editCategory=async(req,res)=>{
   }
 }
 
+//to edit the category
 const editCat = async (req, res) => {
   try {
     const { catName, description } = req.body;
@@ -244,7 +250,7 @@ const catBlock = async (req, res) => {
     // Find the category by ID
     const category = await Category.findById(categoryId);
 
-    // Toggle the is_Blocked property based on the action
+    // Touserhomele the is_Blocked property based on the action
     category.is_Blocked = action === "unblock" ? false : true;
 
     // Save the updated category

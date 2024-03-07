@@ -1,0 +1,99 @@
+<!-- Include Magnific Popup CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+
+<%- include('../layouts/userHeader') %>
+
+<div class="" id="quickView">
+    <div class="" style="margin-top: 150px; margin-bottom: 150px;">
+        <div class="">
+            <div class="container mt-3 mx-auto ">
+                <div class="row">
+                    <div class="col-md-4 ">
+                        <!-- Quick View Images Start -->
+                        <div class="quick-view-images">
+                            <!-- Quick Gallery Images Start -->
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper d-flex flex-wrap"> <!-- Apply flex-wrap here -->
+                                    <% product.images.forEach(function(image, index) { %>
+                                        <div class="swiper-slide">
+                                            <a class="single-img" href="/userImages/<%= image %>" title="Zoom Image">
+                                                <img src="/userImages/<%= image %>" alt="Product Image" />
+                                            </a>
+                                        </div>
+                                    <% }); %>
+                                </div>
+                            </div>
+                            <!-- Quick Gallery Images End -->
+                        </div>
+                        <!-- Quick View Images End -->
+                    </div>
+                    <div class="col-md-6">
+                        
+                             <!-- Quick View Description Start -->
+                        <div class="quick-view-description">
+                            <h4 class="product-name">
+                                <%= product.productName %>
+                            </h4>
+                            <div class="price mt-2">
+                                <span class="sale-price">₹<%= product.price %></span>
+                            </div>
+                            <p>
+                                <%= product.description %>
+                            </p>
+                            <div class="single-info mt-3">
+                                <span class="lable">Color:</span>
+                                <span class="value"><%= product.color %></span>
+                            </div>
+                            <div class="single-info mt-3">
+                                <span class="lable">Category:</span>
+                                <span class="value">
+                                    <a href="#">
+                                        <% if(product.categoryId) { %>
+                                            <%= product.categoryId.name %>
+                                        <% } else { %>
+                                            NA
+                                        <% } %>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="single-info mt-3">
+                                <span class="lable">Stock:</span>
+                                    <% if(product.quantity < 1) { %>
+                                        <span class="value text-danger ">Sold Out</span>
+                                    <% } else if(product.quantity > 11) { %>
+                                        <span class="value">Available</span>
+                                    <% } else if(product.quantity < 11) { %>
+                                        <span class="value text-danger">hurry! only few left</span>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <!-- Quick View Description End -->
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/userFooter') %>
+
+<!-- Include jQuery (required for Magnific Popup) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Include Magnific Popup JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Magnific Popup for image zoom
+        $('.single-img').magnificPopup({
+            type: 'image',
+            zoom: {
+                enabled: true,
+                duration: 300,
+                easing: 'ease-in-out'
+            }
+        });
+    });
+</script>

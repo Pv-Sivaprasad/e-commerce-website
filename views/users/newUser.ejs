@@ -97,47 +97,38 @@
           <div class="mb-3">
               <label for="name" class="form-label">Name:</label>
               <br>
-              <input type="text" class="form-control" name="name" placeholder="Name" required pattern="^[A-Za-z][A-Za-z\s]*[A-Za-z]$">
+              <input type="text" class="form-control" name="name" placeholder="Name"
+               required pattern="^[A-Za-z][A-Za-z\s]*[A-Za-z]$">
           </div>
           <br><br>
           <div class="mb-3">
               <label for="email" class="form-label">Email:</label>
               <br>
-              <input type="email" class="form-control" name="email" placeholder="Email" required>
+              <input type="email" class="form-control" name="email" placeholder="Email" required 
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+
           </div>
           <br><br>
           <div class="mb-3">
               <label for="mobile" class="form-label">Mobile:</label>
               <br>
-              <input type="number" class="form-control" name="mobile" placeholder="Mobile Number" required>
+              <input type="number" class="form-control" name="mobile" placeholder="Mobile Number" 
+              required pattern="[0-9]{10}">
           </div>
-          <div class="mb-3">
-            <label for="gender" class="form-label">Gender:</label>
-            <br>
-            <div>
-                <input type="radio" id="male" name="gender" value="Male" required>
-                <label for="male">Male</label>
-            </div>
-            <div>
-                <input type="radio" id="female" name="gender" value="Female" required>
-                <label for="female">Female</label>
-            </div>
-            <div>
-                <input type="radio" id="other" name="gender" value="Other" required>
-                <label for="other">Other</label>
-            </div>
-        </div>
+         
           <br><br>
           <div class="mb-3">
               <label for="password" class="form-label">Password:</label>
               <br>
-              <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+              <input type="password" class="form-control" name="password" 
+              placeholder="Enter Password" required pattern="^[a-zA-Z0-9!@#$%^&*]+\S{8,}$">
           </div>
           <br><br>
           <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirm Password:</label>
               <br>
-              <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" required>
+              <input type="password" class="form-control" name="confirmPassword" 
+              placeholder="Confirm Password" required pattern="^[a-zA-Z0-9!@#$%^&*]+\S{8,}$">
           </div>
           <br><br>
           

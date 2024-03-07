@@ -7,6 +7,8 @@ const fs = require('fs')
 const path = require('path')
 const { log } = require('console')
 
+
+//to load the products
 const loadProduct = async (req, res) => {
     try {
         const products = await Product.find({}).populate('categoryId')
@@ -17,6 +19,7 @@ const loadProduct = async (req, res) => {
     }
 }
 
+//to  load add product page
 const loadAddProduct = async (req, res) => {
     try {
         const categories = await Category.find({})
@@ -27,8 +30,7 @@ const loadAddProduct = async (req, res) => {
     }
 }
 
-
-
+//to add a product
 const addProduct = async (req, res) => {
     try {
         console.log('Product adding started');
@@ -68,7 +70,7 @@ const addProduct = async (req, res) => {
     }
 };
 
-
+//to load edit product page
 const loadEditProduct = async (req, res) => {
     try {
         console.log('product editing page loading');
@@ -89,45 +91,43 @@ const loadEditProduct = async (req, res) => {
     }
 }
 
-
+//to edit a product
 const editProduct = async (req, res) => {
     try {
-        console.log('editing product starts here');
+        console.log('Editing product starts here');
         const details = req.body;
         const files = req.files;
 
+        console.log('Details:', details);
+        console.log('Files:', files);
 
-        console.log('details', details);
-
-        if (!files || files.length < 4) {
-            return res.status(400).json({ success: false, message: 'Please select at least 4 images' });
+        // Check if files are present and length is at least 4
+        if (files && files.length >= 4) {
+            console.log('Images provided, updating images...');
+            const imgPath = files.map(file => file.filename);
+            details.images = imgPath; // Update images array
+        } else {
+            console.log('No images provided or less than 4 images, skipping image update.');
+            // Remove images field from details object
+            delete details.images;
         }
-        console.log('1');
 
-        const proData = await Product.findByIdAndUpdate({ _id: req.body.id }, {
-            $set: {
-                productName: details.productName,
-                price: details.price,
-                quantity: details.quantity,
-                color: details.color,
-                size: details.size,
-                categoryId: details.categoryId,
-                description: details.description
-            }
-        }, { new: true });
+        // Update product data except for images
+        const proData = await Product.findByIdAndUpdate(
+            { _id: req.body.id },
+            { $set: details }, // Use modified details object
+            { new: true }
+        );
 
-        console.log(`updated data ${proData}`);
-        console.log('product data updated successfully');
+        console.log('Product data updated successfully:', proData);
         res.redirect('/admin/allProduct');
     } catch (error) {
         console.log('Error editing product:', error); // Log error
         res.status(500).json({ success: false, message: 'An error occurred while editing the product' });
     }
-};
+}
 
-
-
-
+//to block and unblock products 
 const blockProduct = async (req, res) => {
     try {
         const productId = req.params.productId;
@@ -136,7 +136,7 @@ const blockProduct = async (req, res) => {
         // Find the product by ID
         const product = await Product.findById(productId);
 
-        // Toggle the is_blocked property based on the action
+        // Touserhomele the is_blocked property based on the action
         product.is_blocked = action === "unblock" ? false : true;
 
         // Save the updated product
@@ -148,18 +148,6 @@ const blockProduct = async (req, res) => {
         res.status(500).json({ success: false, error: 'Error in blocking/unblocking product' });
     }
 }
-
-module.exports = {
-    blockProduct
-};
-
-
-module.exports = { blockProduct };
-
-
-
-
-
 
 module.exports = {
     loadProduct,

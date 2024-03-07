@@ -13,8 +13,8 @@ userRoute.use(express.urlencoded({ extended: true }));
 
 
 
-// User Login Otp Verification Routes
-userRoute.get('/', auth.isLogout,userController.home);
+// User Login Otp Verification Routes     
+userRoute.get('/', userController.home);
 
 userRoute.get('/home', auth.isLogin,userController.home);
 
@@ -24,23 +24,27 @@ userRoute.get('/newUser',auth.isLogout,userController.userRegistration);
 
 userRoute.post('/newUser',auth.isLogout, userController.createUser);
 
-userRoute.get('/logout', userController.logout);
+userRoute.get('/logout',auth.isLogin, userController.logout);
 
 userRoute.get('/otp',auth.isLogout, userController.verifyOtp)
 
 userRoute.post('/otp',auth.isLogout, userController.verifyOtp)
 
-userRoute.get('/signin', userController.verifyLogin)
+userRoute.get('/signin', auth.isLogin,userController.verifyLogin)
 
-userRoute.post('/signin', userController.verifyLogin)
+userRoute.post('/signin',auth.isLogout,userController.verifyLogin)
 
-userRoute.get('/test', userController.loginHome)
+// userRoute.get('/test', userController.loginHome)
 
-userRoute.get('/gg',userController.loginHome)
+userRoute.get('/userhome',auth.isLogin,userController.allProducts)
+// userRoute.post('/userhome',userController.allProducts)
 
 userRoute.get('/resend-otp',userController.resendOtp)
 
 userRoute.post('/resend-otp',userController.resendOtp)
+
+userRoute.get('/productdetails/:id',userController.loadProductDetails)
+
 
 
 
@@ -49,7 +53,7 @@ userRoute.get('/google', passport.authenticate('google', { scope: ['profile', 'e
 
 userRoute.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
     // Successful authentication, redirect to home page or dashboard
-    res.render('users/gg');
+    res.render('users/userhome');
 });
 
 

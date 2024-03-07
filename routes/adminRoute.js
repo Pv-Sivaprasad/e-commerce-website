@@ -7,6 +7,7 @@ const session = require('express-session')
 const config = require('../config/config')
 const adminController = require('../controller/adminCon')
 const productController=require('../controller/productCon')
+const auth=require('../middleware/adminAuth')
 
 
 adminRoute.set('view engine', 'ejs')
@@ -32,11 +33,12 @@ const upload = multer({
     limits: { fieldSize: 10 * 1024 * 1024 } // Adjust size limit as needed (10MB in this example)
 });
 
-
+    
 adminRoute.get('/', adminController.loginPage);
-adminRoute.get('/login', adminController.loginPage)
+adminRoute.get('/login',adminController.loginPage)
 adminRoute.get('/logoout', adminController.logout)
 adminRoute.post('/', adminController.verifyLogin)
+
 adminRoute.get('/dashboard', adminController.loadDasboard)   
 adminRoute.post('/dashboard', adminController.loadDasboard)
 adminRoute.get('/users', adminController.allUsers)
@@ -53,7 +55,7 @@ adminRoute.post('/editCategory',upload.single('image'),adminController.editCat)
 adminRoute.patch('/catblock/:cat_id', adminController.catBlock);
 
 
-
+     
 adminRoute.get('/allProduct',productController.loadProduct)
 adminRoute.post('/allProduct',productController.loadProduct)
 
