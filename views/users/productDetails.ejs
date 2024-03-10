@@ -263,6 +263,15 @@
 </head>
 <%- include('../layouts/userHeader') %>
 <br><br>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/user-login">User Login</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Product List</li>
+    </ol>
+  </nav>
+  
 <body oncontextmenu='return false' class='snippet-body'>
     <link rel='stylesheet' href='https://sachinchoolur.github.io/lightslider/dist/css/lightslider.css'>
     <div class="container-fluid mt-2 mb-3">
@@ -383,11 +392,11 @@
                                 <%= product.description %>
                             </p>
                             
-                                    
+                           
                             <h4>
                                 <span class="label">Stock:</span>
                                 <% if(product.quantity > 3) { %>
-                                    <span class="value text-success">Available  <%= product.quantity %>  Quantity</span>
+                                    <span class="value text-success">Available <%= product.quantity %> Quantity</span>
                                 <% } else if(product.quantity > 1) { %>
                                     <span class="value text-danger">Hurry! Only <%= product.quantity %> left</span>
                                 <% } else if(product.quantity == 1) { %>
@@ -395,7 +404,17 @@
                                 <% } else { %>
                                     <span class="value text-danger">Sold Out</span>
                                 <% } %>
+                                
+                                <!-- Quantity selector -->
+                                <div class="input-group" style="margin-top: 5px; width: 100px;">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" id="subtractQuantity" style="width: 20px; height: 30px;">-</button>
+                                    <input type="text" class="form-control form-control-sm" id="quantity" name="quantity" value="1" readonly style="width: 60px;">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" id="addQuantity" style="width: 20px; height: 30px;">+</button>
+                                </div>
+                                
                             </h4>
+                            
+                            
                             
                                 </div>
                             <div class="bullets">
@@ -450,6 +469,31 @@
             thumbItem: 6
         });
     </script>
+    <script>
+        // Get the quantity input field and buttons
+        var quantityInput = document.getElementById('quantity');
+        var subtractButton = document.getElementById('subtractQuantity');
+        var addButton = document.getElementById('addQuantity');
+        var maxStock = "<%= product.quantity %>"; // Maximum stock value
+
+    
+        // Event listener for subtract button
+        subtractButton.addEventListener('click', function() {
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) { // Ensure quantity doesn't go below 1
+                quantityInput.value = currentValue - 1;
+            }
+        });
+    
+        // Event listener for add button
+        addButton.addEventListener('click', function() {
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue < maxStock) { // Ensure quantity doesn't exceed max stock
+                quantityInput.value = currentValue + 1;
+            }
+        });
+    </script>
+    
 </body>
 <%- include('../layouts/userFooter') %>
 </html>

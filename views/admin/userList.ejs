@@ -7,11 +7,10 @@
         </div>
     </div>
     <form class="search-form">
-        <input type="text" placeholder="Search" name="search" class="search-input">
+        <input type="text" placeholder="Search" name="search" id="search" class="search-input">
         <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
     </form>
-    
-</form>
+
     <div class="card mb-4">
         <div class="card-body">
             <table class="table" id="reloadDiv">
@@ -25,7 +24,7 @@
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="usersTableBody">
                     <% if (users.length > 0) { %>
                         <% users.forEach((user, i) => { %>
                             <tr data-user-id="<%= user._id %>">
@@ -45,6 +44,10 @@
                                 </td>
                             </tr>
                         <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center">No users found.</td>
+                        </tr>
                     <% } %>
                 </tbody>
             </table>
@@ -70,6 +73,34 @@
 <%- include('../layouts/adminFooter') %>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const allUserRows = usersTableBody.getElementsByTagName('tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchText = searchInput.value.toLowerCase();
+
+            let found = false;
+            for (let i = 0; i < allUserRows.length; i++) {
+                const userRow = allUserRows[i];
+                const userName = userRow.getElementsByTagName('td')[1].innerText.toLowerCase();
+
+                if (userName.includes(searchText)) {
+                    userRow.style.display = '';
+                    found = true;
+                } else {
+                    userRow.style.display = 'none';
+                }
+            }
+
+            if (!found) {
+                const noUsersRow = `<tr><td colspan="6" class="text-center">No users found.</td></tr>`;
+                usersTableBody.innerHTML = noUsersRow;
+            }
+        });
+    });
+
     function blockUnblock(user_id) {
         fetch('/admin/blockAndUnblock', {
             method: 'PATCH',

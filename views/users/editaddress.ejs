@@ -1,0 +1,75 @@
+<%- include('../layouts/profileHeader') %>
+
+<form action="/editaddress" method="post">
+    
+    <div class="col-md-8 col-lg-9">
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                <div class="p-5 shadow rounded bg-white">
+                    <h2 class="mb-5 text-center">Edit Address</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="Name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%=address.name%>" placeholder="Enter your Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile Number </label>
+                            <input type="number" class="form-control" id="mobile" name="mobile" value="<%=address.mobile%>" placeholder="10-digit number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="postalCode" class="form-label">Postal Code</label>
+                            <input type="number" class="form-control" id="postalCode" name="pincode"  value="<%=address.pincode %>" placeholder="Postal Code" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="locality" class="form-label">Locality</label>
+                            <input type="text" class="form-control" id="locality" name="locality" value="<%=address.locality %>" placeholder="Locality" required>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Street Address" class="form-label">Address (Area and Street)</label>
+                                <textarea class="form-control" id="streetAddress" rows="3" name="streetAddress" required><%= address.streetAddress %></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">City/District/Town</label>
+                            <input type="text" class="form-control" id="city" placeholder="" value="<%= address.city %>"  name="city" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">State</label>
+                            <select class="form-select" name="state" id="state"  required>
+                                <option value="<%=address.state%>"><%=address.state%></option>
+                                <option value="AP">Andhra Pradesh</option>
+                                <!-- Other state options omitted for brevity -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="landmark" class="form-label">Landmark</label>
+                            <input type="text" class="form-control" name="landmark" id="landmark" placeholder="optional">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="alternatephone" class="form-label">Alternate Phone</label>
+                            <input type="text" class="form-control" id="alterPhone" name="alterPhone" placeholder="optional">
+                        </div>
+                        <div class="col-4">
+                            <input type="hidden"  id="states" name="" value="<%=address.state%>">
+                            <label for="addresstype" class="form-label">Address Type</label>
+                            <select class="form-select" name="addressType" id="addressType" required>
+                                <option selected><%=address.addressType%></option>
+                                <option value="home">Home</option>
+                                <option value="Work">Work</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <button type="submit" class="btn btn-primary px-4">Edit Address</button>
+                        <input type="hidden" name="id" value="<%= address._id %>">
+                        <a href="/alladdress" class="btn" style="background-color: black;">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<%- include('../layouts/profileFooter') %>
+

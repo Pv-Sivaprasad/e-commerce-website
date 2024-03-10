@@ -1,8 +1,7 @@
 <%- include('../layouts/adminHeader') %>
 
-
 <form class="search-form">
-    <input type="text" placeholder="Search" name="search" class="search-input">
+    <input type="text" placeholder="Search" name="search" id="search" class="search-input">
     <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
 </form>
 
@@ -21,7 +20,7 @@
                             <th scope="col">Edit</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="categoriesTableBody">
                         <% for(let i=0; i < categories.length; i++) { %>
                             <tr>
                                 <td><%= i + 1 %></td>
@@ -61,6 +60,27 @@
 </style>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search');
+        const categoriesTableBody = document.getElementById('categoriesTableBody');
+        const allCategoryRows = categoriesTableBody.getElementsByTagName('tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchText = searchInput.value.toLowerCase();
+
+            for (let i = 0; i < allCategoryRows.length; i++) {
+                const categoryRow = allCategoryRows[i];
+                const categoryName = categoryRow.getElementsByTagName('td')[1].innerText.toLowerCase();
+
+                if (categoryName.includes(searchText)) {
+                    categoryRow.style.display = '';
+                } else {
+                    categoryRow.style.display = 'none';
+                }
+            }
+        });
+    });
+
     async function toggleBlockUnblock(element) {
         var categoryId = element.getAttribute('data-category-id');
         var action = element.getAttribute('data-action');

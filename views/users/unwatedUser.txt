@@ -1,99 +1,104 @@
-<!-- Include Magnific Popup CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+/**
+ * downCount: Simple Countdown clock with offset
+ * Author: Sonny T. <hi@sonnyt.com>, sonnyt.com
+ */
 
-<%- include('../layouts/userHeader') %>
+(function ($) {
 
-<div class="" id="quickView">
-    <div class="" style="margin-top: 150px; margin-bottom: 150px;">
-        <div class="">
-            <div class="container mt-3 mx-auto ">
-                <div class="row">
-                    <div class="col-md-4 ">
-                        <!-- Quick View Images Start -->
-                        <div class="quick-view-images">
-                            <!-- Quick Gallery Images Start -->
-                            <div class="swiper-container">
-                                <div class="swiper-wrapper d-flex flex-wrap"> <!-- Apply flex-wrap here -->
-                                    <% product.images.forEach(function(image, index) { %>
-                                        <div class="swiper-slide">
-                                            <a class="single-img" href="/userImages/<%= image %>" title="Zoom Image">
-                                                <img src="/userImages/<%= image %>" alt="Product Image" />
-                                            </a>
-                                        </div>
-                                    <% }); %>
-                                </div>
-                            </div>
-                            <!-- Quick Gallery Images End -->
-                        </div>
-                        <!-- Quick View Images End -->
-                    </div>
-                    <div class="col-md-6">
-                        
-                             <!-- Quick View Description Start -->
-                        <div class="quick-view-description">
-                            <h4 class="product-name">
-                                <%= product.productName %>
-                            </h4>
-                            <div class="price mt-2">
-                                <span class="sale-price">₹<%= product.price %></span>
-                            </div>
-                            <p>
-                                <%= product.description %>
-                            </p>
-                            <div class="single-info mt-3">
-                                <span class="lable">Color:</span>
-                                <span class="value"><%= product.color %></span>
-                            </div>
-                            <div class="single-info mt-3">
-                                <span class="lable">Category:</span>
-                                <span class="value">
-                                    <a href="#">
-                                        <% if(product.categoryId) { %>
-                                            <%= product.categoryId.name %>
-                                        <% } else { %>
-                                            NA
-                                        <% } %>
-                                    </a>
-                                </span>
-                            </div>
-                            <div class="single-info mt-3">
-                                <span class="lable">Stock:</span>
-                                    <% if(product.quantity < 1) { %>
-                                        <span class="value text-danger ">Sold Out</span>
-                                    <% } else if(product.quantity > 11) { %>
-                                        <span class="value">Available</span>
-                                    <% } else if(product.quantity < 11) { %>
-                                        <span class="value text-danger">hurry! only few left</span>
-                                    <% } %>
-                            </div>
-                        </div>
-                        <!-- Quick View Description End -->
-                      
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    $.fn.downCount = function (options, callback) {
+        var settings = $.extend({
+                date: null,
+                offset: null
+            }, options);
 
-<%- include('../layouts/userFooter') %>
+        // Throw error if date is not set
+        if (!settings.date) {
+            $.error('Date is not defined.');
+        }
 
-<!-- Include jQuery (required for Magnific Popup) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        // Throw error if date is set incorectly
+        if (!Date.parse(settings.date)) {
+            $.error('Incorrect date format, it should look like this, 12/24/2012 12:00:00.');
+        }
 
-<!-- Include Magnific Popup JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+        // Save container
+        var container = this;
 
-<script>
-    $(document).ready(function() {
-        // Initialize Magnific Popup for image zoom
-        $('.single-img').magnificPopup({
-            type: 'image',
-            zoom: {
-                enabled: true,
-                duration: 300,
-                easing: 'ease-in-out'
+        /**
+         * Change client's local date to match offset timezone
+         * @return {Object} Fixed Date object.
+         */
+        var currentDate = function () {
+            // get client's current date
+            var date = new Date();
+
+            // turn date to utc
+            var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+
+            // set new Date object
+            var new_date = new Date(utc + (3600000*settings.offset))
+
+            return new_date;
+        };
+
+        /**
+         * Main downCount function that calculates everything
+         */
+        function countdown () {
+            var target_date = new Date(settings.date), // set target date
+                current_date = currentDate(); // get fixed current date
+
+            // difference of dates
+            var difference = target_date - current_date;
+
+            // if difference is negative than it's pass the target date
+            if (difference < 0) {
+                // stop timer
+                clearInterval(interval);
+
+                if (callback && typeof callback === 'function') callback();
+
+                return;
             }
-        });
-    });
-</script>
+
+            // basic math variables
+            var _second = 1000,
+                _minute = _second * 60,
+                _hour = _minute * 60,
+                _day = _hour * 24;
+
+            // calculate dates
+            var days = Math.floor(difference / _day),
+                hours = Math.floor((difference % _day) / _hour),
+                minutes = Math.floor((difference % _hour) / _minute),
+                seconds = Math.floor((difference % _minute) / _second);
+
+                // fix dates so that it will show two digets
+                days = (String(days).length >= 2) ? days : '0' + days;
+                hours = (String(hours).length >= 2) ? hours : '0' + hours;
+                minutes = (String(minutes).length >= 2) ? minutes : '0' + minutes;
+                seconds = (String(seconds).length >= 2) ? seconds : '0' + seconds;
+
+            // based on the date change the refrence wording
+            var ref_days = (days === 1) ? 'day' : 'days',
+                ref_hours = (hours === 1) ? 'hour' : 'hours',
+                ref_minutes = (minutes === 1) ? 'minute' : 'minutes',
+                ref_seconds = (seconds === 1) ? 'second' : 'seconds';
+
+            // set to DOM
+            container.find('.days').text(days);
+            container.find('.hours').text(hours);
+            container.find('.minutes').text(minutes);
+            container.find('.seconds').text(seconds);
+
+            container.find('.days_ref').text(ref_days);
+            container.find('.hours_ref').text(ref_hours);
+            container.find('.minutes_ref').text(ref_minutes);
+            container.find('.seconds_ref').text(ref_seconds);
+        };
+        
+        // start
+        var interval = setInterval(countdown, 1000);
+    };
+
+})(jQuery);

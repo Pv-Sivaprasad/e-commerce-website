@@ -1,0 +1,160 @@
+<%- include('../layouts/profileHeader') %>
+
+    <div class="col-md-8 col-lg-9">
+        <div class="tab-content">
+            <!-- Show Addresses start -->
+
+        </div><!-- Show Addresses end -->
+
+        <!-- user details start -->
+        <div class="col-md-8 col-lg-9">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-account" role="tabpanel"
+                    aria-labelledby="tab-account-link">
+                    <form action="/addaddress" method="post" class="p-5 shadow rounded bg-white">
+                        <h2 class="mb-5 text-center">Manage Address</h2>
+
+                        <div class="row g-3">
+                            <!-- Existing fields for name, email, age, gender, phone -->
+
+                            <!-- Additional fields for address details -->
+                            <div class="col-md-6">
+                                <label for="Name" class="form-label">Name</label>
+                                <p id="errorname"></p>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="Enter your Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <p id="errorphone"></p>
+                                <label for="mobile" class="form-label">Mobile Number
+                                </label>
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    placeholder="10-digit number" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p id="erropin"></p>
+                                <label for="postalCode" class="form-label">Postal
+                                    Code</label>
+                                <input type="number" class="form-control" id="postalCode" name="pincode"
+                                    placeholder="Postal Code" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="locality" class="form-label">Locality</label>
+                                <input type="text" class="form-control" id="locality" name="locality"
+                                    placeholder="Locality" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="Street Address" class="form-label">Address (Area
+                                        and Street)</label>
+                                    <textarea class="form-control" id="Street address" name="streetAddress"
+                                        placeholder="" rows="3" required></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="city" class="form-label">City/District/Town</label>
+                                <input type="text" class="form-control" id="city" placeholder="" name="city" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="country" class="form-label">State</label>
+                                <select class="form-select" name="state" id="state" required>
+                                    <option selected>--Select State--</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="AR">Arunachal Pradesh</option>
+                                    <option value="AS">Assam</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="CT">Chhattisgarh</option>
+                                    <option value="GA">Goa</option>
+                                    <option value="GJ">Gujarat</option>
+                                    <option value="HR">Haryana</option>
+                                    <option value="HP">Himachal Pradesh</option>
+                                    <option value="JK">Jammu and Kashmir</option>
+                                    <option value="JH">Jharkhand</option>
+                                    <option value="KA">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                    <option value="ML">Meghalaya</option>
+                                    <option value="MZ">Mizoram</option>
+                                    <option value="NL">Nagaland</option>
+                                    <option value="OD">Odisha</option>
+                                    <option value="PB">Punjab</option>
+                                    <option value="RJ">Rajasthan</option>
+                                    <option value="SK">Sikkim</option>
+                                    <option value="TN">Tamil Nadu</option>
+                                    <option value="TG">Telangana</option>
+                                    <option value="TR">Tripura</option>
+                                    <option value="UP">Uttar Pradesh</option>
+                                    <option value="UT">Uttarakhand</option>
+                                    <option value="WB">West Bengal</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="landmark" class="form-label">Landmark</label>
+
+                                <input type="text" class="form-control" id="landmark" name="landmark"
+                                    placeholder="optional">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="alternatephone" class="form-label">Alternate
+                                    Phone</label>
+                                <input type="text" class="form-control" id="alterPhone" name="alterPhone"
+                                    placeholder="optional">
+                            </div>
+                            <div class="col-4">
+                                <label for="addresstype" class="form-label">Address
+                                    Type</label>
+                                <select class="form-select" id="addressType" name="addressType" required>
+                                    <option selected>--Select--</option>
+                                    <option value="home">Home</option>
+                                    <option value="Work">Work</option>
+
+
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary px-4">Save
+                            </button>
+                            <a href="/addaddress" class="btn " style="background-color: #c99c9c;"> Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- user details end -->
+
+    </div>
+
+
+
+
+    </div>
+    </div><!-- End .col-lg-9 -->
+
+    </div><!-- End .row -->
+
+
+
+    </div><!-- End .container -->
+    </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+    </main><!-- End .main -->
+    </div><!-- End .page-wrapper -->
+
+    <br><br>
+
+    <%- include('../layouts/profileFooter') %>
+
+   

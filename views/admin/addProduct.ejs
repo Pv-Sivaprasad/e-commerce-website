@@ -13,21 +13,27 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="productName" required>
+                            <input type="text" class="form-control" id="productName" name="productName"
+                             required pattern="[a-zA-Z]+( [a-zA-Z]+)*" title="Alphabets allowed with spaces between">
                         </div>
+                        
                         <div class="row gx-3">
                             <div class="col-md-4 mb-3">
                                 <label for="price" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="price" name="price" required>
+                                <input type="text" class="form-control" id="price" name="price" inputmode="numeric" required>
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input type="text" class="form-control" id="color" name="color" required>
+                                <input type="text" class="form-control" id="color" name="color" 
+                                required pattern="[a-zA-Z]+( [a-zA-Z]+)*" title="Alphabets allowed with spaces between">
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                <input type="text" class="form-control" id="quantity" name="quantity" inputmode="numeric" required>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

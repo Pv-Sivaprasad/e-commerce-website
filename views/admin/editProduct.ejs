@@ -17,21 +17,25 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+                            <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required pattern="^[a-zA-Z]+(?: [a-zA-Z]+)*$" title="Only alphabets allowed between spaces">
+
                         </div>
                         <div class="row gx-3">
                             <div class="col-md-4 mb-3">
                                 <label for="price" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>" required>
+                                <input type="text" class="form-control" id="price" name="price" value="<%= product.price %>" required pattern="[0-9]+" title="Only numbers allowed">
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input type="text" class="form-control" id="color" name="color"value="<%= product.color %>" required>
+                                <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>" required pattern="[a-zA-Z]+( [a-zA-Z]+)*" title="Only alphabets allowed with space between">
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity"     value="<%= product.quantity %>" required>
+                                <input type="text" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>" required pattern="[0-9]+" title="Only numbers allowed">
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -45,20 +49,23 @@
                     </div>
                 </div>
                 <!-- card end// -->
+                <
                 <div class="card mb-4">
                     <div class="card-body">
-                         <div> 
-                           
-                            <div>
-                                <label class="form-label">Images</label>
-                                <input class="form-control" type="file" name="images" multiple id="formimages" onchange="previewImages(event)"/>
-                                <div id="imagePreview" style="display: flex; flex-wrap: wrap;"></div>  
-                            </div>
-
+                        <div>
+                            <label class="form-label">Images</label>
+                            <input class="form-control" type="file" name="images" multiple id="formimages" onchange="previewImages(event)" />
+                            <div id="imagePreview" style="display: flex; flex-wrap: wrap;"></div>
+                            <% if (product && product.images && product.images.length > 0) { %>
+                                <% product.images.forEach(image => { %>
+                                    <img src="userImages/<%= image %>" alt="Product Image" style="width: 100px; height: 100px;">
+                                <% }); %>
+                            <% } %>
                         </div>
-                         
                     </div>
                 </div>
+                
+                
                 <!-- card end// -->
             </div>
             <div class="col-lg-3">
@@ -73,7 +80,7 @@
                         </div>
                         <label for="categoryId" class="form-label">Category:</label>
                         <select name="categoryId" id="categoryId" class="form-select">
-                            <option value="">--select category--</option>
+                            
                             <% categories.forEach((category)=> { %>
                             <option value="<%= category._id %>"><%= category.catName %></option>
                             <% }) %>

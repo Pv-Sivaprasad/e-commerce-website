@@ -1,6 +1,5 @@
 const express = require('express')
 const adminRoute = express()
-const multer = require('multer')
 const path = require('path')
 const fs = require('fs');
 const session = require('express-session')
@@ -8,8 +7,8 @@ const config = require('../config/config')
 const adminController = require('../controller/adminCon')
 const productController=require('../controller/productCon')
 const auth=require('../middleware/adminAuth')
-
-
+const upload=require('../middleware/upload')
+const multer = require('multer')
 adminRoute.set('view engine', 'ejs')
 adminRoute.set('views', 'views/admin')
 adminRoute.use(express.json())
@@ -18,26 +17,15 @@ adminRoute.use(express.static('public'))
 
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../public/userImages'))
-    },
-    filename: function (req, file, cb) {
-        const name = Date.now() + '-' + file.originalname;
-        cb(null, name)
-    }
-})
 
-const upload = multer({ 
-    storage: storage,
-    limits: { fieldSize: 10 * 1024 * 1024 } // Adjust size limit as needed (10MB in this example)
-});
+
+
 
     
 adminRoute.get('/', adminController.loginPage);
 adminRoute.get('/login',adminController.loginPage)
 adminRoute.get('/logoout', adminController.logout)
-adminRoute.post('/', adminController.verifyLogin)
+adminRoute.post('/login', adminController.verifyLogin)
 
 adminRoute.get('/dashboard', adminController.loadDasboard)   
 adminRoute.post('/dashboard', adminController.loadDasboard)
@@ -66,6 +54,9 @@ adminRoute.get('/editProduct',productController.loadEditProduct)
 adminRoute.post('/editProduct',upload.array('images', 4),productController.editProduct)
 
 adminRoute.patch('/blockProduct/:productId', productController.blockProduct);
+
+
+// adminRoute.get('/salesReport',adminController.loadSalesReport)
 
 
 

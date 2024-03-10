@@ -17,10 +17,14 @@
               <label for="categoryDescription" class="form-label">Category Description</label>
               <textarea class="form-control" id="description" name="description" rows="3" required><%= category.description %></textarea>
             </div>
+          
             <div class="mb-3">
               <label for="image" class="form-label">Category Image</label>
               <input type="file" class="form-control" name="image">
-            </div>
+              <% if (category.image) { %>
+                  <img src="userImages/<%= category.image %>" alt="Category Image" style="width: 100px; height: 100px;">
+              <% } %>
+          </div>
             <button type="submit" class="btn btn-primary">Update Category</button>
             <input type="hidden" name="id" value="<%=category._id %>">
           </form>

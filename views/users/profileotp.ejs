@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTP Verification</title>
+
+<link rel="icon" href="assets/img/favicon.png">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<!-- animate CSS -->
+<link rel="stylesheet" href="assets/css/animate.css">
+<!-- owl carousel CSS -->
+<link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+<!-- font awesome CSS -->
+<link rel="stylesheet" href="assets/css/all.css">
+<!-- flaticon CSS -->
+<link rel="stylesheet" href="assets/css/flaticon.css">
+<link rel="stylesheet" href="assets/css/themify-icons.css">
+<!-- font awesome CSS -->
+<link rel="stylesheet" href="assets/css/magnific-popup.css">
+<!-- swiper CSS -->
+<link rel="stylesheet" href="assets/css/slick.css">
+<!-- style CSS -->
+<link rel="stylesheet" href="assets/css/style.css">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .otp-form {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .otp-input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 60px;
+    text-align: center;
+  }
+  .verify-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  
+<div class="container">
+  <div class="otp-form">
+    <p>Verify your OTP for registration</p>
+    <form id="otpForm" method="post" action="/profileotp">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <input type="text" class="otp-input" maxlength="1" required name="otp" onkeyup="moveToNext(this, event)">
+      <button type="submit" class="verify-btn">Verify</button>
+    </form>
+  </div>
+</div>
+
+<!-- jquery plugins here -->
+<script src="assets/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="assets/js/slick.min.js"></script>
+<script src="assets/js/jquery.counterup.min.js"></script>
+<script src="assets/js/waypoints.min.js"></script>
+<script src="assets/js/contact.js"></script>
+<script src="assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="assets/js/jquery.form.js"></script>
+<script src="assets/js/jquery.validate.min.js"></script>
+<script src="assets/js/mail-script.js"></script>
+<!-- custom js -->
+<script src="assets/js/custom.js"></script>
+
+<script>
+function moveToNext(input, event) {
+    if (event.keyCode === 8 && input.previousElementSibling) {
+        input.previousElementSibling.focus();
+    } else if (event.keyCode !== 8 && input.nextElementSibling && input.value.length === 1) {
+        input.nextElementSibling.focus();
+    }
+}
+</script>
+
+</body>
+</html>

@@ -101,15 +101,17 @@ const editProduct = async (req, res) => {
         console.log('Details:', details);
         console.log('Files:', files);
 
-        // Check if files are present and length is at least 4
+        
         if (files && files.length >= 4) {
             console.log('Images provided, updating images...');
             const imgPath = files.map(file => file.filename);
-            details.images = imgPath; // Update images array
+            details.images = imgPath; 
+            console.log('imgPath',details.images);
         } else {
             console.log('No images provided or less than 4 images, skipping image update.');
             // Remove images field from details object
             delete details.images;
+            console.log(details.image);
         }
 
         // Update product data except for images

@@ -387,6 +387,174 @@ const loadProductDetails=async(req,res)=>{
     }
 }
 
+
+const errorPage=async(req,res)=>{
+    try {
+        res.render('users/error')
+    } catch (error) {
+        console.log('error rendering error page');
+        console.log(error);
+    }
+}
+
+const loadProfilePage=async(req,res)=>{
+try {
+    let userData= await User.findOne({_id:req.session.user_id , is_blocked:0})
+
+    console.log('userData is :',userData);
+    res.render('users/profile',{user:userData})
+} catch (error) {
+    console.log('error loading profile page view only');
+    console.log(error);
+}
+}
+
+const loadEditProfile=async(req,res)=>{
+    try {
+        const userData=await User.findOne({_id:req.session.user_id})
+
+        res.render('users/editprofile',{user:userData})
+    } catch (error) {
+        console.log('error loading editingpage');
+        console.log(error)
+    }
+}
+
+
+const renderProfileOTPPage = (req, res) => {
+    try {
+        // Render the profile OTP page
+        res.render('users/profileotp');
+    } catch (error) {
+        console.error('Error rendering profile OTP page:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+const editProfile = async (req, res) => {
+    try {
+        console.log('Starting editing profile');
+        const existingData = await User.findOne({ _id: req.session.user_id });
+        console.log('The existing userData:', existingData);
+
+        const { name, email, mobile, password, confirmPassword } = req.body;
+
+        console.log(name, email, mobile, password, confirmPassword );
+
+        // Check if any of the fields are being updated
+        if (
+            req.session.name=name,
+            req.session.email=email,
+            req.session.mobile=mobile,
+            req.session.password=password,
+
+            existingData.mobile !== mobile ||
+            existingData.email !== email ||
+            existingData.password !== password
+        ) {
+            // If any of the fields are being updated, send email with OTP
+            const secret = speakeasy.generateSecret({ length: 20 }); // Generate secret for OTP
+            const otp = speakeasy.totp({
+                secret: secret.base32,
+                encoding: 'base32'
+            });
+            const otpDB = new OTP({
+                userId: req.session.user_id,
+                otp: otp
+            });
+            await otpDB.save();
+
+            console.log('OTP saved to database:', otpDB);
+
+            const mailOptions = {
+                from: 'sivaprasadpv777@gmail.com',
+                to: email,
+                subject: 'Your OTP for profile update of Royal Oak',
+                text: `Your OTP for profile update is ${otp}`
+            };
+
+            console.log('Mail options:', mailOptions);
+           
+            res.redirect('/profileotp')
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log('Failed to send email:', error);
+                    return res.status(500).json({ error: "Failed to send OTP" });
+                } else {
+                    console.log('Email sent:', info.response);
+                   
+                   
+                }
+            });
+        } else {
+            // If no fields are being updated, directly update the name
+            const updatedUser = await User.findByIdAndUpdate(
+                { _id: req.session.user_id },
+                { $set: { name: name } },
+                { new: true }
+            );
+            console.log('Name updated successfully:', updatedUser);
+        }
+
+        // Handle other fields being updated if needed
+
+    } catch (error) {
+        console.error('Error editing profile:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+const verifyProfileOtp=async(req,res)=>{
+    
+        try {
+            console.log('OTP verification');
+           
+            const currentOtp = req.body.otp.join('')
+            console.log(currentOtp);
+    
+            const actualOtp = await OTP.findOne({ otp: currentOtp });
+            console.log(actualOtp);
+            if (!actualOtp) {
+                console.log('Invalid OTP');
+                return res.status(400).send('Invalid OTP');
+            }
+    
+            const actualUser = await User.findById(actualOtp.userId);
+            if (!actualUser) {
+                console.log('User not found');
+                return res.status(404).send('User not found');
+            }
+    
+            console.log('OTP verified successfully');
+            actualUser.is_verified = true;
+            await actualUser.save();
+
+            const updatedUser = await User.findByIdAndUpdate(
+                { _id: req.session.user_id },
+                { $set:{
+                    name:req.session.name,
+                    mobile:req.session.mobile,
+                    email:req.session.email,
+                    password:req.session.password
+                }
+
+                 }
+            );
+    
+            console.log('Redirecting to user profile page');
+            // Redirect to user login page after OTP verification
+            res.redirect('/profile');
+        } catch (error) {
+            console.error('Error verifying OTP:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+
+
+
+
+
 module.exports =
 {
     login,
@@ -400,7 +568,16 @@ module.exports =
     verifyLogin,
     resendOtp,
     allProducts,
-    loadProductDetails
+    loadProductDetails,
+    errorPage,
+
+
+
+    loadProfilePage,
+    loadEditProfile,
+    editProfile,
+    renderProfileOTPPage,
+    verifyProfileOtp
 
 }
 

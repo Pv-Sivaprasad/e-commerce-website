@@ -5,8 +5,8 @@ const Category = require('../model/categoryModel')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
-const validoator=require('validator')      
-   
+const validoator = require('validator')
+
 
 // for the passwording hashing security
 const securePassword = async (req, res) => {
@@ -23,11 +23,11 @@ const securePassword = async (req, res) => {
 const loginPage = async (req, res) => {
   try {
     res.set("Cache-control", "no-store")
-  //  if( req.session.admin_id){
-  //   console.log("admin login page")
+    //  if( req.session.admin_id){
+    //   console.log("admin login page")
     res.render('login')
-  //  }
-   
+    //  }
+
   } catch (error) {
     console.log(error);
   }
@@ -36,8 +36,8 @@ const loginPage = async (req, res) => {
 // logout from admin
 const logout = async (req, res) => {
   try {
-  req.session.admin_id=false
-  
+    req.session.admin_id = false
+
     res.redirect('/admin/login')
   } catch (error) {
     console.log('error logging admin out');
@@ -61,7 +61,7 @@ const verifyLogin = async (req, res) => {
 
       if (passwordMatch) {
         res.set('Cache-control', 'no-store');
-        req.session.admin_id =adminData.admin_id;
+        // req.session.admin_id = adminData.admin_id;
         return res.redirect('/admin/dashboard'); // Redirect if password matches
       } else {
         req.session.loginError = 'Invalid password';
@@ -83,7 +83,7 @@ const verifyLogin = async (req, res) => {
 //loading admin dashboard
 const loadDasboard = async (req, res) => {
   try {
-   
+
     res.render('dashboard')
   } catch (error) {
     console.log(error);
@@ -98,9 +98,13 @@ const allUsers = async (req, res) => {
 
     const regularUsers = await User.find({});
     console.log('1');
-    
+
     console.log('111');
-    
+    if(req.session.updateError)
+    {
+               
+               req.session.updateError=false
+           }
     res.render('userList', { users: regularUsers });
     console.log('112');
   } catch (error) {
@@ -114,8 +118,9 @@ const userBlock = async (req, res) => {
   try {
     const user_id = req.body.user_id;
     const userData = await User.findById(user_id);
-
+    
     userData.is_blocked = !userData.is_blocked;
+   
     await userData.save();
 
     res.json({ res: true, is_blocked: userData.is_blocked });
@@ -130,7 +135,7 @@ const userBlock = async (req, res) => {
 const allCategory = async (req, res) => {
   try {
     const categories = await Category.find();
-    
+
     res.render('allCategories', { categories });
   } catch (error) {
     console.log('Error loading categories:', error);
@@ -160,7 +165,7 @@ const addCat = async (req, res) => {
     if (alreadyExist.length > 0) {
       return res.redirect('/admin/addCategory');
     }
-    console.log("files",req.file);
+    console.log("files", req.file);
     // Create new category instance
     const newCategory = new Category({
       catName: catName,
@@ -185,19 +190,19 @@ const addCat = async (req, res) => {
 }
 
 //to render edit category page
-const editCategory=async(req,res)=>{
+const editCategory = async (req, res) => {
   try {
     console.log('editing start');
-    const id=req.query.id
+    const id = req.query.id
     console.log(id);
-    const catData=await Category.findById({_id:id})
+    const catData = await Category.findById({ _id: id })
     console.log(catData);
-    if(catData){
-      res.render('editCategory',{category:catData})
-    }else{
+    if (catData) {
+      res.render('editCategory', { category: catData })
+    } else {
       res.redirect('/admin/allCategory')
     }
-   
+
   } catch (error) {
     console.log('error loading edit cat page');
     console.log(error);
@@ -208,27 +213,28 @@ const editCategory=async(req,res)=>{
 const editCat = async (req, res) => {
   try {
     const { catName, description } = req.body;
-    const image = req.file ? req.file.filename : req.body.image; 
+    const image = req.file ? req.file.filename : req.body.image;
 
- 
-    const existing = await Category.findOne({ catName: catName });
+    console.log(catName, description);
+    console.log(image);
+    // const existing = await Category.findOne({ catName: catName });
 
-    if (existing) {
-      console.log('Category with this name already exists');
-      return res.redirect('/admin/allCategory');
-    }
+    // if (existing) {
+    //   console.log('Category with this name already exists');
+    //   return res.redirect('/admin/allCategory');
+    // }
 
-    
+     
     const catData = await Category.findByIdAndUpdate(
       { _id: req.body.id },
       {
         $set: {
           catName: catName,
           description: description,
-          image: image 
+          image: image
         }
       },
-      { new: true } 
+      { new: true }
     );
 
     console.log('Updated category:', catData);
@@ -263,6 +269,8 @@ const catBlock = async (req, res) => {
   }
 }
 
+//to show the sales report
+
 
 module.exports = {
   loginPage,
@@ -276,6 +284,7 @@ module.exports = {
   addCat,
   catBlock,
   editCategory,
-  editCat
-  
+  editCat,
+ 
+
 }

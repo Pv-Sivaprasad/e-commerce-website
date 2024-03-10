@@ -1,44 +1,104 @@
+<%- include('../layouts/adminHeader') %>
 
-
-// const editProduct = async (req, res) => {
-//     try {
-//         console.log('editing product starts here');
-//         const details = req.body;
-//         const files = req.files;
-
-
-//         console.log('details', details);
-//         console.log('files', files);
-
-//         if (!files || files.length < 4) {
-//             return res.status(400).json({ success: false, message: 'Please select at least 4 images' });
-//         }
-//         console.log('1');
-//         const imgPath=files.map(files=>files.filename)
-//         const proData = await Product.findByIdAndUpdate({ _id: req.body.id }, {
-//             $set: {
-//                 productName: details.productName,
-//                 price: details.price,
-//                 quantity: details.quantity,
-//                 color: details.color,
-//                 size: details.size,
-//                 images:imgPath,
-//                 categoryId: details.categoryId,
-//                 description: details.description
-//             }
-//         }, { new: true });
-
-//         console.log(`updated data ${proData}`);
-//         console.log('product data updated successfully');
-//         res.redirect('/admin/allProduct');
-//     } catch (error) {
-//         console.log('Error editing product:', error); // Log error
-//         res.status(500).json({ success: false, message: 'An error occurred while editing the product' });
-//     }
-// };
-
-   <div class="swiper-slide">
-                                    <a class="single-img" href="/userImages/<%= image %>" title="Zoom Image">
-                                        <img src="/userImages/<%= image %>" alt="Product Image" />
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Customers List</h2>
+        </div>
+    </div>
+    <form class="search-form">
+        <input type="text" placeholder="Search" name="search" class="search-input">
+        <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+    </form>
+    
+</form>
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table" id="reloadDiv">
+                <thead>
+                    <tr>
+                        <th>S No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Mobile</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (users.length > 0) { %>
+                        <% users.forEach((user, i) => { %>
+                            <tr data-user-id="<%= user._id %>">
+                                <td><%= i + 1 %></td>
+                                <td><%= user.name %></td>
+                                <td><b><%= user.email %></b></td>
+                                <td><%= user.mobile %></td>
+                                <td>
+                                    <span class="badge rounded-pill status-badge <%= user.is_blocked ? 'alert-warning' : 'alert-success' %>">
+                                        <%= user.is_blocked ? 'not verified' : 'verified' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a style="color: <%= user.is_blocked ? 'green' : 'red' %>" class="block-unblock" data-user-id="<%= user._id %>" onclick="blockUnblock('<%= user._id %>')">
+                                        <%= user.is_blocked ? 'Unblock' : 'Block' %>
                                     </a>
-                                </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+<%- include('../layouts/adminFooter') %>
+
+<script>
+    function blockUnblock(user_id) {
+        fetch('/admin/blockAndUnblock', {
+            method: 'PATCH',
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                user_id
+            })
+        })
+        .then(res => res.json())  
+        .then(data => {
+            if (data.res) {
+                // Update the specific row in the table
+                const statusBadge = $(`tr[data-user-id='${user_id}'] .status-badge`);
+                const actionLink = $(`tr[data-user-id='${user_id}'] .block-unblock`);
+
+                // Update status badge
+                statusBadge.text(data.is_blocked ? 'not verified' : 'verified');
+                statusBadge.toggleClass('alert-warning alert-success');
+
+                // Update action link
+                const actionText = data.is_blocked ? 'Unblock' : 'Block';
+                actionLink.text(actionText);
+                actionLink.css('color', data.is_blocked ? 'green' : 'red');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })   
+    }
+</script>

@@ -1,0 +1,86 @@
+<%- include('../layouts/profileHeader') %>
+
+
+
+<form action="/editprofile" method="post">
+    <section class="content-main">
+        <div class="row">
+            <div class="col-6">
+                <div class="content-header">
+                    <h2 class="content-title">Edit your profile <%= user.name %></h2>
+                    <div>
+                        <button class="btn btn-md rounded font-sm hover-up">Update Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Name</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <input type="text" id="name" name="name" placeholder="Name" value="<%= user.name %>" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Mobile</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <input type="text" id="mobile" name="mobile" placeholder="Mobile" value="<%= user.mobile %>" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Email</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <input type="text" id="email" name="email" placeholder="Email" value="<%= user.email %>" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Password</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <input type="password" id="password" name="password" placeholder="Password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4 mt-0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Confirm Password</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+
+<br>
+<br>
+<%- include('../layouts/profileFooter') %>
