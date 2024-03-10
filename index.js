@@ -109,6 +109,10 @@ mongoose.connect(process.env.MONGODB_URI)
             }
         ));
 
+
+        
+
+
         // Start the server
         app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
@@ -118,9 +122,14 @@ mongoose.connect(process.env.MONGODB_URI)
         console.error("Error connecting to MongoDB:", error);
     });
 
+
 // Routes
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 
+
+app.use((req, res, next) => {
+    res.status(404).render('users/error');
+});
 
 

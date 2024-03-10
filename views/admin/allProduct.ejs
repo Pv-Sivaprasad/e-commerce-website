@@ -37,7 +37,7 @@
                             </thead>
                             <tbody id="productsTableBody">
                                 <% products.forEach((product, i)=> { %>
-                                <tr>
+                                <tr>  
                                     <td><%= i + 1 %></td>
                                     <td><img width="90px" height="90px" class="rounded-3"
                                             src="userImages/<%= product.images[0] %>" alt="not "></td>
@@ -61,7 +61,7 @@
                                         <a href="/admin/editProduct?id=<%= product._id %>"
                                             class="badge rounded-pill alert-dark">Edit</a>
                                     </td>
-                                </tr>
+                                </tr>    
                                 <% }) %>
                             </tbody>
                             <% } else { %>

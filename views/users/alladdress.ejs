@@ -27,10 +27,13 @@
                     <div class="">
                         <a href="/editaddress?id=<%=item._id %>" class="btn btn-primary"
                             style="width: 100px;">
-                            <i class="fa fa-pencil" aria-hidden="true"></i> Edit <%=address._id %>
+                            <i class="fa fa-pencil" aria-hidden="true"></i> Edit    
                         </a>
-                        <a href="/deleteAddress?id=<%= item._id %>" class="btn"
-                            style="width: 100px; background-color: #adb2ce;">
+                        <!-- <a href="/deleteAddress?id=<%= item._id %>" class="btn"
+                            style="width: 100px; background-color: red;">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                        </a> -->
+                        <a href="/deleteaddress?id=<%= item._id %>" class="btn" style="width: 100px; background-color: red;">
                             <i class="fa fa-trash" aria-hidden="true"></i> Delete
                         </a>
                     </div>
@@ -56,7 +59,20 @@
 
 </div>
     
-    
+<div class="pagination-area mt-30 mb-50">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-start">
+            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+            <li class="page-item"><a class="page-link" href="#">02</a></li>
+            <li class="page-item"><a class="page-link" href="#">03</a></li>
+            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">16</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 
 
