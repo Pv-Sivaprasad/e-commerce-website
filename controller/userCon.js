@@ -115,7 +115,10 @@ const createUser = async (req, res) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)?$/;
         const mobileRegex = /^\d{10}$/;    //chang e it to 10
-        const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{8}$/;
+        // const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]+\S{8}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,}$/;
+
+
         
 
 
@@ -316,10 +319,11 @@ const verifyLogin=async (req,res)=>{
                  if(!userData.is_blocked){
                     if(userData.is_verified){
                         console.log('success-log in');
-                        req.session.user_id=userData._id
+                       
 
                         // const loginStatus=req.session.loginStatus
                         res.set('Cache-control','no-store')
+                        req.session.user_id=userData._id
                         res.redirect('/userhome')
                     }else{
                         console.log('is_verified error');
@@ -486,6 +490,7 @@ const editProfile = async (req, res) => {
                 }
             });
         } else {
+            const hashedPassword = await bcrypt.hash(password, 10);
             // If no fields are being updated, directly update the name
             const updatedUser = await User.findByIdAndUpdate(
                 { _id: req.session.user_id },
@@ -530,13 +535,16 @@ const verifyProfileOtp=async(req,res)=>{
             actualUser.is_verified = true;
             await actualUser.save();
 
+            // Hash the new password before updating the user profile
+        const hashedPassword = await bcrypt.hash(req.session.password, 10);
+
             const updatedUser = await User.findByIdAndUpdate(
                 { _id: req.session.user_id },
                 { $set:{
                     name:req.session.name,
                     mobile:req.session.mobile,
                     email:req.session.email,
-                    password:req.session.password
+                    password:hashedPassword
                 }
 
                  }

@@ -6,6 +6,7 @@ const Category = require('../model/categoryModel')
 const fs = require('fs')
 const path = require('path')
 const { log } = require('console')
+const sharp = require('sharp');
 
 
 //to load the products
@@ -30,7 +31,7 @@ const loadAddProduct = async (req, res) => {
     }
 }
 
-//to add a product
+
 const addProduct = async (req, res) => {
     try {
         console.log('Product adding started');
@@ -41,15 +42,35 @@ const addProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Please select at least 4 images' });
         }
 
-        const alreadyExist = await Product.findOne({ productName: details.productName });
-        if (alreadyExist) {
-            return res.status(400).json({ success: false, message: 'Item already exists' });
+        const resizedImages = [];  // Array to store resized buffers
+
+        for (const file of files) {
+            try {
+                const mimeType = mime.getType(file.originalname);  // Check file type
+                if (!mimeType.startsWith('image/')) {
+                    throw new Error(`${file.originalname} is not a valid image file.`);
+                }
+
+                const resizedImageBuffer = await sharp(file.buffer)
+                    .resize({ width: 200 })  // Set desired width
+                    .extract({ width: 100, height: 100 }) // Try resizing a smaller portion first (optional)
+                    .toBuffer();
+
+                resizedImages.push(resizedImageBuffer);
+            } catch (error) {
+                console.log(`Error resizing image ${file.originalname}:`, error);
+                console.log('Error details:', error.message, error.code);  // Log additional details
+                return res.status(400).json({ success: false, message: `Error resizing image ${file.originalname}: ${error.message}` });
+            }
         }
 
-        // Extract filenames from uploaded files
-        const images = files.map(file => file.filename);
+        // Continue with product creation
+        // Use resizedImages array or original files based on your needs
 
-        // Create a new product object
+        const images = files.map(file => file.filename);
+        // OR
+        // const images = resizedImages;  // If using resized buffers
+
         const product = new Product({
             productName: details.productName,
             price: details.price,
@@ -62,13 +83,17 @@ const addProduct = async (req, res) => {
         });
 
         const savedProduct = await product.save();
-        res.redirect('/admin/allProduct')
-        // return res.status(201).json({ success: true, message: 'Product added successfully', product: savedProduct });
+        res.redirect('/admin/allProduct');
     } catch (error) {
         console.log('Error adding product:', error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+
+
+
+
 
 //to load edit product page
 const loadEditProduct = async (req, res) => {
@@ -101,12 +126,12 @@ const editProduct = async (req, res) => {
         console.log('Details:', details);
         console.log('Files:', files);
 
-        
+
         if (files && files.length >= 4) {
             console.log('Images provided, updating images...');
             const imgPath = files.map(file => file.filename);
-            details.images = imgPath; 
-            console.log('imgPath',details.images);
+            details.images = imgPath;
+            console.log('imgPath', details.images);
         } else {
             console.log('No images provided or less than 4 images, skipping image update.');
             // Remove images field from details object
@@ -151,11 +176,112 @@ const blockProduct = async (req, res) => {
     }
 }
 
+
+const lowhigh = async (req, res) => {
+    try {
+        console.log('loading low-high filtering');
+        const userId = req.session.user_id
+        console.log('userID', userId);
+
+        const userData = await User.findOne({ _id: userId })
+        console.log('userData', userData);
+
+        const products = await Product.find().sort({ price: 1 })
+        res.render('users/userhome', { products: products, user: userData })
+
+    } catch {
+        console.log('error loading low-high filtering');
+        console.log(error);
+    }
+}
+
+const highlow = async (req, res) => {
+    try {
+        console.log('loading low-high filtering');
+        const userId = req.session.user_id
+        console.log('userID', userId);
+
+        const userData = await User.findOne({ _id: userId })
+        console.log('userData', userData);
+
+        const products = await Product.find().sort({ price: -1 })
+        res.render('users/userhome', { products: products, user: userData })
+
+    } catch (error) {
+        console.log('error loading high-low filtering');
+        console.log(error);
+    }
+}
+
+const AToZ = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        console.log('suerId',userId);
+        const userData = await User.findOne({ _id: userId });
+        console.log('userData',userData);
+        let products = await Product.aggregate([
+            {
+                $addFields: {
+                    lowerCaseName: { $toLower: "$productName" }
+                }
+            },
+            {
+                $sort: {
+                    lowerCaseName: 1
+                }
+            },
+            {
+                $project: {
+                    lowerCaseName: 0
+                }
+            }
+        ]);
+        res.render('users/userhome', { products: products, user: userData });
+    } catch (error) {
+        console.log('Error sorting A-Z:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const ZToA = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        console.log('suerId',userId);
+        const userData = await User.findOne({ _id: userId });
+        console.log('userData',userData);
+        let products = await Product.aggregate([
+            {
+                $addFields: {
+                    lowerCaseName: { $toLower: "$productName" }
+                }
+            },
+            {
+                $sort: {
+                    lowerCaseName: -1
+                }
+            },
+            {
+                $project: {
+                    lowerCaseName: 0
+                }
+            }
+        ]);
+        res.render('users/userhome', { products: products, user: userData });
+    } catch (error) {
+        console.log('Error sorting A-Z:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 module.exports = {
     loadProduct,
     loadAddProduct,
     addProduct,
     loadEditProduct,
     editProduct,
-    blockProduct
+    blockProduct,
+    lowhigh,
+    highlow,
+    AToZ,
+    ZToA
 }

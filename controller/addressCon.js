@@ -12,9 +12,9 @@ const loadAddressPage=async(req,res)=>{
     try {
         const id=req.session.user_id
         const user=await User.findById({_id:id})
-        console.log(user);
+     
         const address=await Address.find({userId:id})
-        console.log(address);
+      
        
         res.render('users/alladdress',{user:user,address:address})
     } catch (error) {
@@ -95,19 +95,13 @@ const loadEditAddress = async (req, res) => {
 
 const editAddress = async (req, res) => {
     try {
-        console.log('editing start');
+        
         const id = req.session.user_id;
-        console.log('id',id);
         const user = await User.findById(id);
-        console.log('user',user); 
         const _id=req.body.id
-        console.log('_id',_id);
         const address=await Address.findOne({_id:_id})
-        console.log('address',address);
         const details = req.body;
-        console.log('details',details);
 
-    
         const updateFields = {
             name: details.name,
             mobile: details.mobile,
@@ -135,12 +129,44 @@ const editAddress = async (req, res) => {
 };
 
 
+const deleteAddress = async (req, res) => {
+    try {
+        console.log('deleting starts here');
+        const id = req.session.user_id;
+        console.log('id', id);
+
+        // Retrieve the ID from URL parameters
+        const addressId = req.query.id;
+        console.log('addressId', addressId);
+
+        // Find the user and check if the user exists
+        const user = await User.findById(id);
+        console.log('user', user); 
+
+        // Find the address to delete
+        const address = await Address.findOne({_id: addressId});
+        console.log('address', address);
+
+        // If address exists, delete it
+        if (address) {
+            await Address.deleteOne({_id: addressId});
+            res.redirect('/alladdress');
+        } else {
+            console.log('Address not found');
+            res.redirect('/alladdress');
+        }
+    } catch (error) {
+        console.log('Error deleting the address:', error);
+        res.redirect('/alladdress');
+    }
+}
+
 module.exports={
     loadAddressPage,
     loadAddAddress,
     addAddress,
     loadEditAddress,
-    editAddress
+    editAddress,
+    deleteAddress
     
 }
-
