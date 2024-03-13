@@ -6,11 +6,11 @@ const Category = require('../model/categoryModel')
 const fs = require('fs')
 const path = require('path')
 const { log } = require('console')
-const sharp = require('sharp');
+
 
 
 //to load the products
-const loadProduct = async (req, res) => {
+const   loadProduct = async (req, res) => {
     try {
         const products = await Product.find({}).populate('categoryId')
         res.render('allProduct', { products })
@@ -36,40 +36,16 @@ const addProduct = async (req, res) => {
     try {
         console.log('Product adding started');
         const details = req.body;
+        console.log('details',details);
         const files = req.files;
-
+        console.log('files',files);
         if (!files || files.length < 4) {
             return res.status(400).json({ success: false, message: 'Please select at least 4 images' });
         }
 
-        const resizedImages = [];  // Array to store resized buffers
-
-        for (const file of files) {
-            try {
-                const mimeType = mime.getType(file.originalname);  // Check file type
-                if (!mimeType.startsWith('image/')) {
-                    throw new Error(`${file.originalname} is not a valid image file.`);
-                }
-
-                const resizedImageBuffer = await sharp(file.buffer)
-                    .resize({ width: 200 })  // Set desired width
-                    .extract({ width: 100, height: 100 }) // Try resizing a smaller portion first (optional)
-                    .toBuffer();
-
-                resizedImages.push(resizedImageBuffer);
-            } catch (error) {
-                console.log(`Error resizing image ${file.originalname}:`, error);
-                console.log('Error details:', error.message, error.code);  // Log additional details
-                return res.status(400).json({ success: false, message: `Error resizing image ${file.originalname}: ${error.message}` });
-            }
-        }
-
-        // Continue with product creation
-        // Use resizedImages array or original files based on your needs
-
+    
         const images = files.map(file => file.filename);
-        // OR
-        // const images = resizedImages;  // If using resized buffers
+       
 
         const product = new Product({
             productName: details.productName,
@@ -77,13 +53,15 @@ const addProduct = async (req, res) => {
             quantity: details.quantity,
             color: details.color,
             images: images,
-            size: details.size,
+            // size: details.size,
             categoryId: details.categoryId,
-            description: details.description
+            description: details.formdescription
         });
 
         const savedProduct = await product.save();
-        res.redirect('/admin/allProduct');
+
+      res.json({success:true})
+
     } catch (error) {
         console.log('Error adding product:', error);
         return res.status(500).json({ success: false, message: 'Internal server error' });

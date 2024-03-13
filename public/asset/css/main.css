@@ -4279,6 +4279,15 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
     padding: 5px 4px;
   }
 }
+.image-upload-container{
+
+  width:225px;
+  padding-left: 50px;
+  
+}
+.close-icon{
+  padding-left: 180px;
+}
 
 @media all and (max-width: 480px) {
   .table-responsive table {

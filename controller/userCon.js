@@ -377,11 +377,16 @@ const allProducts = async (req, res) => {
 const loadProductDetails=async(req,res)=>{
     try {
         const id=req.params.id
-
+    const users=req.session.user_id
+    
+    console.log(users);
+     const user=await User.findOne({_id:users})
+     console.log(user);
         const proData = await Product.findById({_id:id})
+
    console.log('proData',proData);
         if(proData){
-            res.render('users/productDetails',{product:proData})
+            res.render('users/productDetail',{product:proData})
         }
 
 

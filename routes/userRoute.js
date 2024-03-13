@@ -69,10 +69,11 @@ userRoute.get('/deleteaddress',addressController.deleteAddress)
 
 
 
-//all cart detailed
-userRoute.get('/cart',auth.isLogin,cartController.loadCartPage)
-userRoute.post('/addtocart',cartController.addToCart)
-userRoute.patch('/removecart',cartController.removeProduct)
+
+//cart
+userRoute.get('/cart',auth.isLogin,cartController.loadCartPage);
+userRoute.post('/addToCart',cartController.addProductsToCart);
+userRoute.patch('/removeFromCart',cartController.removeProduct);
 
 
 

@@ -1,132 +1,125 @@
-<%- include('../layouts/userHeader') %>
-
 <!doctype html>
 <html>
 
 <head>
     <br><br>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Royal Oak</title>
-    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'>
   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+   
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
-
+    
         body {
             background-color: #eee;
             font-family: "Poppins", sans-serif
         }
-
+    
         .card {
             background-color: #fff;
             padding: 14px;
             border: none
         }
-
+    
         #lightSlider li {}
-
+    
         .demo {
             width: 100%
         }
-
+    
         ul {
             list-style: none outside none;
             padding-left: 0;
             margin-bottom: 0
         }
-
+    
         li {
             display: block;
             float: left;
             margin-right: 6px;
             cursor: pointer
         }
-
+    
         img {
             display: block;
             height: auto;
             width: 100%
         }
-
+    
         .stars i {
             color: #f6d151
         }
-
+    
         .stars span {
             font-size: 13px
         }
-
+    
         hr {
             color: #d4d4d4
         }
-
+    
         .badge {
             padding: 5px !important;
             padding-bottom: 6px !important
         }
-
+    
         .badge i {
             font-size: 10px
         }
-
+    
         .profile-image {
             width: 35px
         }
-
+    
         .comment-ratings i {
             font-size: 13px
         }
-
+    
         .username {
             font-size: 12px
         }
-
+    
         .comment-profile {
             line-height: 17px
         }
-
+    
         .date span {
             font-size: 12px
         }
-
+    
         .p-ratings i {
             color: #f6d151;
             font-size: 12px
         }
-
+    
         .btn-long {
             padding-left: 35px;
             padding-right: 35px
         }
-
+    
         .buttons {
             margin-top: 15px
         }
-
+    
         .buttons .btn {
             height: 46px
         }
-
+    
         .buttons .cart {
             border-color: #ff7676;
             color: #ff7676
         }
-
+    
         .buttons .cart:hover {
             background-color: #e86464 !important;
             color: #fff
         }
-
+    
         .buttons .buy {
             color: #fff;
             background-color: #ff7676;
             border-color: #ff7676
         }
-
+    
         .buttons .buy:focus,
         .buy:active {
             color: #fff;
@@ -134,45 +127,45 @@
             border-color: #ff7676;
             box-shadow: none
         }
-
+    
         .buttons .buy:hover {
             color: #fff;
             background-color: #e86464;
             border-color: #e86464
         }
-
+    
         .buttons .wishlist {
             background-color: #fff;
             border-color: #ff7676
         }
-
+    
         .buttons .wishlist:hover {
             background-color: #e86464;
             border-color: #e86464;
             color: #fff
         }
-
+    
         .buttons .wishlist:hover i {
             color: #fff
         }
-
+    
         .buttons .wishlist i {
             color: #ff7676
         }
-
+    
         .comment-ratings i {
             color: #f6d151
         }
-
+    
         .followers {
             font-size: 9px;
             color: #d6d4d4
         }
-
+    
         .store-image {
             width: 42px
         }
-
+    
         .dot {
             height: 10px;
             width: 10px;
@@ -181,20 +174,20 @@
             display: inline-block;
             margin-right: 5px
         }
-
+    
         .bullet-text {
             font-size: 12px
         }
-
+    
         .my-color {
             margin-top: 10px;
             margin-bottom: 10px
         }
-
+    
         label.radio {
             cursor: pointer
         }
-
+    
         label.radio input {
             position: absolute;
             top: 0;
@@ -202,7 +195,7 @@
             visibility: hidden;
             pointer-events: none
         }
-
+    
         label.radio span {
             border: 2px solid #8f37aa;
             display: inline-block;
@@ -213,32 +206,32 @@
             text-transform: uppercase;
             transition: 0.5s all
         }
-
+    
         label.radio .red {
             background-color: red;
             border-color: red
         }
-
+    
         label.radio .blue {
             background-color: blue;
             border-color: blue
         }
-
+    
         label.radio .green {
             background-color: green;
             border-color: green
         }
-
+    
         label.radio .orange {
             background-color: orange;
             border-color: orange
         }
-
+    
         label.radio input:checked+span {
             color: #fff;
             position: relative
         }
-
+    
         label.radio input:checked+span::before {
             opacity: 1;
             content: '\2713';
@@ -247,23 +240,22 @@
             font-weight: bold;
             left: 4px
         }
-
+    
         .card-body {
             padding: 0.3rem 0.3rem 0.2rem
         }
         .card .demo .single-img {
     overflow: hidden; /* Prevent image overflow */
-}
-
-.card .demo .single-img:hover img {
+    }
+    
+    .card .demo .single-img:hover img {
     transform: scale(1.2); /* Zoom on hover */
     transition: transform 0.3s ease-in-out; /* Smooth transition */
-}
-
+    }
+    
     </style>
-
 </head>
-
+<%- include('../layouts/userHeader') %>
 <br><br>
 
 <nav aria-label="breadcrumb">
@@ -279,7 +271,7 @@
     <div class="container-fluid mt-2 mb-3">
         <div class="row no-gutters">
             <div class="col-md-5 pr-2">
-               
+             
                 <div class="card">
                     <div class="demo">
                         <ul id="lightSlider">
@@ -341,17 +333,19 @@
                     </div>
                     <div class="about"> <span class="font-weight-bold">Royal Oak MInimalist Collection</span><br>
                         <!-- <h4 class="font-weight-bold">$3,444</h4> -->
-                       <h4><span class="sale-price">₹<%= product.price %></span></h4>
+                       <h4><span id="price"  value="<%= product.price %>"  class="sale-price">₹<%= product.price %></span></h4>
                     </div>
-                    <button class="btn btn-outline-warning btn-long cart">Add to Cart</button>
-                        <button class="btn btn-warning btn-long buy">Buy it Now</button> <button
-                            class="btn btn-light wishlist"> <i class="fa fa-heart"></i> </button> </div>
+             <input type="hidden"  id="productId" name="" value="<%=product._id%>">
+
+                    <div class="buttons" > <button id="addToCart" class="btn btn-outline-warning btn-long cart" value="<%=product._id%>">Add to Cart</button><%=product._id%>
+                        <!-- <button class="btn btn-warning btn-long buy">Buy it Now</button> <button
+                            class="btn btn-light wishlist"> <i class="fa fa-heart"></i> </button> </div> -->
                     <hr>
                     <div class="product-description">
                         
                                     <div>
                                         <span class="font-weight-bold">Color:</span>
-                                        <span class="value"><%= product.color %></span>
+                                        <span id="<%= product.color %>" class="value"><%= product.color %></span>
                                         <span></span>
                                     </div>
                                     <div class="my-color">
@@ -385,23 +379,23 @@
                                 <span class="label">Stock:</span>
                                 <% if(product.quantity > 3) { %>
                                     <span class="value text-success">Available <%= product.quantity %> Quantity</span>
-                                <% } else if(product.quantity > 0) { %>
+                                <% } else if(product.quantity > 1) { %>
                                     <span class="value text-danger">Hurry! Only <%= product.quantity %> left</span>
-                                <% } else if(product.quantity == 0) { %>
+                                <% } else if(product.quantity == 1) { %>
                                     <span class="value text-danger">Sold Out</span>
                                 <% } else { %>
                                     <span class="value text-danger">Sold Out</span>
                                 <% } %>
                                 
-                                <!-- Quantity selector -->
-                                <!-- <div class="input-group" style="margin-top: 5px; width: 100px;">
-                                    <button class="btn btn-outline-secondary btn-sm" type="button" id="subtractQuantity" style="width: 20px; height: 30px;">-</button>
-                                    <input type="text" class="form-control form-control-sm" id="quantity" name="quantity" value="1" readonly style="width: 60px;">
-                                    <button class="btn btn-outline-secondary btn-sm" type="button" id="addQuantity" style="width: 20px; height: 30px;">+</button>
-                                </div>
-                                 -->
+                               
+                                
                             </h4>
-                            
+                            <div style="display: flex; align-items: center;">
+                                <button style="padding: 8px 8px; cursor: pointer;" id="subtractQuantity">-</button>
+                                <input type="number" style="width: 50px; text-align: center;" id="items" value="1" min="1">
+                                <button style="padding: 5px 8px; cursor: pointer;" id="addQuantity">+</button>
+                            </div>
+                        
                             
                             
                                 </div>
@@ -448,6 +442,9 @@
     <script type='text/javascript' src=''></script>
     <script type='text/javascript' src=''></script>
     <script type='text/Javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" 
+    integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $('#lightSlider').lightSlider({
             gallery: true,
@@ -459,10 +456,10 @@
     </script>
     <script>
         // Get the quantity input field and buttons
-        var quantityInput = document.getElementById('quantity');
+        var quantityInput = document.getElementById('items');   
         var subtractButton = document.getElementById('subtractQuantity');
         var addButton = document.getElementById('addQuantity');
-        var maxStock = "<%= product.quantity %>"; // Maximum stock value
+        var maxStock = "<%= product.quantity %>"; 
 
     
         // Event listener for subtract button
@@ -470,6 +467,7 @@
             var currentValue = parseInt(quantityInput.value);
             if (currentValue > 1) { // Ensure quantity doesn't go below 1
                 quantityInput.value = currentValue - 1;
+
             }
         });
     
@@ -480,107 +478,57 @@
                 quantityInput.value = currentValue + 1;
             }
         });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded',function(){
+      const addcartBtn = document.getElementById('addToCart')
+    
+      const productId= document.getElementById('productId').value
+            console.log(productId);
+      
+      addcartBtn.addEventListener('click',function(){
+        const price=document.getElementById('price').value
+            console.log(price);
+
+        const quantity=document.getElementById('items').value
+             console.log("quantity",quantity);
+
         
 
-</script>
-<script>
-    $(document).ready(function() {
-        let count = 1; // Define the count variable here
-
-        // Attach click event listener to the "Add to Cart" button
-        $('.cart').click(function(event) {
-            event.preventDefault();
-
-            // Get product details
-            var productId = "<%= product._id %>";
-            var quantity = parseInt($('#quantity').val());
-
-            // Prepare data to send to the backend
-            var data = {
-                productId: productId,
-                quantity: quantity,
-                count: count // Include the count variable here
-            };
-
-            // Send a POST request to the backend to add the product to the cart
-            fetch('/addtocart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                // Check if the request was successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Redirect the user to the cart page
-                window.location.href = '/cart';
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-                // Handle errors here, e.g., show an alert to the user
-                alert('There was a problem adding the product to the cart. Please try again later.');
+        axios.post('/addToCart',{productId,price,quantity})
+        .then(res=>{
+            console.log('success');
+            console.log(res);
+          
+            if (!res.data.success) {
+            // Use SweetAlert for existing product notification
+            swal({
+                title: "Already in Cart!",
+                text: "The product is already in your cart.",
+                icon: "warning",
+                button: "OK",
             });
-        });
-    });
-</script>
-
-<!-- <script>
-    $(document).ready(function() {
-    // Attach click event listener to the "Add to Cart" button
-    $('.cart').click(function(event) {
-        event.preventDefault();
-        // Redirect the user to the "/cart" route
-        window.location.href = '/cart';
-    });
-});
-    $(document).ready(function() {
-    let count=1
-        // Attach click event listener to the "Add to Cart" button
-        $('.cart').click(function(event) {
-            event.preventDefault();
-
-            // Get product details
-            var productId = "<%= product._id %>";
-            var quantity = parseInt($('#quantity').val());
-
-            // Prepare data to send to the backend
-            var data = {
-                productId: productId,
-                quantity: quantity
-            };
-
-            // Send a POST request to the backend to add the product to the cart
-            fetch('/addtocart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                // Check if the request was successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Redirect the user to the cart page
-                window.location.href = '/cart';
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-                // Handle errors here, e.g., show an alert to the user
-                alert('There was a problem adding the product to the cart. Please try again later.');
+        } else {
+            // Use SweetAlert for successfully added product notification
+            swal({
+                title: "Added to Cart!",
+                text: "The product has been successfully added to your cart.",
+                icon: "success",
+                button: "OK",
             });
-        });
-    });
-</script> -->
+        }
+        })
 
 
-   
+        .catch(err=>{
+            console.log('error in cartaxios',err);
+        })
+
+      })
+    })
+</script>
     
 </body>
 <%- include('../layouts/userFooter') %>
 </html>
-
