@@ -1,63 +1,38 @@
+const User=require('../model/userModel')
 const Cart = require('../model/cartModel');
 const Products = require('../model/productModel');
-const mongoose=require('mongoose')
+const Address=require('../model/addressModel')
+const mongoose = require('mongoose')
+
+
+
 
 const loadCartPage = async (req, res) => {
     try {
         console.log('cart loading page');
         const user = req.session.user_id;
-        console.log('user',user);
+        console.log('user', user);
         const populateOption = {
             path: 'product.productId',
             model: 'Product'
         }
-        const cartDetails=await Cart.find({userId:user}).populate('product.productId')
-      console.log("cartDetails",cartDetails);
-     
-        let  data = [];
+        const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
+        console.log("cartDetails", cartDetails);
 
-//        const cartDetails= await  Cart.aggregate([
-        
-//         {$lookup:{
+        let total = 0;
 
-//             from:'products',
-//             localField:'product.productId',
-//             foreignField:'_id',
-//             as:'product'
-//         },
+        cartDetails.forEach(item => {
 
-//     }, 
-//     {
-//         $unwind:{
-//             path:'$product',
-//             preserveNullAndEmptyArrays: true
-//         }
-//     },
-
-//     {
-//         $project:{
-//             productName:"$product.productName",
-//             images:"$product.images",
-//             quantity:1,
-//             price: "$product.price",
-//             _id:1,
-          
-
-//         }
-//     },
-
-// ])
-       
-
-    
-        let total = 1000
+            total += item.product.totalPrice;
+        });
 
         console.log('Total:', total);
 
         // Get the count of products
         const productsCount = cartDetails.length;
 
-        res.render('users/cart', { user, cartDetails: cartDetails, subTotal: total, productsCount });
+        // res.render('users/cart', { user, cartDetails: cartDetails, subTotal: total, productsCount });
+        res.render('users/newCart', { user, cartDetails: cartDetails, subTotal: total, productsCount })
     } catch (error) {
         console.log(error.message);
         res.status(500).render('users/error')
@@ -69,15 +44,16 @@ const loadCartPage = async (req, res) => {
 const addProductsToCart = async (req, res) => {
     try {
         console.log('cart adding starts here');
-            console.log(req.body);
+        console.log(req.body);
         const { productId, quantity, price } = req.body;
-        console.log(` productId ${productId}, quantity ${quantity}, price ${price} `);
+        console.log(` productId ${productId},  `);
         const userId = req.session.user_id;
         console.log(userId);
         const existingProduct = await Cart.findOne({ userId: userId, 'product.productId': productId }, { 'product.$': 1 });
         console.log('existingProduct:', existingProduct);
 
         if (existingProduct) {
+
             return res.json({ success: false })
         }
 
@@ -85,22 +61,20 @@ const addProductsToCart = async (req, res) => {
         const totalProductStock = await Products.findOne({ _id: productId }, { quantity: 1 });
         // console.log('totalProductStock:',totalProductStock);
         if (totalProductStock.quantity == 0) {
-            return res.json({ addedToCart: 'the product is out of stock' })
+            return res.json({ outOfStock: true })
         }
-
-
-
         console.log('ok, reached new cart method!!!!!1');
         const productDetails = await Products.findOne({ _id: productId });
+        const tp = productDetails.price * quantity;
+        console.log('tp', tp);
 
-        
         const save = await Cart.insertMany([{
             userId: userId,
             product: {
                 productId: productDetails._id,
                 price: productDetails.price,
-                quantity: quantity,
-                totalPrice: productDetails.price 
+                quantity: 1,
+                totalPrice: productDetails.price
             }
         }]);
         console.log('save', save);
@@ -109,19 +83,40 @@ const addProductsToCart = async (req, res) => {
         res.json({ addedNew: true, success: true })
 
 
-
-
     } catch (error) {
         console.log(error.message);
         res.status(500).render('users/error')
     }
 }
 
+const updateCart = async (req, res) => {
+    try {
+        console.log('starting cart editing updating here onwards');
+        const { productId, quantity, cartId } = req.body
+        console.log(`productId ${productId} quantity ${quantity} cartId ${cartId} `);
 
+        const userId = req.session.user_id
+        console.log('userId', userId);
+        const productDetails = await Products.findOne({ _id: productId });
+        const tp = productDetails.price * quantity;
+        console.log('tp', tp);
+        // const cartItem = await Cart.find({userId:userId}).populate('product.product_id')
+        const  cartItem=await Cart.updateOne({userId:userId,'product.productId':productId},
+        {$set:{'product.quantity':quantity,'product.totalPrice':tp}})
+        console.log('cartItem', cartItem);
+        if (!cartItem) {
+            return res.status(404).json({ success: false, message: "Cart item not found" });
+        }
+        res.json({ success: true })
+    } catch (error) {
+        console.log('error in updating cart product item details');
+        console.log(error);
+    }
+}
 
 const removeProduct = async (req, res) => {
     try {
-        console.log(':::::::reached delete product!!!::::::::::::');
+        console.log('delete starts from here');
 
         console.log(req.body);
         const { productId } = req.body;
@@ -130,10 +125,10 @@ const removeProduct = async (req, res) => {
         console.log(user);
 
         // Remove the product from the cart
-        const updatedCart = await Cart.deleteOne({_id: productId });
-        console.log('updated',updatedCart);
-        let cart=await Cart.find({userId:user})
-        console.log('updated cart',cart);
+        const updatedCart = await Cart.deleteOne({ _id: productId });
+        console.log('updated', updatedCart);
+        let cart = await Cart.find({ userId: user })
+        console.log('updated cart', cart);
 
         res.json({ removed: true });
     } catch (error) {
@@ -142,8 +137,46 @@ const removeProduct = async (req, res) => {
     }
 }
 
+
+const loadCheckoutPage=async(req,res)=>{
+    try {
+        console.log('entering the checkout page');
+
+        const userId=req.session.user_id
+        console.log('userid',userId);
+
+        const user= await User.findOne({_id:userId})
+        console.log('user',user);
+
+        const address= await Address.find({userId:userId})
+        console.log('address',address);
+        
+        const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
+        console.log("cartDetails", cartDetails);
+
+        
+        let total = 0;
+
+        cartDetails.forEach(item => {
+
+            total += item.product.totalPrice;
+        });
+
+        console.log('Total:', total);
+
+
+        res.render('users/checkout' ,{address:address,user:userId,address:address, cartDetails:cartDetails ,subTotal: total} )
+    } catch (error) {
+        console.log('error rendering checkoutpage');
+        console.log(error);
+    }
+}
 module.exports = {
     loadCartPage,
     addProductsToCart,
-    removeProduct
+    removeProduct,
+    updateCart,
+
+
+    loadCheckoutPage
 }

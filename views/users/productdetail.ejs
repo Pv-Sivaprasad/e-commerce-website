@@ -337,7 +337,7 @@
                     </div>
              <input type="hidden"  id="productId" name="" value="<%=product._id%>">
 
-                    <div class="buttons" > <button id="addToCart" class="btn btn-outline-warning btn-long cart" value="<%=product._id%>">Add to Cart</button><%=product._id%>
+                    <div class="buttons" > <button id="addToCart" class="btn btn-outline-warning btn-long cart" value="<%=product._id%>">Add to Cart</button>
                         <!-- <button class="btn btn-warning btn-long buy">Buy it Now</button> <button
                             class="btn btn-light wishlist"> <i class="fa fa-heart"></i> </button> </div> -->
                     <hr>
@@ -390,11 +390,11 @@
                                
                                 
                             </h4>
-                            <div style="display: flex; align-items: center;">
+                            <!-- <div style="display: flex; align-items: center;">
                                 <button style="padding: 8px 8px; cursor: pointer;" id="subtractQuantity">-</button>
                                 <input type="number" style="width: 50px; text-align: center;" id="items" value="1" min="1">
                                 <button style="padding: 5px 8px; cursor: pointer;" id="addQuantity">+</button>
-                            </div>
+                            </div> -->
                         
                             
                             
@@ -454,31 +454,7 @@
             thumbItem: 6
         });
     </script>
-    <script>
-        // Get the quantity input field and buttons
-        var quantityInput = document.getElementById('items');   
-        var subtractButton = document.getElementById('subtractQuantity');
-        var addButton = document.getElementById('addQuantity');
-        var maxStock = "<%= product.quantity %>"; 
-
-    
-        // Event listener for subtract button
-        subtractButton.addEventListener('click', function() {
-            var currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) { // Ensure quantity doesn't go below 1
-                quantityInput.value = currentValue - 1;
-
-            }
-        });
-    
-        // Event listener for add button
-        addButton.addEventListener('click', function() {
-            var currentValue = parseInt(quantityInput.value);
-            if (currentValue < maxStock) { // Ensure quantity doesn't exceed max stock
-                quantityInput.value = currentValue + 1;
-            }
-        });
-    </script>
+   
 
 <script>
     document.addEventListener('DOMContentLoaded',function(){
@@ -491,39 +467,44 @@
         const price=document.getElementById('price').value
             console.log(price);
 
-        const quantity=document.getElementById('items').value
-             console.log("quantity",quantity);
-
+    
         
 
-        axios.post('/addToCart',{productId,price,quantity})
-        .then(res=>{
-            console.log('success');
-            console.log(res);
-          
-            if (!res.data.success) {
-            // Use SweetAlert for existing product notification
-            swal({
-                title: "Already in Cart!",
-                text: "The product is already in your cart.",
-                icon: "warning",
-                button: "OK",
-            });
-        } else {
-            // Use SweetAlert for successfully added product notification
+      
+        axios.post('/addToCart', { productId, price })
+    .then(res => {
+        console.log('success');
+        console.log(res);
+
+        if (res.data.success) {
+            // Product successfully added to cart
             swal({
                 title: "Added to Cart!",
                 text: "The product has been successfully added to your cart.",
                 icon: "success",
                 button: "OK",
             });
+        } else if (res.data.addedToCart) {
+            // Product already in cart
+            swal({
+                title: "Already in Cart!",
+                text: "The product is already in your cart.",
+                icon: "warning",
+                button: "OK",
+            });
+        } else if (res.data.outOfStock) {
+            // Product out of stock
+            swal({
+                title: "Out Of Stock!",
+                text: "The product is out of stock. Sorry for the inconvenience.",
+                icon: "warning",
+                button: "OK",
+            });
         }
-        })
-
-
-        .catch(err=>{
-            console.log('error in cartaxios',err);
-        })
+    })
+    .catch(err => {
+        console.log('error in cart axios', err);
+    });
 
       })
     })

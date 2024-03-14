@@ -74,7 +74,12 @@ userRoute.get('/deleteaddress',addressController.deleteAddress)
 userRoute.get('/cart',auth.isLogin,cartController.loadCartPage);
 userRoute.post('/addToCart',cartController.addProductsToCart);
 userRoute.patch('/removeFromCart',cartController.removeProduct);
+userRoute.patch('/updateCart',cartController.updateCart);
 
+
+//checkout
+userRoute.get('/checkout',auth.isLogin,cartController.loadCheckoutPage)
+userRoute.post('/checkaddress',auth.isLogin,addressController.checkoutAddAddress)
 
 
 

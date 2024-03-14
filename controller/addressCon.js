@@ -11,7 +11,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const loadAddressPage=async(req,res)=>{
     try {
         const id=req.session.user_id
-        const user=await User.findById({_id:id})
+        const user=await User.findById({_id:id})  
      
         const address=await Address.find({userId:id})
       
@@ -57,7 +57,7 @@ const addAddress = async (req, res) => {
 
         const savedAddress = await address.save();
 
-        res.redirect('/alladdress');
+        res.json({success:true})
 
     } catch (error) {
         console.log('Error adding address');
@@ -161,12 +161,72 @@ const deleteAddress = async (req, res) => {
     }
 }
 
+// const checkoutAddAddress=async(req,res)=>{
+//     try {
+//             console.log(req.body);
+//         const details = req.body;
+//        console.log('details',details);
+
+//         const address = new Address({
+//             name: details.name,
+//             mobile: details.mobile,
+//             pincode: details.pincode,
+//             locality: details.locality,
+//             streetAddress: details.streetAddress,
+//             city: details.city,
+//             state: details.state,
+//             landmark: details.landmark,
+//             alterPhone: details.alterPhone,
+//             addressType: details.addressType,
+//             userId:req.session.user_id
+//         });
+
+//         const savedAddress = await address.save();
+
+//         res.json({success:true})
+//     } catch (error) {
+//         console.log('checkout address adding issue');
+//         console.log(error);
+//     }
+// }
+const checkoutAddAddress = async (req, res) => {
+    try {
+        console.log(req.body);
+        const details = req.body; 
+            console.log(details);
+        const address = new Address({
+            name: details.name,
+            mobile: details.mobile,
+            pincode: details.pincode,
+            locality: details.locality,
+            streetAddress: details.streetAddress,
+            city: details.city,
+            state: details.state,
+            landmark: details.landmark,
+            alterPhone: details.alterPhone,
+            addressType: details.addressType,
+            userId: req.session.user_id // Assuming you're using session-based authentication
+        });
+
+        const savedAddress = await address.save(); // Save the address to the database
+             console.log(savedAddress);
+        res.json({ success: true }); // Send a success response
+    } catch (error) {
+        console.log('checkout address adding issue');
+        console.log(error);
+        res.status(500).json({ success: false}); // Send an error response
+    }
+}
+
 module.exports={
     loadAddressPage,
     loadAddAddress,
     addAddress,
     loadEditAddress,
     editAddress,
-    deleteAddress
+    deleteAddress,
+
+
+    checkoutAddAddress
     
 }

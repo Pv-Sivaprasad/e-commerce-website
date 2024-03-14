@@ -1,4 +1,5 @@
 <%- include('../layouts/header.ejs') %> 
+<br><br>
 <header class="main_menu home_menu">
   <div class="container">
       <div class="row align-items-center">
@@ -65,11 +66,7 @@
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <i class="fas fa-cart-plus"></i>
                           </a>
-                          <!-- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <div class="single_product">
-
-                              </div>
-                          </div> -->
+                        
                           
                       </div>
                   </div>
@@ -100,7 +97,7 @@
               <input type="text" class="form-control" name="name" placeholder="Name"
                required pattern="^[A-Za-z][A-Za-z\s]*[A-Za-z]$">
           </div>
-          <br><br>
+        
           <div class="mb-3">
               <label for="email" class="form-label">Email:</label>
               <br>
@@ -108,7 +105,7 @@
               pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
 
           </div>
-          <br><br>
+        
           <div class="mb-3">
               <label for="mobile" class="form-label">Mobile:</label>
               <br>
@@ -116,28 +113,28 @@
               required pattern="[0-9]{10}">
           </div>
          
-          <br><br>
+       
           <div class="mb-3">
               <label for="password" class="form-label">Password:</label>
               <br>
               <input type="password" class="form-control" name="password" 
               placeholder="Enter Password" required >
           </div>
-          <br><br>
+         
           <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirm Password:</label>
               <br>
               <input type="password" class="form-control" name="confirmPassword" 
               placeholder="Confirm Password" required >
           </div>
-          <br><br>
+     
           
           
-          <br><br>
+     
           <div class="mb-3">
               <input type="submit" onclick="submitFormAndRedirectToOTP()" class="btn btn-success" value="Register">
           </div>
-          <br><br>
+     
       </form>
       
         <a href="/login"><input type="button" value="Back To Login" class="btn btn-primary"></a>

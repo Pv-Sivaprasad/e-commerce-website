@@ -32,7 +32,7 @@ const addressSchema = new mongoose.Schema({
         required: true
     },
     landmark: String,
-    alterPhone: String,
+    alterPhone: String,  
     addressType: {
         type: String,
         required: true
