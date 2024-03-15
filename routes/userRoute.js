@@ -5,6 +5,7 @@ const userController = require('../controller/userCon');
 const addressController=require('../controller/addressCon')
 const productController=require('../controller/productCon')
 const cartController=require('../controller/cartCon')
+const orderController=require('../controller/orderCon')
 const config = require('../config/config')
 const auth = require('../middleware/userAuth')   
 const sharp = require('sharp');
@@ -61,26 +62,27 @@ userRoute.get('/ZToA',productController.ZToA)
 
 // all address related add,delete ,edit
 userRoute.get('/alladdress',auth.isLogin,addressController.loadAddressPage)
-userRoute.get('/addaddress',addressController.loadAddAddress)
-userRoute.post('/addaddress',addressController.addAddress)
-userRoute.get('/editaddress', addressController.loadEditAddress);
-userRoute.post('/editaddress',addressController.editAddress)
-userRoute.get('/deleteaddress',addressController.deleteAddress)
+userRoute.get('/addaddress',auth.isLogin,addressController.loadAddAddress)
+userRoute.post('/addaddress',auth.isLogin,addressController.addAddress)
+userRoute.get('/editaddress', auth.isLogin,addressController.loadEditAddress);
+userRoute.post('/editaddress',auth.isLogin,addressController.editAddress)
+userRoute.get('/deleteaddress',auth.isLogin,addressController.deleteAddress)
 
 
 
 
 //cart
 userRoute.get('/cart',auth.isLogin,cartController.loadCartPage);
-userRoute.post('/addToCart',cartController.addProductsToCart);
-userRoute.patch('/removeFromCart',cartController.removeProduct);
-userRoute.patch('/updateCart',cartController.updateCart);
+userRoute.post('/addToCart',auth.isLogin,cartController.addProductsToCart);
+userRoute.patch('/removeFromCart',auth.isLogin,cartController.removeProduct);
+userRoute.patch('/updateCart',auth.isLogin,cartController.updateCart);
 
 
 //checkout
 userRoute.get('/checkout',auth.isLogin,cartController.loadCheckoutPage)
 userRoute.post('/checkaddress',auth.isLogin,addressController.checkoutAddAddress)
-
+userRoute.get('/ordersuccess',auth.isLogin,cartController.orderSuccess)
+userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 
 
 

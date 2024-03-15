@@ -102,3 +102,7 @@
         })   
     }
 </script>
+
+
+
+<th class="text-right"><%= subTotal %></th>

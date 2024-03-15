@@ -53,7 +53,7 @@ adminRoute.post('/allProduct',productController.loadProduct)
 adminRoute.get('/addProduct',productController.loadAddProduct)
 adminRoute.post('/addproduct', upload.array('cropImages', 4), productController.addProduct);
 adminRoute.get('/editProduct',productController.loadEditProduct)
-adminRoute.post('/editProduct',upload.array('images', 4),productController.editProduct)
+adminRoute.post('/editProduct',upload.array('cropImages', 4),productController.editProduct)
 adminRoute.patch('/blockProduct/:productId', productController.blockProduct);
 
 

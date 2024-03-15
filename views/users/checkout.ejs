@@ -15,6 +15,8 @@
                 <div class="card">
                     <div class="card-body">
                         <ol class="activity-checkout mb-0 px-4 mt-3">
+
+                            <!-- billing info -->
                             <li class="checkout-item">
                                 <div class="avatar checkout-icon p-1">
                                     <div class="">
@@ -31,8 +33,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-4">
                                                             <div class="mb-3">
-                                                                <!-- <label class="form-label" for="billing-name">Name</label>
-                                                            <input type="text" class="form-control" id="billing-name" placeholder="Enter name"> -->
+                                                          
                                                                 <label for="Name" class="form-label">Name</label>
                                                                 <input type="text" class="form-control" id="namee"
                                                                     name="name" placeholder="Enter your Name" required>
@@ -135,7 +136,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="checkout-item">
+                            <!-- <li class="checkout-item">
                                 <div class="avatar checkout-icon p-1">
                                     <div class="avatar-title rounded-circle bg-primary">
                                         <i class="bx bxs-truck text-white font-size-20"></i>
@@ -144,35 +145,39 @@
                                 <div class="feed-item-list">
                                     <div>
                                         <h5 class="font-size-16 mb-1">Shipping Info</h5>
-                                        <p class="text-muted text-truncate mb-4">Neque porro quisquam est</p>
+                                        <p class="text-muted text-truncate mb-4">Select the address that needs to be
+                                            delivered</p>
                                         <div class="mb-3">
                                             <div class="row">
-                                                <% address.forEach(item=>{%>
+                                                <% address.forEach((item, index)=> { %>
                                                     <div class="col-lg-10 col-sm-6">
                                                         <div data-bs-toggle="collapse">
                                                             <label class="card-radio-label mb-0">
-                                                                <input type="radio" name="address" id="info-address1"
-                                                                    class="card-radio-input" checked="">
+                                                                <input class="form-check-input" type="radio" name="shippingAddress"
+                                                                    id="info-address<%= index %>"
+                                                                    class="card-radio-input" <%=index===0 ? 'checked'
+                                                                    : '' %>>
                                                                 <div class="card-radio text-truncate p-3">
-                                                                    <span class="fs-14 mb-4 d-block">Address </span>
+                                                                    <span class="fs-14 mb-4 d-block">Address</span>
                                                                     <span class="fs-14 mb-2 d-block">
                                                                         <p><strong>
-                                                                                <%=item.name%>
+                                                                                <%= item.name %>
                                                                             </strong></p>
                                                                     </span>
                                                                     <span
                                                                         class="text-muted fw-normal text-wrap mb-1 d-block">
-                                                                        <%=item.streetAddress%>
-                                                                            <br> Phone: <%=item.mobile%>
+                                                                        <%= item.streetAddress %><br> Phone: <%=
+                                                                                item.mobile %>
                                                                     </span>
-
                                                                     <span class="text-muted fw-normal d-block">
-                                                                        <%=item.city%>, <%=item.state%>,
-                                                                                <%=item.pincode%>
+                                                                        <%= item.city %>, <%= item.state %>, <%=
+                                                                                    item.pincode %>
                                                                     </span>
                                                                 </div>
                                                             </label>
-                                                            <div class="edit-btn bg-light  rounded">
+                                                            <div class="edit-btn bg-light rounded"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#staticBackdrop<%= index %>">
                                                                 <a href="#" data-bs-toggle="tooltip"
                                                                     data-placement="top" title=""
                                                                     data-bs-original-title="Edit">
@@ -181,17 +186,191 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <%})%>
+                                                  
+                                                    <div class="modal fade" id="staticBackdrop<%= index %>"
+                                                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel">Edit Address</h1>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                  
+                                                                    <form>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-name"
+                                                                                class="form-label">Name</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="edit-name" value="<%= item.name %>">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-street"
+                                                                                class="form-label">Street
+                                                                                Address</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="edit-street"
+                                                                                value="<%= item.streetAddress %>">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-mobile"
+                                                                                class="form-label">Mobile</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="edit-mobile"
+                                                                                value="<%= item.mobile %>">
+                                                                        </div>
+                                                                    
+                                                                        <button type="submit" class="btn btn-primary"
+                                                                            data-bs-dismiss="modal">Save
+                                                                            Changes</button>
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
+                            <form id="addressForm" action="/placeorder" method="POST">
+                                <li class="checkout-item">
+                                    <div class="avatar checkout-icon p-1">
+                                        <div class="avatar-title rounded-circle bg-primary">
+                                            <i class="bx bxs-truck text-white font-size-20"></i>
+                                        </div>
+                                    </div>
+                                    <div class="feed-item-list">
+                                        <div>
+                                            <h5 class="font-size-16 mb-1">Shipping Info</h5>
+                                            <p class="text-muted text-truncate mb-4">Select the address that needs to be delivered</p>
+                                            <div class="mb-3">
+                                                <div class="row">
+                                                    <div class="existing-addresses">
+                                                        <h6 class="mb-3">Your Addresses:</h6>
+                                                        <% for(let i=0; i < address.length; i++) { %>
+                                                            <input class="form-check-input" type="radio" name="shippingAddress"
+                                                                id="address<%= i %>" value="<%= address[i]._id %>">
+                                                            <div class="form-check mb-2 border shadow" style="border-radius: 10px;">
+                                                                <label class="form-check-label" for="address<%= i %>">
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address[i].name %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address[i].mobile %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address[i].streetAddress %>
+                                                                            <%= address[i].locality %>
+                                                                    </span>
+                                                                    <span class="text-muted fw-normal mb-1 d-block">
+                                                                        <%= address[i].city %>
+                                                                    </span>
+                                                                    <span class="text-muted fw-normal mb-1 d-block">
+                                                                        <%= address[i].state %>
+                                                                    </span>
+                                                                    <span class="text-muted fw-normal d-block">
+                                                                        <%= address[i].addressType %>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                            <% } %>
+                            </div>
+                                                </div>
+                                                <!-- <div class="row">
+                                                    <% address.forEach((item, index)=> { %>
+                                                    <div class="col-lg-10 col-sm-6">
+                                                        <div data-bs-toggle="collapse">
+                                                            <label class="card-radio-label mb-0">
+                                                                <input class="form-check-input" type="radio" name="shippingAddress"
+                                                                    id="info-address<%= index %>" value="<%=address._id%>"
+                                                                    class="card-radio-input" <%=index===0 ? 'checked' : '' %>
+                                                                    value="<%= item.addressId %>">
+                                                                <div class="card-radio text-truncate p-3">
+                                                                    <span class="fs-14 mb-4 d-block">Address</span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <p><strong><%= item.name %></strong></p>
+                                                                    </span>
+                                                                    <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                                                                        <%= item.streetAddress %><br> Phone: <%= item.mobile %>
+                                                                    </span>
+                                                                    <span class="text-muted fw-normal d-block">
+                                                                        <%= item.city %>, <%= item.state %>, <%= item.pincode %>
+                                                                    </span>
+                                                                </div>
+                                                            </label>
+                                                            <div class="edit-btn bg-light rounded" data-bs-toggle="modal"
+                                                                data-bs-target="#staticBackdrop<%= index %>">
+                                                                <a href="#" data-bs-toggle="tooltip" data-placement="top" title=""
+                                                                    data-bs-original-title="Edit">
+                                                                    <i class="bx bx-pencil font-size-16"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="modal fade" id="staticBackdrop<%= index %>" data-bs-backdrop="static"
+                                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Address</h1>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    
+                                                                    <form>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-name" class="form-label">Name</label>
+                                                                            <input type="text" class="form-control" id="edit-name"
+                                                                                value="<%= item.name %>">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-street" class="form-label">Street Address</label>
+                                                                            <input type="text" class="form-control" id="edit-street"
+                                                                                value="<%= item.streetAddress %>">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="edit-mobile" class="form-label">Mobile</label>
+                                                                            <input type="text" class="form-control" id="edit-mobile"
+                                                                                value="<%= item.mobile %>">
+                                                                        </div>
+                                                                        
+                                                                        <button type="submit" class="btn btn-primary"
+                                                                            data-bs-dismiss="modal">Save Changes</button>
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                
+                            </form>
+                            
+                            
+
                             <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
                                 data-bs-target="#addAddressModal">
                                 + Add New
-                                Address</a>
-                            </button><br><br>
+                                Address</a></button><br><br>
+
+                                <!-- payment info -->
                             <li class="checkout-item">
                                 <div class="avatar checkout-icon p-1">
                                     <div class="avatar-title rounded-circle bg-primary">
@@ -213,7 +392,7 @@
                                                             class="card-radio-input">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bx bx-credit-card d-block h2 mb-3"></i>
-                                                            Credit / Debit Card
+                                                            Wallet
                                                         </span>
                                                     </label>
                                                 </div>
@@ -226,7 +405,7 @@
                                                             class="card-radio-input">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bx bxl-paypal d-block h2 mb-3"></i>
-                                                            Paypal
+                                                            RazorPay
                                                         </span>
                                                     </label>
                                                 </div>
@@ -236,7 +415,7 @@
                                                 <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="pay-method" id="pay-methodoption3"
-                                                            class="card-radio-input" checked="">
+                                                            class="card-radio-input"  value="COD">
 
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bx bx-money d-block h2 mb-3"></i>
@@ -261,14 +440,15 @@
                     </div> <!-- end col -->
                     <div class="col">
                         <div class="text-end mt-2 mt-sm-0">
-                            <a href="#" class="btn btn-success">
-                                <i class="mdi mdi-cart-outline me-1"></i> Procced </a>
+                            <a href="" class="btn btn-success " id='place-order-btn'>
+                                <i class="mdi mdi-cart-outline me-1  "></i> Procced </a>
                         </div>
                     </div> <!-- end col -->
                 </div> <!-- end row-->
             </div>
             <div class="col-xl-4">
                 <div class="card checkout-order-summary">
+                    <p id="errormsg" style="color: red; margin-left: 150px;"></p>
                     <div class="card-body">
                         <div class="p-3 bg-light mb-3">
                             <h5 class="font-size-16 mb-0">Order Summary <span class="float-end ms-2">#MN0124</span></h5>
@@ -587,7 +767,7 @@
 
 
 
-    <!-- Modal -->
+    <!-- Modal  for adding address-->
     <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -600,9 +780,7 @@
                         <h2 class="mb-5 text-center">Manage Address</h2>
 
                         <div class="row g-3">
-                            <!-- Existing fields for name, email, age, gender, phone -->
 
-                            <!-- Additional fields for address details -->
                             <div class="col-md-6">
                                 <label for="Name" class="form-label">Name</label>
                                 <p id="errorname"></p>
@@ -717,16 +895,17 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+
                 </div>
             </div>
         </div>
     </div>
 
+
+
     <%- include('../layouts/userfooter') %>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script>
 
@@ -798,7 +977,102 @@
 
 
             })
+          
+          
+          
+            document.addEventListener('DOMContentLoaded', function () {
+    const placeorder = document.getElementById('place-order-btn');
+    const errormsg = document.getElementById('errormsg');
 
+    placeorder.addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('proceed clicked ');
+
+        const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
+        console.log('selectedAddress', selectAddress); // Corrected variable name
+        
+        if (!selectAddress) {
+            errormsg.innerHTML = 'Please select an address';
+            return; 
+        }
+
+        const paymentOption = document.querySelector('input[name="pay-method"]:checked');
+        console.log('paymentOption', paymentOption)
+        if (!paymentOption) {
+            errormsg.innerHTML = 'Please select a payment option';
+            return; 
+        }
+
+        const selectedAddressValue = selectAddress.value;
+        console.log('selectedAddressValue',selectedAddressValue);
+        const paymentOptionValue = paymentOption.value;
+        console.log('paymentOptionValue',paymentOptionValue);
+
+
+        if (paymentOptionValue === "COD") {
+            axios.post('/placeorder', { selectedAddressValue,  paymentOptionValue })
+                .then(res => {
+                    if (!res.data.success) {
+                        errormsg.innerHTML = res.data.message;
+                    } else {
+                        const orderId = res.data.orderId;
+                        window.location.href = `/ordersuccess?orderId=${orderId}`;
+                    }
+                })
+                .catch(err => {
+                    console.log('error', err);
+                });
+        }
+    });
+});
+
+
+//             document.addEventListener('DOMContentLoaded', function () {
+//     const placeorder = document.getElementById('place-order-btn');
+   
+ 
+
+//     placeorder.addEventListener('click', function (e) {
+//         e.preventDefault();
+//         alert('hiiiiiii')
+//         console.log('proceed clicked ');
+
+//         const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
+//          console.log('selectedAddress', selectedAddressElem);
+        
+//          const errormsg = document.getElementById('errormsg');
+
+//         if (!selectAddress) {
+//             errormsg.innerHTML = 'Please select an address';
+//             return; 
+//         }
+
+//         const paymentOption = document.querySelector('input[name="pay-method"]:checked');
+//         if (!paymentOption) {
+//             errormsg.innerHTML = 'Please select a payment option';
+//             return; 
+//         }
+
+//         const selectedAddressValue = selectAddress.value;
+//         const paymentOptionValue = paymentOption.value;
+
+//         if (paymentOptionValue === "COD") {
+
+//             axios.post('/placeorder', { selectedAddressValue,  paymentOptionValue })
+//                 .then(res => {
+//                     if (!res.data.success) {
+//                         document.getElementById('errormsg').innerHTML = res.data.message;
+//                     } else {
+//                         const orderId = res.data.orderId;
+//                         window.location.href = `/ordersuccess?orderId=${orderId}`;
+//                     }
+//                 })
+//                 .catch(err => {
+//                     console.log('error', err);
+//                 });
+//         }
+//     });
+// });
 
 
         </script>

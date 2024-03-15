@@ -1,9 +1,9 @@
-const User=require('../model/userModel')
+const User = require('../model/userModel')
 const Cart = require('../model/cartModel');
 const Products = require('../model/productModel');
-const Address=require('../model/addressModel')
+const Address = require('../model/addressModel')
 const mongoose = require('mongoose')
-
+const Order=require('../model/orderModel')
 
 
 
@@ -17,6 +17,7 @@ const loadCartPage = async (req, res) => {
             model: 'Product'
         }
         const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
+       
         console.log("cartDetails", cartDetails);
 
         let total = 0;
@@ -98,11 +99,13 @@ const updateCart = async (req, res) => {
         const userId = req.session.user_id
         console.log('userId', userId);
         const productDetails = await Products.findOne({ _id: productId });
+
         const tp = productDetails.price * quantity;
         console.log('tp', tp);
+        
         // const cartItem = await Cart.find({userId:userId}).populate('product.product_id')
-        const  cartItem=await Cart.updateOne({userId:userId,'product.productId':productId},
-        {$set:{'product.quantity':quantity,'product.totalPrice':tp}})
+        const cartItem = await Cart.updateOne({ userId: userId, 'product.productId': productId },
+            { $set: { 'product.quantity': quantity, 'product.totalPrice': tp } })
         console.log('cartItem', cartItem);
         if (!cartItem) {
             return res.status(404).json({ success: false, message: "Cart item not found" });
@@ -138,23 +141,23 @@ const removeProduct = async (req, res) => {
 }
 
 
-const loadCheckoutPage=async(req,res)=>{
+const loadCheckoutPage = async (req, res) => {
     try {
         console.log('entering the checkout page');
 
-        const userId=req.session.user_id
-        console.log('userid',userId);
+        const userId = req.session.user_id
+        console.log('userid', userId);
 
-        const user= await User.findOne({_id:userId})
-        console.log('user',user);
+        const user = await User.findOne({ _id: userId })
+        console.log('user', user);
 
-        const address= await Address.find({userId:userId})
-        console.log('address',address);
-        
+        const address = await Address.find({ userId: userId })
+        console.log('address', address);
+
         const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
         console.log("cartDetails", cartDetails);
 
-        
+
         let total = 0;
 
         cartDetails.forEach(item => {
@@ -165,12 +168,47 @@ const loadCheckoutPage=async(req,res)=>{
         console.log('Total:', total);
 
 
-        res.render('users/checkout' ,{address:address,user:userId,address:address, cartDetails:cartDetails ,subTotal: total} )
+        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total })
     } catch (error) {
         console.log('error rendering checkoutpage');
         console.log(error);
     }
 }
+
+const orderSuccess = async (req, res) => {
+    try {
+        const userId = req.session.user_id
+        console.log('userId', userId);
+        
+        const id=req.query.id
+
+        const user = await User.findOne({ _id: userId })
+        console.log('user', user);
+
+        const address = await Address.find({ userId: userId })
+        console.log('address', address);
+
+        const proData = await Products.find({})
+
+        const orderDetails= await Order.find({_id:id})
+            
+       
+
+
+        res.render('users/ordersuccess',
+            {
+                address: address,
+                user: userId,
+                address: address,
+                product: proData,
+                orderDetails:orderDetails
+            })
+    } catch (error) {
+        console.log('error loading success ');
+        console.log(error);
+    }
+}
+
 module.exports = {
     loadCartPage,
     addProductsToCart,
@@ -178,5 +216,6 @@ module.exports = {
     updateCart,
 
 
-    loadCheckoutPage
+    loadCheckoutPage,
+    orderSuccess
 }

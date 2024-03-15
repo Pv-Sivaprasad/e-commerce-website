@@ -4,7 +4,7 @@
 
 
    
-<form action="/admin/editProduct" method="post" enctype="multipart/form-data" id="addproductform">
+<form >
     <section class="content-main">
         <div class="row">
             <div class="col-9">
@@ -17,23 +17,23 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required pattern="^[a-zA-Z]+(?: [a-zA-Z]+)*$" title="Only alphabets allowed between spaces">
+                            <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required pattern="^[a-zA-Z]+(?: [a-zA-Z]+)*$" >
 
                         </div>
                         <div class="row gx-3">
                             <div class="col-md-4 mb-3">
                                 <label for="price" class="form-label">Price</label>
-                                <input type="text" class="form-control" id="price" name="price" value="<%= product.price %>" required pattern="[0-9]+" title="Only numbers allowed">
+                                <input type="text" class="form-control" id="price" name="price" value="<%= product.price %>" required pattern="[0-9]+" >
                             </div>
                             
                             <div class="col-md-4 mb-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>" required pattern="[a-zA-Z]+( [a-zA-Z]+)*" title="Only alphabets allowed with space between">
+                                <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>" required pattern="[a-zA-Z]+( [a-zA-Z]+)*" >
                             </div>
                             
                             <div class="col-md-4 mb-3">
                                 <label for="quantity" class="form-label">Quantity</label>
-                                <input type="text" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>" required pattern="[0-9]+" title="Only numbers allowed">
+                                <input type="text" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>" required pattern="[0-9]+" >
                             </div>
                             
                         </div>
@@ -132,8 +132,8 @@
             </div>
         </div>
     </section>
-    <button type="submit" class="btn btn-primary">Edit Product</button>
-    <input type="hidden" name="id" value="<%=product._id %>">
+    <button type="submit" class="btn btn-primary">Edit Product</button><%=product._id %>
+    <input type="hidden" id="id" name="id" value="<%=product._id %>">
     
 </form>
 
@@ -252,27 +252,25 @@
             const quantity = document.getElementById('quantity').value
             const formdescription = document.getElementById('formdescription').value
             const categoryId=document.getElementById('categoryId').value
+            const id=document.getElementById('id').value
 
-            // const image1 = document.getElementById('image1').file[0]
-            // const image2 = document.getElementById('image2').file[0]
-            // const image3 = document.getElementById('image3').file[0]
-            // const image4 = document.getElementById('image4').file[0]
+          
+            const formData = new FormData()
 
-            const formData = new FormData();
             formData.append('productName', productName)
             formData.append('price', price)
             formData.append('color', color)
             formData.append('quantity', quantity)
             formData.append('formdescription', formdescription)
             formData.append('categoryId',categoryId)
+            formData.append('id',id)
 
-            Object.keys(croppedImages).forEach(key => {
-                const originalFileName = originalFileNames[key]
-                formData.append('cropImages', croppedImages[key], originalFileName)
+            Object.keys(croppedImages).forEach(key => { // Corrected variable name
+    const originalFileName = originalFileNames[key];
+    formData.append('cropImages', croppedImages[key], originalFileName);
+});
 
-            })
-
-            axios.post('/admin/addproduct', formData, {
+            axios.post('/admin/editproduct', formData, {
 
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -295,30 +293,3 @@
     })
 
 </script>
-<!-- <script>
-    function previewImages(event) {
-        var preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';
-        var files = event.target.files;
-
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                var img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '90px';
-                img.style.height = '90px';
-                img.style.marginRight = '10px';
-                img.style.marginBottom = '10px';
-                img.style.objectFit = 'cover';
-                var container = document.createElement('div');
-                container.appendChild(img);
-                preview.appendChild(container);
-            }
-
-            reader.readAsDataURL(file);
-        }
-    }
-</script> -->

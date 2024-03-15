@@ -68,7 +68,7 @@ const addProduct = async (req, res) => {
     }
 };
 
-
+ 
 
 
 
@@ -79,8 +79,10 @@ const loadEditProduct = async (req, res) => {
         console.log('product editing page loading');
         const id = req.query.id
         console.log("id", id);
+
         const proData = await Product.findById({ _id: id })
         const categories = await Category.find({})
+
         console.log(proData);
         if (proData) {
             console.log('reached here');
@@ -100,7 +102,7 @@ const editProduct = async (req, res) => {
         console.log('Editing product starts here');
         const details = req.body;
         const files = req.files;
-
+        const id=details.id
         console.log('Details:', details);
         console.log('Files:', files);
 
@@ -119,13 +121,13 @@ const editProduct = async (req, res) => {
 
         // Update product data except for images
         const proData = await Product.findByIdAndUpdate(
-            { _id: req.body.id },
+            { _id: id },
             { $set: details }, // Use modified details object
             { new: true }
         );
 
         console.log('Product data updated successfully:', proData);
-        res.redirect('/admin/allProduct');
+        res.json({success:true})
     } catch (error) {
         console.log('Error editing product:', error); // Log error
         res.status(500).json({ success: false, message: 'An error occurred while editing the product' });

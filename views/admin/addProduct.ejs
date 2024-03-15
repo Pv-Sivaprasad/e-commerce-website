@@ -259,11 +259,7 @@
                     const formdescription = document.getElementById('formdescription').value
                     const categoryId=document.getElementById('categoryId').value
 
-                    // const image1 = document.getElementById('image1').file[0]
-                    // const image2 = document.getElementById('image2').file[0]
-                    // const image3 = document.getElementById('image3').file[0]
-                    // const image4 = document.getElementById('image4').file[0]
-
+               
                     const formData = new FormData();
                     formData.append('productName', productName)
                     formData.append('price', price)
@@ -278,7 +274,7 @@
 
                     })
 
-                    axios.post('/admin/addproduct', formData, {
+                    axios.post('/admin/addProduct', formData, {
 
                         headers: {
                             'content-type': 'multipart/form-data'

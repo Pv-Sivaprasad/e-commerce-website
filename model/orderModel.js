@@ -39,7 +39,7 @@ const orderSchema= new mongoose.Schema({
     },
     deliveryAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"address",
+        ref:"Address",
         required: true,
     },
     orderStatus: {
@@ -65,4 +65,4 @@ const orderSchema= new mongoose.Schema({
 
 })
 
-module.exports=mongoose.model(Order,orderSchema)
+module.exports=mongoose.model('Order',orderSchema)
