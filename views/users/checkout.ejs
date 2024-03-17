@@ -49,10 +49,7 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <div class="mb-3">
-                                                                <!-- <label class="form-label"
-                                                                    for="billing-phone">Phone</label>
-                                                                <input type="text" class="form-control"
-                                                                    id="billing-phone" placeholder="Enter Phone no."> -->
+                                                               
                                                                 <label for="mobile" class="form-label">Mobile Number
                                                                 </label>
                                                                 <input type="number" class="form-control" id="mobilee"
@@ -136,110 +133,6 @@
                                     </div>
                                 </div>
                             </li>
-                            <!-- <li class="checkout-item">
-                                <div class="avatar checkout-icon p-1">
-                                    <div class="avatar-title rounded-circle bg-primary">
-                                        <i class="bx bxs-truck text-white font-size-20"></i>
-                                    </div>
-                                </div>
-                                <div class="feed-item-list">
-                                    <div>
-                                        <h5 class="font-size-16 mb-1">Shipping Info</h5>
-                                        <p class="text-muted text-truncate mb-4">Select the address that needs to be
-                                            delivered</p>
-                                        <div class="mb-3">
-                                            <div class="row">
-                                                <% address.forEach((item, index)=> { %>
-                                                    <div class="col-lg-10 col-sm-6">
-                                                        <div data-bs-toggle="collapse">
-                                                            <label class="card-radio-label mb-0">
-                                                                <input class="form-check-input" type="radio" name="shippingAddress"
-                                                                    id="info-address<%= index %>"
-                                                                    class="card-radio-input" <%=index===0 ? 'checked'
-                                                                    : '' %>>
-                                                                <div class="card-radio text-truncate p-3">
-                                                                    <span class="fs-14 mb-4 d-block">Address</span>
-                                                                    <span class="fs-14 mb-2 d-block">
-                                                                        <p><strong>
-                                                                                <%= item.name %>
-                                                                            </strong></p>
-                                                                    </span>
-                                                                    <span
-                                                                        class="text-muted fw-normal text-wrap mb-1 d-block">
-                                                                        <%= item.streetAddress %><br> Phone: <%=
-                                                                                item.mobile %>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal d-block">
-                                                                        <%= item.city %>, <%= item.state %>, <%=
-                                                                                    item.pincode %>
-                                                                    </span>
-                                                                </div>
-                                                            </label>
-                                                            <div class="edit-btn bg-light rounded"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#staticBackdrop<%= index %>">
-                                                                <a href="#" data-bs-toggle="tooltip"
-                                                                    data-placement="top" title=""
-                                                                    data-bs-original-title="Edit">
-                                                                    <i class="bx bx-pencil font-size-16"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                  
-                                                    <div class="modal fade" id="staticBackdrop<%= index %>"
-                                                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h1 class="modal-title fs-5"
-                                                                        id="staticBackdropLabel">Edit Address</h1>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                  
-                                                                    <form>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-name"
-                                                                                class="form-label">Name</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="edit-name" value="<%= item.name %>">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-street"
-                                                                                class="form-label">Street
-                                                                                Address</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="edit-street"
-                                                                                value="<%= item.streetAddress %>">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-mobile"
-                                                                                class="form-label">Mobile</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="edit-mobile"
-                                                                                value="<%= item.mobile %>">
-                                                                        </div>
-                                                                    
-                                                                        <button type="submit" class="btn btn-primary"
-                                                                            data-bs-dismiss="modal">Save
-                                                                            Changes</button>
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <% }) %>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li> -->
                             <form id="addressForm" action="/placeorder" method="POST">
                                 <li class="checkout-item">
                                     <div class="avatar checkout-icon p-1">
@@ -257,7 +150,7 @@
                                                         <h6 class="mb-3">Your Addresses:</h6>
                                                         <% for(let i=0; i < address.length; i++) { %>
                                                             <input class="form-check-input" type="radio" name="shippingAddress"
-                                                                id="address<%= i %>" value="<%= address[i]._id %>">
+                                                                id="address<%= i %>" value="<%= address[i]._id %>" <% if (i === 0) { %> checked <% } %>>
                                                             <div class="form-check mb-2 border shadow" style="border-radius: 10px;">
                                                                 <label class="form-check-label" for="address<%= i %>">
                                                                     <span class="fs-14 mb-2 d-block">
@@ -268,7 +161,7 @@
                                                                     </span>
                                                                     <span class="fs-14 mb-2 d-block">
                                                                         <%= address[i].streetAddress %>
-                                                                            <%= address[i].locality %>
+                                                                        <%= address[i].locality %>
                                                                     </span>
                                                                     <span class="text-muted fw-normal mb-1 d-block">
                                                                         <%= address[i].city %>
@@ -281,89 +174,16 @@
                                                                     </span>
                                                                 </label>
                                                             </div>
-                                                            <% } %>
-                            </div>
+                                                        <% } %>
+                                                    </div>
                                                 </div>
-                                                <!-- <div class="row">
-                                                    <% address.forEach((item, index)=> { %>
-                                                    <div class="col-lg-10 col-sm-6">
-                                                        <div data-bs-toggle="collapse">
-                                                            <label class="card-radio-label mb-0">
-                                                                <input class="form-check-input" type="radio" name="shippingAddress"
-                                                                    id="info-address<%= index %>" value="<%=address._id%>"
-                                                                    class="card-radio-input" <%=index===0 ? 'checked' : '' %>
-                                                                    value="<%= item.addressId %>">
-                                                                <div class="card-radio text-truncate p-3">
-                                                                    <span class="fs-14 mb-4 d-block">Address</span>
-                                                                    <span class="fs-14 mb-2 d-block">
-                                                                        <p><strong><%= item.name %></strong></p>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal text-wrap mb-1 d-block">
-                                                                        <%= item.streetAddress %><br> Phone: <%= item.mobile %>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal d-block">
-                                                                        <%= item.city %>, <%= item.state %>, <%= item.pincode %>
-                                                                    </span>
-                                                                </div>
-                                                            </label>
-                                                            <div class="edit-btn bg-light rounded" data-bs-toggle="modal"
-                                                                data-bs-target="#staticBackdrop<%= index %>">
-                                                                <a href="#" data-bs-toggle="tooltip" data-placement="top" title=""
-                                                                    data-bs-original-title="Edit">
-                                                                    <i class="bx bx-pencil font-size-16"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                   
-                                                    <div class="modal fade" id="staticBackdrop<%= index %>" data-bs-backdrop="static"
-                                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                                        aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Address</h1>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    
-                                                                    <form>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-name" class="form-label">Name</label>
-                                                                            <input type="text" class="form-control" id="edit-name"
-                                                                                value="<%= item.name %>">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-street" class="form-label">Street Address</label>
-                                                                            <input type="text" class="form-control" id="edit-street"
-                                                                                value="<%= item.streetAddress %>">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="edit-mobile" class="form-label">Mobile</label>
-                                                                            <input type="text" class="form-control" id="edit-mobile"
-                                                                                value="<%= item.mobile %>">
-                                                                        </div>
-                                                                        
-                                                                        <button type="submit" class="btn btn-primary"
-                                                                            data-bs-dismiss="modal">Save Changes</button>
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <% }) %>
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                
                             </form>
                             
-                            
+                          
 
                             <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
                                 data-bs-target="#addAddressModal">
@@ -1010,6 +830,7 @@
 
 
         if (paymentOptionValue === "COD") {
+            
             axios.post('/placeorder', { selectedAddressValue,  paymentOptionValue })
                 .then(res => {
                     if (!res.data.success) {
@@ -1020,59 +841,12 @@
                     }
                 })
                 .catch(err => {
-                    console.log('error', err);
+                    console.log('error in axios changing status', err);
                 });
         }
     });
 });
 
-
-//             document.addEventListener('DOMContentLoaded', function () {
-//     const placeorder = document.getElementById('place-order-btn');
-   
- 
-
-//     placeorder.addEventListener('click', function (e) {
-//         e.preventDefault();
-//         alert('hiiiiiii')
-//         console.log('proceed clicked ');
-
-//         const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
-//          console.log('selectedAddress', selectedAddressElem);
-        
-//          const errormsg = document.getElementById('errormsg');
-
-//         if (!selectAddress) {
-//             errormsg.innerHTML = 'Please select an address';
-//             return; 
-//         }
-
-//         const paymentOption = document.querySelector('input[name="pay-method"]:checked');
-//         if (!paymentOption) {
-//             errormsg.innerHTML = 'Please select a payment option';
-//             return; 
-//         }
-
-//         const selectedAddressValue = selectAddress.value;
-//         const paymentOptionValue = paymentOption.value;
-
-//         if (paymentOptionValue === "COD") {
-
-//             axios.post('/placeorder', { selectedAddressValue,  paymentOptionValue })
-//                 .then(res => {
-//                     if (!res.data.success) {
-//                         document.getElementById('errormsg').innerHTML = res.data.message;
-//                     } else {
-//                         const orderId = res.data.orderId;
-//                         window.location.href = `/ordersuccess?orderId=${orderId}`;
-//                     }
-//                 })
-//                 .catch(err => {
-//                     console.log('error', err);
-//                 });
-//         }
-//     });
-// });
 
 
         </script>

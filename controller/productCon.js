@@ -43,6 +43,17 @@ const addProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Please select at least 4 images' });
         }
 
+        //checking price
+        const price = parseFloat(details.price);
+        if (isNaN(price) || price < 0) {
+            return res.status(400).json({ success: false, message: 'Product price must be a non-negative number' });
+        }
+        
+        // Validate quantity
+        const quantity = parseInt(details.quantity);
+        if (isNaN(quantity) || quantity < 0) {
+            return res.status(400).json({ success: false, message: 'Quantity must be a non-negative number' });
+        }
     
         const images = files.map(file => file.filename);
        
@@ -106,6 +117,17 @@ const editProduct = async (req, res) => {
         console.log('Details:', details);
         console.log('Files:', files);
 
+          //checking price
+          const price = parseFloat(details.price);
+          if (isNaN(price) || price < 0) {
+              return res.status(400).json({ success: false, message: 'Product price must be a non-negative number' });
+          }
+          
+          // Validate quantity
+          const quantity = parseInt(details.quantity);
+          if (isNaN(quantity) || quantity < 0) {
+              return res.status(400).json({ success: false, message: 'Quantity must be a non-negative number' });
+          }
 
         if (files && files.length >= 4) {
             console.log('Images provided, updating images...');

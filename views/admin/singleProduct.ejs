@@ -1,0 +1,199 @@
+<%- include('../layouts/adminHeader') %>
+
+<section class="content-main">
+    <div class="content-header">
+       
+                <div>
+                    <h2 class="content-title card-title">Order detail</h2>
+                    <p>Details for Order ID: <%= orderDetails._id %></p>
+                </div>
+                </div>
+                <div class="card">
+                    <header class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                                <span> <i class="material-icons md-calendar_today"></i> <b><%= orderDetails.updatedAt.toLocaleString() %></b> </span> <br />
+                                <small class="text-muted">Order ID: <%= orderDetails._id %></small>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                
+                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                    <button class="btn btn-success border changeStatusBtn" id="orderid" data-bs-toggle="modal" data-bs-target="#statusChangeModal"  
+                    data-index="<%= orderDetails._id %>">Change Status</button>
+                </div>
+                
+               
+            </div>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="row mb-50 mt-20 order-info-wrap">
+                <!-- Customer Info -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-person"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Customer</h6>
+                            <p class="mb-1">
+                                <%= orderDetails.userId.name %> <br />
+                                <%= orderDetails.userId.email %> <br />
+                                <%= orderDetails.userId.mobile %>
+                            </p>
+                        
+                        </div>
+                    </article>
+                </div>
+                <!-- Order Info -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-local_shipping"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Order info</h6>
+                            <p class="mb-1">
+                                Shipping: <%= orderDetails.deliveryMethod %> <br />
+                                Pay method: <%= orderDetails.paymentMethod %> <br />
+                                Status: <%= orderDetails.orderStatus %>
+                                
+                            </p>
+                          
+                        </div>
+                    </article>
+                </div>
+                <!-- Delivery Info -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-place"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Deliver to</h6>
+                            <p class="mb-1">
+                                City: <%= orderDetails.deliveryAddress.city %>, <%= orderDetails.deliveryAddress.locality %> <br />
+                                <%= orderDetails.deliveryAddress. streetAddress %> <br />
+                                State : <%= orderDetails.deliveryAddress.state %> <br />
+                                PINCODE : <%= orderDetails.deliveryAddress.pincode %>
+                            </p>
+                           
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <!-- Order Details Table -->
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">Product</th>
+                                    <th width="20%">Unit Price</th>
+                                    <th width="20%">Quantity</th>
+                                    <th width="20%" class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orderDetails.orderedItem.forEach(function(item, i) { %>
+                                    <tr>
+                                        <td>
+                                            <a class="itemside" href="#">
+                                                <div class="left">
+                                                    <img src="userImages/<%= item.productId.images[0] %>" width="40" height="40" class="img-xs" alt="Item" />
+                                                </div>
+                                                <div class="info"><%= item.productId.productName %></div>
+                                            </a>
+                                        </td>
+                                        <td>$<%= item.productId.price %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td class="text-end">$<%= item.totalProductAmount %></td>
+                                        <input type="hidden" id="productId" value="<%= orderDetails.orderedItem[0].productId._id %>"><%= orderDetails.orderedItem[0].productId._id %>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- table-responsive// -->
+                </div>
+                <!-- col// -->
+                <div class="col-lg-1"></div>
+                <!-- Payment Info -->
+                <div class="col-lg-4">
+                    <div class="box shadow-sm bg-light">
+                        <h6 class="mb-15">Payment info</h6>
+                        <p>
+                            <i class="bi bi-credit-card"></i> <%= orderDetails.paymentMethod %> <br />
+                            Phone: <%= orderDetails.userId.mobile %>
+                        </p>
+                        
+                        </p>
+                    </div>
+                   
+                </div>
+                <!-- col// -->
+            </div>
+        </div>
+        
+       <!-- Status Change Modal -->
+       <div class="modal fade" id="statusChangeModal" tabindex="-1" aria-labelledby="statusChangeModalLabel"
+       aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title" id="statusChangeModalLabel">Change Order Status</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                   <select class="form-select" id="modalOrderStatus">
+
+                       <option value="pending">Pending</option>
+                       <option value="processing">Processing</option>
+                       <option value="shipped">Shipped</option>
+                       <option value="delivered">Delivered</option>
+                       <option value="cancelled">Cancelled</option>
+                   </select>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                   <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" id="saveStatus">Save changes</button>
+               </div>
+           </div>
+       </div>
+   </div>
+    
+    </div>
+ 
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveStatusBtn = document.getElementById('saveStatus');
+
+        saveStatusBtn.addEventListener('click', function() {
+            event.preventDefault(); 
+            const orderId = '<%= orderDetails._id %>';
+            console.log('orderId',orderId);
+            const selectedStatus = document.getElementById('modalOrderStatus').value;
+            console.log('selectedStatus',selectedStatus);
+
+            // Make a POST request to your backend
+            axios.post('/admin/updatestatus', {
+                orderId: orderId,
+                status: selectedStatus
+            })
+            .then((data)=>{
+                console.log("data",data);
+            })
+            .catch(function (error) {
+                console.error(error);
+                // Handle error
+            });
+        });
+    });
+</script>
+<%- include('../layouts/adminFooter') %>

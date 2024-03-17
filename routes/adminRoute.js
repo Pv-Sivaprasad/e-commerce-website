@@ -57,6 +57,12 @@ adminRoute.post('/editProduct',upload.array('cropImages', 4),productController.e
 adminRoute.patch('/blockProduct/:productId', productController.blockProduct);
 
 
+//order related details of users
+adminRoute.get('/orderDetails',adminController.orderDetails)
+adminRoute.get('/singleorderview',adminController.singleProduct)
+adminRoute.post('/updatestatus',adminController.updateStatus)
+
+
 
 
 

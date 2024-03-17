@@ -55,7 +55,7 @@ const addProductsToCart = async (req, res) => {
 
         if (existingProduct) {
 
-            return res.json({ success: false })
+            return res.json({ addedToCart: true})   
         }
 
         //find the total product stock 

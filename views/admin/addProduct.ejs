@@ -6,9 +6,16 @@
                 <div class="col-9">
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
+
                     </div>
                 </div>
                 <div class="col-lg-9">
+                   
+                <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= errorMessage %>
+                    </div>
+                <% } %>
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-4">

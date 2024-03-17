@@ -84,6 +84,26 @@ userRoute.post('/checkaddress',auth.isLogin,addressController.checkoutAddAddress
 userRoute.get('/ordersuccess',auth.isLogin,cartController.orderSuccess)
 userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 
+// my orders
+userRoute.get('/myorder',auth.isLogin,orderController.loadOrderDetails)
+userRoute.get('/singleorder',auth.isLogin,orderController.singleOrder)
+userRoute.patch('/cancelorder',auth.isLogin,orderController.cancelOrder)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

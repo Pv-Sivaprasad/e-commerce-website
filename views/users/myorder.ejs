@@ -1,0 +1,122 @@
+<%- include('../layouts/profileHeader') %>
+
+
+
+
+    <section class="content-main">
+        <div class="content-header">
+            <div >
+                <h2 class="content-title card-title">Order List</h2>
+                <p>All orders List</p>
+            </div>
+            <div>
+             
+            </div>
+        </div>
+        
+                    
+            </header>
+            <!-- card-header end// -->
+            <div class="image-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <!-- <th>Status</th> -->
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(orderDetails){ %>
+                            <% orderDetails.forEach(function(order) { %>
+                                <% order.orderedItem.forEach(item => { %>
+                                    <% if(item.productId && item.productId.productName){ %>
+                                        <tr>
+                                            <td>
+                                                <img src="/userImages/<%= item.productId.images[0] %>" alt="Product Image" class="order-image" style="width: 80px; height: auto;">
+                                            </td>
+                                            <td><%= item.productId.productName %></td>
+                                            <td><%= item.quantity %></td>
+                                            <td>₹<%= item.totalProductAmount %></td>
+                                            <!-- <td>
+                                                <% if(orderDetails.orderStatus === 'pending'){ %>
+                                                    <span class="badge rounded-pill alert-warning">Pending</span>
+                                                <% } else if(orderDetails.orderStatus === 'processing'){ %>
+                                                    <span class="badge rounded-pill alert-primary">Processing</span>
+                                                <% } else if(orderDetails.orderStatus === 'shipped'){ %>
+                                                    <span class="badge rounded-pill alert-info">Shipped</span>
+                                                <% } else if(orderDetails.orderStatus === 'delivered'){ %>
+                                                    <span class="badge rounded-pill alert-success">Delivered</span>
+                                                <% } else if(orderDetails.orderStatus === 'cancelled'){ %>
+                                                    <span class="badge rounded-pill alert-danger">Cancelled</span>
+                                                <% } %>
+                                            </td> -->
+                                            <td>
+                                                <a href="javascript:void(0)" class="btn btn-success btn-sm view-btn font-sm text-white" data-id="<%= order._id %>">View</a>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                <% }); %>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                    
+                </table>
+            </div>
+            
+            
+            
+          
+        </div>
+   
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <!-- content-main end// -->
+  
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('view-btn')) {
+                    // Get the order ID from the data-id attribute of the clicked element
+                    var orderId = event.target.getAttribute('data-id');
+                    console.log("orderId", orderId);
+                    // Redirect to the single order page with the order ID as a query parameter
+                    window.location.href = '/singleorder?orderId=' + orderId;
+                }
+            });
+        });
+    </script>
+<!-- <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('view-btn')) {
+            alert('sdffhsdf')
+            var orderId = event.target.getAttribute('data-id');
+            console.log("orderId", orderId);
+      
+            window.location.href = '/singleorder?orderId=' + orderId;
+        }
+    });
+})
+
+</script> -->
+
+<%- include('../layouts/profileFooter') %>

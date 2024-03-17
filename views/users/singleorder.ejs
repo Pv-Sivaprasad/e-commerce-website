@@ -1,0 +1,187 @@
+<%- include('../layouts/profileHeader') %>
+
+
+    
+  
+      
+      <div class="container-fluid">
+        <div class="container">
+            <!-- Title -->
+            <div class="d-flex justify-content-between align-items-center py-3">
+                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orderDetails._id %></h2>
+            </div>
+    
+            <!-- Main content -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Details -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-3 d-flex justify-content-between">
+                                <div>
+                                    <span class="me-3"><%= orderDetails.createdAt.toLocaleDateString() %></span>
+                                    <span class="me-3">#<%= orderDetails._id %></span>
+                                    <span class="me-3">Payment Method: <%= orderDetails.paymentMethod %></span>
+                                    <span class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
+                                        <%= orderDetails.orderStatus %>
+                                    </span>
+
+
+                                </div>
+                                <div class="d-flex">
+                                    <!-- Additional buttons or dropdowns can be added here -->
+                                </div>
+                            </div>
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Product Image</th>
+                                        <th>Product Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% orderDetails.orderedItem.forEach(function(item) { %>
+                                        <tr>
+                                            <td>
+                                                <img src="userImages/<%= item.productId.images[0] %>" alt="Product Image" width="200" class="img-fluid">
+                                            </td>
+                                            <td><%= item.productId.productName %></td>
+                                            <td><%= item.quantity %></td>
+                                            <td>₹<%= item.totalProductAmount %></td>
+                                        
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                                <tfoot>
+                                    <!-- Add subtotal, shipping, discount, and total rows here -->
+                                </tfoot>
+                            </table>
+                            <div class="card-footer">
+               
+                                <% if (orderDetails.orderStatus !== 'delivered') { %>
+                                    <button type="button" id="cancel-btn" class="  btn btn-danger" data-id="<%= orderDetails._id %>">Cancel</button>
+                                    <% } else { %>
+                                        <button type="button" id="cancel-btn" class="  btn btn-danger" data-id="<%= orderDetails._id %>">Cancel</button>
+                               <% } %>
+                                    </div>
+                          
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-lg-4 d-flex flex-column">
+        <!-- Payment -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3 class="h6">Payment Method</h3>
+                        <p><%= orderDetails.paymentMethod %>  <br>
+                        Total: ₹<%= orderDetails.orderAmount %> <span class="badge bg-success rounded-pill"></span></p>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3 class="h6">Billing Info</h3>
+                        <address>
+                            Name:  <%= orderDetails.userId.name %> <br />
+                            Phone: <%= orderDetails.userId.mobile %> <br />
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="h6">Shipping Information</h3>
+                <strong><%= orderDetails.shippingProvider %></strong>
+                <span><a href="<%= orderDetails.trackingLink %>" class="text-decoration-underline" target="_blank"><%= orderDetails.trackingNumber %></a> <i class="bi bi-box-arrow-up-right"></i></span>
+                <hr>
+                <h3 class="h6">Address</h3>
+                <address>
+                    City: <%= orderDetails.deliveryAddress.city %>, <%= orderDetails.deliveryAddress.locality %> <br />
+                    <%= orderDetails.deliveryAddress.streetAddress %> <br />
+                    State : <%= orderDetails.deliveryAddress.state %> <br />
+                    PINCODE : <%= orderDetails.deliveryAddress.pincode %>
+                </address>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+
+<style>
+    body{
+    background:#eee;
+}
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+.text-reset {
+    --bs-text-opacity: 1;
+    color: inherit!important;
+}
+a {
+    color: #5465ff;
+    text-decoration: none;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script>
+
+    
+        document.addEventListener('DOMContentLoaded', function() {
+          const btn= document.getElementById('cancel-btn')
+          btn.addEventListener('click',function (e){
+            alert('clicked cancel')
+            e.preventDefault()
+            console.log('reached here');
+                var orderId = this.getAttribute('data-id');
+
+                console.log("orderId", orderId);
+
+                // Send a PATCH request to the backend to cancel the order
+                axios.patch('/cancelorder', {
+                        orderId: orderId
+                    })
+                    .then(res=>{
+                        console.log('res',res);
+                        
+                        window.location.href='/singleorder'
+                    })
+                    .catch(function(error) {
+                        console.error(error);
+                        // Optionally, handle errors here
+                    });
+          })
+           
+        });
+   
+
+    
+</script> 
+
+
+
+<br><br><br>
+<%- include('../layouts/profilefooter') %>
