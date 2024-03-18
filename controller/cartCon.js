@@ -190,7 +190,7 @@ const orderSuccess = async (req, res) => {
 
         const proData = await Products.find({})
 
-        const orderDetails= await Order.find({_id:id})
+        const orderDetails= await Order.find({_id:id})   
             
        
 

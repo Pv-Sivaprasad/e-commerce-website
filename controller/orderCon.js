@@ -32,6 +32,8 @@ const placeOrder = async (req, res) => {
     try {
         console.log('starting order placing');
 
+        const {transactionId}=req.query
+
         console.log(req.body);
         const { selectedAddressValue, paymentOptionValue } = req.body;
 
@@ -170,12 +172,42 @@ const cancelOrder=async(req,res)=>{
     }
 }
 
+const returnOrder=async(req,res)=>{
+    try {
+        
+        console.log(req.body);
 
+        const userId=req.session.user_id
+
+        const {selectedReason,orderId}=req.body
+
+        if(!selectedReason){
+            res.json({success:false})
+        }
+
+        const orderStatus= await Order.updateOne({_id:orderId},{
+            $set:{
+                orderStatus:'returned'
+            }
+        })
+
+        if(orderStatus){
+            res.status(200).json({ success: true })
+        }else{
+            res.json({success:false})
+        }
+
+    } catch (error) {
+        console.log('error in returning order');
+        console.log(error);
+    }
+}
 
 
 module.exports = {
     loadOrderDetails,
     placeOrder,
     singleOrder,
-    cancelOrder
+    cancelOrder,
+    returnOrder
 }

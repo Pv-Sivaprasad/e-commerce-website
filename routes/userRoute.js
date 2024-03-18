@@ -6,6 +6,8 @@ const addressController=require('../controller/addressCon')
 const productController=require('../controller/productCon')
 const cartController=require('../controller/cartCon')
 const orderController=require('../controller/orderCon')
+const paymentController=require('../controller/paymentCon')
+
 const config = require('../config/config')
 const auth = require('../middleware/userAuth')   
 const sharp = require('sharp');
@@ -84,10 +86,14 @@ userRoute.post('/checkaddress',auth.isLogin,addressController.checkoutAddAddress
 userRoute.get('/ordersuccess',auth.isLogin,cartController.orderSuccess)
 userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 
+userRoute.post('/createorder',auth.isLogin,paymentController.createOrder)
+userRoute.post('/verification',auth.isLogin,paymentController.verifypayment)
+
 // my orders
 userRoute.get('/myorder',auth.isLogin,orderController.loadOrderDetails)
 userRoute.get('/singleorder',auth.isLogin,orderController.singleOrder)
 userRoute.patch('/cancelorder',auth.isLogin,orderController.cancelOrder)
+userRoute.patch('/returnorder',auth.isLogin,orderController.returnOrder)
 
 
 

@@ -33,7 +33,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-4">
                                                             <div class="mb-3">
-                                                          
+
                                                                 <label for="Name" class="form-label">Name</label>
                                                                 <input type="text" class="form-control" id="namee"
                                                                     name="name" placeholder="Enter your Name" required>
@@ -49,7 +49,7 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <div class="mb-3">
-                                                               
+
                                                                 <label for="mobile" class="form-label">Mobile Number
                                                                 </label>
                                                                 <input type="number" class="form-control" id="mobilee"
@@ -143,38 +143,43 @@
                                     <div class="feed-item-list">
                                         <div>
                                             <h5 class="font-size-16 mb-1">Shipping Info</h5>
-                                            <p class="text-muted text-truncate mb-4">Select the address that needs to be delivered</p>
+                                            <p class="text-muted text-truncate mb-4">Select the address that needs to be
+                                                delivered</p>
                                             <div class="mb-3">
                                                 <div class="row">
                                                     <div class="existing-addresses">
                                                         <h6 class="mb-3">Your Addresses:</h6>
                                                         <% for(let i=0; i < address.length; i++) { %>
-                                                            <input class="form-check-input" type="radio" name="shippingAddress"
-                                                                id="address<%= i %>" value="<%= address[i]._id %>" <% if (i === 0) { %> checked <% } %>>
-                                                            <div class="form-check mb-2 border shadow" style="border-radius: 10px;">
-                                                                <label class="form-check-label" for="address<%= i %>">
-                                                                    <span class="fs-14 mb-2 d-block">
-                                                                        <%= address[i].name %>
-                                                                    </span>
-                                                                    <span class="fs-14 mb-2 d-block">
-                                                                        <%= address[i].mobile %>
-                                                                    </span>
-                                                                    <span class="fs-14 mb-2 d-block">
-                                                                        <%= address[i].streetAddress %>
-                                                                        <%= address[i].locality %>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal mb-1 d-block">
-                                                                        <%= address[i].city %>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal mb-1 d-block">
-                                                                        <%= address[i].state %>
-                                                                    </span>
-                                                                    <span class="text-muted fw-normal d-block">
-                                                                        <%= address[i].addressType %>
-                                                                    </span>
-                                                                </label>
-                                                            </div>
-                                                        <% } %>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="shippingAddress" id="address<%= i %>"
+                                                                value="<%= address[i]._id %>" <% if (i===0) { %> checked
+                                                            <% } %>>
+                                                                <div class="form-check mb-2 border shadow"
+                                                                    style="border-radius: 10px;">
+                                                                    <label class="form-check-label"
+                                                                        for="address<%= i %>">
+                                                                        <span class="fs-14 mb-2 d-block">
+                                                                            <%= address[i].name %>
+                                                                        </span>
+                                                                        <span class="fs-14 mb-2 d-block">
+                                                                            <%= address[i].mobile %>
+                                                                        </span>
+                                                                        <span class="fs-14 mb-2 d-block">
+                                                                            <%= address[i].streetAddress %>
+                                                                                <%= address[i].locality %>
+                                                                        </span>
+                                                                        <span class="text-muted fw-normal mb-1 d-block">
+                                                                            <%= address[i].city %>
+                                                                        </span>
+                                                                        <span class="text-muted fw-normal mb-1 d-block">
+                                                                            <%= address[i].state %>
+                                                                        </span>
+                                                                        <span class="text-muted fw-normal d-block">
+                                                                            <%= address[i].addressType %>
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                                <% } %>
                                                     </div>
                                                 </div>
                                             </div>
@@ -182,15 +187,15 @@
                                     </div>
                                 </li>
                             </form>
-                            
-                          
+
+
 
                             <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
                                 data-bs-target="#addAddressModal">
                                 + Add New
                                 Address</a></button><br><br>
 
-                                <!-- payment info -->
+                            <!-- payment info -->
                             <li class="checkout-item">
                                 <div class="avatar checkout-icon p-1">
                                     <div class="avatar-title rounded-circle bg-primary">
@@ -222,7 +227,7 @@
                                                 <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="pay-method" id="pay-methodoption2"
-                                                            class="card-radio-input">
+                                                            class="card-radio-input" value="Razorpay">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bx bxl-paypal d-block h2 mb-3"></i>
                                                             RazorPay
@@ -235,7 +240,7 @@
                                                 <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="pay-method" id="pay-methodoption3"
-                                                            class="card-radio-input"  value="COD">
+                                                            class="card-radio-input" value="COD">
 
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bx bx-money d-block h2 mb-3"></i>
@@ -328,7 +333,7 @@
                                             </tr>
                                             <tr class="bg-light">
                                                 <td colspan="2">
-                                                    <h5 class="font-size-14 m-0">Total:</h5>
+                                                    <h5  id="orderTotal" class="font-size-14 m-0">Total:</h5>
                                                 </td>
                                                 <td>₹ <%= subTotal %>
                                                 </td>
@@ -797,55 +802,145 @@
 
 
             })
-          
-          
-          
+
+
+
             document.addEventListener('DOMContentLoaded', function () {
-    const placeorder = document.getElementById('place-order-btn');
-    const errormsg = document.getElementById('errormsg');
+                const placeorder = document.getElementById('place-order-btn');
+                const errormsg = document.getElementById('errormsg');
 
-    placeorder.addEventListener('click', function (e) {
-        e.preventDefault();
-        console.log('proceed clicked ');
+                placeorder.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('proceed clicked ');
 
-        const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
-        console.log('selectedAddress', selectAddress); // Corrected variable name
-        
-        if (!selectAddress) {
-            errormsg.innerHTML = 'Please select an address';
-            return; 
-        }
+                    const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
+                    console.log('selectedAddress', selectAddress); // Corrected variable name
 
-        const paymentOption = document.querySelector('input[name="pay-method"]:checked');
-        console.log('paymentOption', paymentOption)
-        if (!paymentOption) {
-            errormsg.innerHTML = 'Please select a payment option';
-            return; 
-        }
-
-        const selectedAddressValue = selectAddress.value;
-        console.log('selectedAddressValue',selectedAddressValue);
-        const paymentOptionValue = paymentOption.value;
-        console.log('paymentOptionValue',paymentOptionValue);
-
-
-        if (paymentOptionValue === "COD") {
-            
-            axios.post('/placeorder', { selectedAddressValue,  paymentOptionValue })
-                .then(res => {
-                    if (!res.data.success) {
-                        errormsg.innerHTML = res.data.message;
-                    } else {
-                        const orderId = res.data.orderId;
-                        window.location.href = `/ordersuccess?orderId=${orderId}`;
+                    if (!selectAddress) {
+                        errormsg.innerHTML = 'Please select an address';
+                        return;
                     }
-                })
-                .catch(err => {
-                    console.log('error in axios changing status', err);
+
+                    const paymentOption = document.querySelector('input[name="pay-method"]:checked');
+                    console.log('paymentOption', paymentOption)
+                    if (!paymentOption) {
+                        errormsg.innerHTML = 'Please select a payment option';
+                        return;
+                    }
+                    var orderAmount = document.getElementById('orderTotal').textContent.trim()
+                    var numericalPart = orderAmount.replace('₹', '');
+                    var Amount = parseFloat(numericalPart);
+
+                    console.log('Amount',Amount);
+
+                    const selectedAddressValue = selectAddress.value;
+                    console.log('selectedAddressValue', selectedAddressValue);
+
+                    const paymentOptionValue = paymentOption.value;
+                    console.log('paymentOptionValue', paymentOptionValue);
+
+
+                    if (paymentOptionValue === "COD") {
+
+                        axios.post('/placeorder', { selectedAddressValue, paymentOptionValue })
+                            .then(res => {
+                                if (!res.data.success) {
+                                    errormsg.innerHTML = res.data.message;
+                                } else {
+                                    const orderId = res.data.orderId;
+                                    window.location.href = `/ordersuccess?orderId=${orderId}`;
+                                }
+                            })
+                            .catch(err => {
+                                console.log('error in axios changing status', err);
+                            });
+                    } else if (paymentOptionValue === 'Razorpay') {
+
+                        axios.post('/createorder', { selectedAddressValue })
+                            .then(res => {
+                                if (res.data.success) {
+                                    console.log(res.data);
+                                    const { orderId } = res.data
+                                    console.log('orderId',orderId);
+
+                                    var options = {
+                                        key: res.data.key_id,
+                                        amount: res.data.amount * 100,
+                                        currency: 'INR',
+                                        name: 'Royal Oak',
+                                        description: 'Test Transaction',
+                                        order_id: orderId,
+
+
+                                      
+                                        handler: function (response) {
+                                            const status = 'success'
+                                            console.log('status', status);
+
+                                            axios.post('/verification', {
+
+                                                response,
+                                                razorpay_payment_id: response.razorpay_payment_id,
+                                                razorpay_order_id: response.razorpay_order_id,
+                                                razorpay_signature: response.razorpay_signature
+                                            }).then(res => {
+                                                if (res.data.success) {
+
+                                                    axios.post(`/placeorder?transactionId=${res.data.razorpay_payment_id}`, { selectedAddressValue, paymentOptionValue })
+                                                        .then(res => {
+                                                            if (!res.data.success) {
+
+                                                                errormsg.innerHTML = res.data.message;
+                                                            } else {
+                                                                const orderId = res.data.orderId;
+                                                                window.location.href = `/ordersuccess?orderId=${orderId}`;
+                                                            }
+                                                        })
+                                                        .catch(err => {
+                                                            console.log('error in axios changing status razorpay', err);
+                                                        });
+                                                }
+                                                else{
+                                                    alert('payment verification failed')
+                                                }
+                                            })
+                                            .catch(err=>{
+                                                console.error('verification failed',err)
+                                                
+                                                alert('verification failed')
+                                            })
+
+                                        },
+                                        prefill:{
+
+                                        },
+                                        theme:{
+                                            // start from here
+                                            color: "#2300a3"
+                                        }
+                                    };
+                                    var razorpayObject= new Razorpay(options)
+                                    razorpayObject.on('payment.failed',function(res){
+                                        const status ='pending'
+                                        axios.post('/placeorder',{selectedAddressValue, paymentOptionValue})
+                                        .then(res=>{
+                                            if(!res.data.success){
+                                                const orderId = res.data.orderId;
+                                                 window.location.href = `/orderpage?totalOrderAmount=`+Amount;
+                                            }
+                                        })
+                                    })
+                                    razorpayObject.open()
+                                }
+                            })
+                            .catch(err=>{
+                                console.log('error in checkout',err);
+                            })
+                    }else{
+
+                    }
                 });
-        }
-    });
-});
+            });
 
 
 

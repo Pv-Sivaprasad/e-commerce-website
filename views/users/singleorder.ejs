@@ -1,16 +1,17 @@
 <%- include('../layouts/profileHeader') %>
 
 
-    
-  
-      
-      <div class="container-fluid">
+
+
+
+    <div class="container-fluid">
         <div class="container">
             <!-- Title -->
             <div class="d-flex justify-content-between align-items-center py-3">
-                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orderDetails._id %></h2>
+                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orderDetails._id %>
+                </h2>
             </div>
-    
+
             <!-- Main content -->
             <div class="row">
                 <div class="col-lg-8">
@@ -19,10 +20,13 @@
                         <div class="card-body">
                             <div class="mb-3 d-flex justify-content-between">
                                 <div>
-                                    <span class="me-3"><%= orderDetails.createdAt.toLocaleDateString() %></span>
+                                    <span class="me-3">
+                                        <%= orderDetails.createdAt.toLocaleDateString() %>
+                                    </span>
                                     <span class="me-3">#<%= orderDetails._id %></span>
                                     <span class="me-3">Payment Method: <%= orderDetails.paymentMethod %></span>
-                                    <span class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
+                                    <span
+                                        class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
                                         <%= orderDetails.orderStatus %>
                                     </span>
 
@@ -39,44 +43,52 @@
                                         <th>Product Name</th>
                                         <th>Quantity</th>
                                         <th>Price</th>
-                                    
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% orderDetails.orderedItem.forEach(function(item) { %>
                                         <tr>
                                             <td>
-                                                <img src="userImages/<%= item.productId.images[0] %>" alt="Product Image" width="200" class="img-fluid">
+                                                <img src="userImages/<%= item.productId.images[0] %>"
+                                                    alt="Product Image" width="200" class="img-fluid">
                                             </td>
-                                            <td><%= item.productId.productName %></td>
-                                            <td><%= item.quantity %></td>
-                                            <td>₹<%= item.totalProductAmount %></td>
-                                        
+                                            <td>
+                                                <%= item.productId.productName %>
+                                            </td>
+                                            <td>
+                                                <%= item.quantity %>
+                                            </td>
+                                            <td>₹<%= item.totalProductAmount %>
+                                            </td>
+
                                         </tr>
-                                    <% }); %>
+                                        <% }); %>
                                 </tbody>
                                 <tfoot>
                                     <!-- Add subtotal, shipping, discount, and total rows here -->
                                 </tfoot>
                             </table>
                             <div class="card-footer">
-               
-                                <% if (orderDetails.orderStatus !== 'delivered') { %>
-                                    <button type="button" id="cancel-btn" class="  btn btn-danger" data-id="<%= orderDetails._id %>">Cancel</button>
+
+                                <% if (orderDetails.orderStatus !=='delivered' ) { %>
+                                    <button type="button" id="cancel-btn" class="  btn btn-danger"
+                                        data-id="<%= orderDetails._id %>">Cancel</button>
                                     <% } else { %>
-                                        <button type="button" id="cancel-btn" class="  btn btn-danger" data-id="<%= orderDetails._id %>">Cancel</button>
-                               <% } %>
-                                    </div>
-                          
-                               
+                                        <button type="button"    id="return-btn" class="  btn btn-primary"
+                                            data-id="<%= orderDetails._id %>">Return</button>
+                                        <% } %>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
-                
             </div>
+
         </div>
-        
+    </div>
+
     </div>
     <div class="col-lg-4 d-flex flex-column">
         <!-- Payment -->
@@ -85,103 +97,221 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <h3 class="h6">Payment Method</h3>
-                        <p><%= orderDetails.paymentMethod %>  <br>
-                        Total: ₹<%= orderDetails.orderAmount %> <span class="badge bg-success rounded-pill"></span></p>
+                        <p>
+                            <%= orderDetails.paymentMethod %> <br>
+                                Total: ₹<%= orderDetails.orderAmount %> <span
+                                        class="badge bg-success rounded-pill"></span>
+                        </p>
                     </div>
                     <div class="col-lg-6">
                         <h3 class="h6">Billing Info</h3>
                         <address>
-                            Name:  <%= orderDetails.userId.name %> <br />
-                            Phone: <%= orderDetails.userId.mobile %> <br />
+                            Name: <%= orderDetails.userId.name %> <br />
+                                Phone: <%= orderDetails.userId.mobile %> <br />
                         </address>
                     </div>
                 </div>
             </div>
         </div>
-    
+
         <div class="card mb-4">
             <div class="card-body">
                 <h3 class="h6">Shipping Information</h3>
-                <strong><%= orderDetails.shippingProvider %></strong>
-                <span><a href="<%= orderDetails.trackingLink %>" class="text-decoration-underline" target="_blank"><%= orderDetails.trackingNumber %></a> <i class="bi bi-box-arrow-up-right"></i></span>
+                <strong>
+                    <%= orderDetails.shippingProvider %>
+                </strong>
+                <span><a href="<%= orderDetails.trackingLink %>" class="text-decoration-underline" target="_blank">
+                        <%= orderDetails.trackingNumber %>
+                    </a> <i class="bi bi-box-arrow-up-right"></i></span>
                 <hr>
                 <h3 class="h6">Address</h3>
                 <address>
                     City: <%= orderDetails.deliveryAddress.city %>, <%= orderDetails.deliveryAddress.locality %> <br />
-                    <%= orderDetails.deliveryAddress.streetAddress %> <br />
-                    State : <%= orderDetails.deliveryAddress.state %> <br />
-                    PINCODE : <%= orderDetails.deliveryAddress.pincode %>
+                            <%= orderDetails.deliveryAddress.streetAddress %> <br />
+                                State : <%= orderDetails.deliveryAddress.state %> <br />
+                                    PINCODE : <%= orderDetails.deliveryAddress.pincode %> 
+                                    <input type="hidden" name=""  id="orderId" value="<%=orderDetails._id %>">
                 </address>
             </div>
         </div>
     </div>
-    
+
     </div>
+      <!-- return reason modal -->
+    <div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
+                <p id="errorMessage"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="returnReasonForm">
+                    <div class="mb-3">
+                        <label for="returnReason" class="form-label">Why are you returning this item?</label>
+                        <select class="form-select" id="returnReason">
+                            <option value="" selected>Choose...</option>
+                            <option value="damaged">Item was damaged</option>
+                            <option value="incorrect">Incorrect item was sent</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 d-none" id="otherReasonContainer">
+                        <label for="otherReason" class="form-label">Please specify:</label>
+                        <textarea class="form-control" id="otherReason" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmReturn" data-bs-dismiss="modal">Confirm Return</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<style>
-    body{
-    background:#eee;
-}
-.card {
-    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-}
-.card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 0 solid rgba(0,0,0,.125);
-    border-radius: 1rem;
-}
-.text-reset {
-    --bs-text-opacity: 1;
-    color: inherit!important;
-}
-a {
-    color: #5465ff;
-    text-decoration: none;
-}
-</style>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
- <script>
+    <style>
+        body {
+            background: #eee;
+        }
 
-    
-        document.addEventListener('DOMContentLoaded', function() {
-          const btn= document.getElementById('cancel-btn')
-          btn.addEventListener('click',function (e){
-            alert('clicked cancel')
-            e.preventDefault()
-            console.log('reached here');
+        .card {
+            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid rgba(0, 0, 0, .125);
+            border-radius: 1rem;
+        }
+
+        .text-reset {
+            --bs-text-opacity: 1;
+            color: inherit !important;
+        }
+
+        a {
+            color: #5465ff;
+            text-decoration: none;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('cancel-btn')
+            const bdg = document.querySelector('.badge')
+            btn.addEventListener('click', function (e) {
+                e.preventDefault()
+                console.log('reached here');
                 var orderId = this.getAttribute('data-id');
 
                 console.log("orderId", orderId);
 
                 // Send a PATCH request to the backend to cancel the order
                 axios.patch('/cancelorder', {
-                        orderId: orderId
+                    orderId: orderId
+                })
+                    .then(res => {
+                        console.log('res', res);
+
+                        window.location.href = '/singleorder'
                     })
-                    .then(res=>{
-                        console.log('res',res);
-                        
-                        window.location.href='/singleorder'
-                    })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.error(error);
                         // Optionally, handle errors here
                     });
-          })
-           
+            })
+
         });
+
+
+       
+
+        document.addEventListener('DOMContentLoaded', function() {
+ 
+    const returnBtn = document.getElementById('return-btn');
+    const returnModal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
+    const returnReasonSelect = document.getElementById('returnReason');
+    const confirmReturnBtn = document.getElementById('confirmReturn');
+    const orderId=document.getElementById('orderId').value
+
+  
+    function openReturnModal() {
+        returnModal.show();
+    }
+
    
+    function handleReturnReasonSelection() {
+     
+        const selectedReason = returnReasonSelect.value;
+
+        console.log('Selected return reason:', selectedReason);
+
+     
+        const otherReasonContainer = document.getElementById('otherReasonContainer');
+        if (selectedReason === 'other') {
+            otherReasonContainer.classList.remove('d-none');
+        } else {
+            otherReasonContainer.classList.add('d-none');
+        }
+    }
+
+   
+    function confirmReturn() {
+       
+        const selectedReason = returnReasonSelect.value;
+
+       
+        let additionalInfo = '';
+        if (selectedReason === 'other') {
+            additionalInfo = document.getElementById('otherReason').value;
+        }
+        console.log('Selected return reason:', selectedReason);
+       
+       
+        axios.patch('/returnorder', {
+        orderId: orderId, 
+        reason: selectedReason,
+        additionalInfo: additionalInfo
+    })
+    .then(response => {
+       
+        console.log('Return request successful:', response.data);
+        window.location.href = '/singleorder'
+        returnModal.hide();
+    })
+    .catch(error => {
+       
+        console.error('Error sending return request:', error);
+      
+    });
+    }
+
+    // Add event listeners
+    returnBtn.addEventListener('click', openReturnModal);
+    returnReasonSelect.addEventListener('change', handleReturnReasonSelection);
+    confirmReturnBtn.addEventListener('click', confirmReturn);
 
     
-</script> 
+});
 
 
 
-<br><br><br>
-<%- include('../layouts/profilefooter') %>
+    </script>
+
+
+
+    <br><br><br>
+    <%- include('../layouts/profilefooter') %>
