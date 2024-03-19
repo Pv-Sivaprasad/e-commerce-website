@@ -33,7 +33,8 @@ const securePassword = async (password) => {
 const home = async (req, res) => {
     try {
    if(req.session.user_id){
-    res.render('users/userhome')
+    const products = await Product.find({});
+    res.render('users/userhome',{products:products})
    }else{
     res.render('users/home')
    }
@@ -591,6 +592,9 @@ module.exports =
     editProfile,
     renderProfileOTPPage,
     verifyProfileOtp
+
+
+    
 
 }
 

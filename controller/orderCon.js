@@ -5,6 +5,7 @@ const Order = require('../model/orderModel')
 const Category = require('../model/categoryModel')
 const Payment = require('../model/paymentModel')
 const Cart = require('../model/cartModel')
+const Wallet=require('../model/walletModel')
 
 
 //load the full orders of user
@@ -173,17 +174,23 @@ const cancelOrder=async(req,res)=>{
 }
 
 const returnOrder=async(req,res)=>{
+console.log('entering returing product');
+
     try {
         
         console.log(req.body);
 
         const userId=req.session.user_id
-
+        
         const {selectedReason,orderId}=req.body
 
-        if(!selectedReason){
-            res.json({success:false})
-        }
+        console.log('selectedReason',selectedReason  );
+
+        console.log('orderId',orderId);
+
+        // if(!selectedReason){
+        //    return res.json({success:false})
+        // }
 
         const orderStatus= await Order.updateOne({_id:orderId},{
             $set:{
@@ -191,8 +198,63 @@ const returnOrder=async(req,res)=>{
             }
         })
 
+        
+        const order=await Order.findOne({_id:orderId})
+
+        console.log('order',order);
+
+        for (const item of order.orderedItem) {
+            const product = await Product.findById(item.productId);
+            if (!product) {
+                return res.status(404).json({ success: false, error: `Product ${item.productId} not found` });
+            }
+            product.quantity += item.quantity;
+            await product.save();
+        }
+
+        console.log('product quantity updated successfully');
+
+        const orderAmount=order.orderAmount
+
+        const isexistWallet= await Wallet.findOne({userId:userId})
+
+        if(!isexistWallet){
+            const newWallet= new Wallet({
+                userId:userId,
+                balance:orderAmount,
+                transaction:[{
+                    amount:orderAmount,
+                    transactionsMethod:'Refund'
+                }]
+            })
+            await newWallet.save()
+        }
+        // else{
+        //      await Wallet.updateOne({userId:userId},
+        //         {$inc:{
+        //             balance:orderAmount, $push:{transaction:{amount:orderAmount,transactionsMethod:'Refund'}}
+        //         }}
+
+        //         )
+        // }
+        else {
+            // Update wallet balance and push a new transaction
+            await Wallet.updateOne(
+                { userId: userId },
+                {
+                    $inc: { balance: orderAmount },
+                    $push: { transactions: { amount: orderAmount, transactionsMethod: 'Refund' } }
+                }
+            );
+        }
+
+        const productStatus=await Order.findOne({})
+
+
+        
+
         if(orderStatus){
-            res.status(200).json({ success: true })
+            res.json({ success: true })
         }else{
             res.json({success:false})
         }

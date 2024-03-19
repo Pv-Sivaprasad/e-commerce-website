@@ -1,0 +1,273 @@
+<%- include('../layouts/userHeader') %>
+    <br><br><br><br>
+    <div class="page-wrapper" id="walletdiv" style="background-color: rgb(241, 243, 246);">
+
+        <main class="main">
+            <div class="page-content">
+                <div class="dashboard">
+                    <div class="container-fluid ">
+                        <div class="row mt-5">
+
+                            <div class="col-md-8 col-lg-11">
+                                <div class="tab-content">
+                                    <div class="p-5 shadow rounded bg-white">
+                                        <h2 class="mb-5 text-center" style="color:#717fe0;">
+                                            Wallet Details</h2>
+
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body" style="width:320px">
+                                                        <h5 class="card-title "><i class="fa fa-wallet"
+                                                                style="color: #717fe0;"></i>
+                                                            Wallet Balance</h5>
+                                                        <%if(WalletDetails){%>
+                                                            <p class="mt-4"><strong>Current
+                                                                    Balance:</strong> <span id="walletBalance">
+                                                                    ₹<%= WalletDetails ? WalletDetails.balance : 0 %>
+                                                                </span></p>
+                                                            <%}else{%>
+                                                                <p class="mt-4">
+                                                                    <strong>Current
+                                                                        Balance:</strong>
+                                                                    <span id="walletBalance">
+                                                                        ₹0
+
+                                                                    </span>
+                                                                </p>
+
+                                                                <%}%>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title"><i class="fa fa-history"
+                                                                style="color: #717fe0;"></i>
+                                                            Transaction History</h5>
+                                                        <p>View your recent transactions
+                                                            .</p>
+                                                        <div class="text-center mt-4">
+                                                            <a href="#transactions" id="transactionbtn"
+                                                                class="btn btn-primary px-4" style="width: 150px;">View
+                                                                All Transactions</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button id="addFund" class="btn btn-primary px-4" style="width: 150px;">Add
+                                                To Wallet </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <div class="page-wrapper " id="transaction" style="background-color: rgb(241, 243, 246); display:none">
+        <main class="main">
+            <div class="page-content">
+                <div class="dashboard">
+                    <div class="container-fluid">
+                        <div class="row mt-5">
+                            <div class="col-md-8 col-lg-11">
+                                <div class="tab-content">
+                                    <div class="p-5 shadow rounded bg-white">
+                                        <h2 class="mb-5 text-center" style="color:#717fe0;">
+                                            Transaction History</h2>
+
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Transaction Method</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+
+                                                    <% if (WalletDetails){%>
+
+                                                        <% WalletDetails.transaction.forEach(item=>
+                                                            {%>
+
+
+                                                            <tr>
+                                                                <td>
+                                                                    <%=item.formattedDate%>
+                                                                </td>
+                                                                <td>
+                                                                    <%=item.transactionsMethod%>
+                                                                </td>
+                                                                <td>₹<%=item.amount%>
+                                                                </td>
+                                                            </tr>
+                                                            <%})%>
+                                                                <%}%>
+                                                                    <!-- More transactions can be dynamically added here -->
+                                                </tbody>
+                                            </table>
+                                            <button id="backToWallet" class="btn btn-secondary px-4" style="width: 150px;">Back to Wallet</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <style>
+        .page-wrapper {
+            margin: 0 auto;
+
+            width: 80%;
+
+        }
+    </style>
+
+    <br><br>
+
+
+    <%- include('../layouts/userFooter') %>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+
+                document.getElementById('transactionbtn').addEventListener('click', function (e) {
+                    e.preventDefault()
+
+                    document.getElementById('walletdiv').style.display = 'none'
+                    document.getElementById('transaction').style.display = 'block'
+                })
+                document.getElementById('backToWallet').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById('walletdiv').style.display = 'block';
+                    document.getElementById('transaction').style.display = 'none';
+                });
+
+                const addFund = document.getElementById('addFund')
+                addFund.addEventListener('click', function () {
+                    Swal.fire({
+                        title: 'update Wallet',
+                        input: 'number',
+                        inputLabel: 'Amount',
+                        inputPlaceholder: 'Enter the amount you want to add to your wallet',
+                        inputAttributes: {
+                            min: 1,
+
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Add',
+                        cancelButtonText: 'Cancel',
+                    })
+                        .then(res => {
+                            if (res.isConfirmed) {
+                                const Amount = res.value
+
+                                axios.post('/addfunds', { Amount })
+                                    .then(res => {
+                                        alert('reached then of add funds')
+                                        if (res.data.success) {
+                                            alert('reached then of add funds data.res.success')
+                                            const { orderId } = res.data
+                                            alert(`orderID  ${orderId}`)
+                                            console.log(res.data);
+
+                                            var options = {
+                                                key: res.data.key_id,
+                                                amount: Amount * 100,
+                                                currency: "INR",
+                                                name: "Royal Oak ",
+                                                description: "Test Transaction",
+                                                order_id: orderId,
+
+                                                handler: function (response) {
+
+                                                    axios.post('/fundverification', {
+
+                                                        response,
+                                                        razorpay_payment_id: response.razorpay_payment_id,
+                                                        razorpay_order_id: response.razorpay_order_id,
+                                                        razorpay_signature: response.razorpay_signature
+                                                    })
+                                                        .then(res => {
+                                                            if (res.data.success) {
+                                                                alert('fundverificaation completed')
+                                                                axios.post('/addwallet', { Amount })
+                                                                    .then(res => {
+                                                                        alert('reached add wallet')
+                                                                        if (res.data.success) {
+                                                                            Swal.fire('Added!', `Amount added:`, 'success')
+                                                                                .then((result) => {
+                                                                                    if (result) {
+                                                                                        Swal.fire({
+                                                                                            icon: 'success',
+                                                                                            title: 'Amount Updated',
+                                                                                            text: 'The amount has been successfully updated in your wallet.',
+                                                                                            showConfirmButton: false,
+                                                                                            timer: 2000,// Close the alert after 2 seconds
+                                                                                            onClose: () => {
+                                                                                                setTimeout(() => {
+                                                                                                    window.location.href = "/wallet";  // Redirect to the wallet page
+                                                                                                }, 2000);  // Delay for 2 seconds before redirecting
+                                                                                            }
+                                                                                        });
+
+                                                                                    }
+                                                                                })
+                                                                        } else {
+                                                                            Swal.fire('Something wrong');
+                                                                        }
+                                                                    })
+                                                            } else {
+                                                                alert('Payment verification failed');
+                                                            }
+                                                        }).catch(err => {
+                                                            console.error('Verification request failed', error);
+                                                            alert('Payment verification failed');
+                                                        })
+                                                },
+                                                prefill: {
+
+                                                },
+                                                theme: {
+                                                    color: '#3399cc'
+                                                }
+                                            };
+                                            var razorpayObject = new Razorpay(options)
+                                            razorpayObject.on('payment.failed', function (res) {
+                                                alert('payment failed')
+                                            })
+                                            razorpayObject.open()
+                                        }
+                                    }).catch(err => {
+                                        console.log('error');
+                                    })
+
+                            }
+                        })
+                })
+
+            })
+
+        </script>

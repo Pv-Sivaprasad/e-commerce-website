@@ -204,7 +204,7 @@
             text-decoration: none;
         }
     </style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
 
@@ -286,11 +286,24 @@
         reason: selectedReason,
         additionalInfo: additionalInfo
     })
-    .then(response => {
+    .then(res => {
        
-        console.log('Return request successful:', response.data);
-        window.location.href = '/singleorder'
+        console.log('Return request successful:', res.data);
+       
+    
+
         returnModal.hide();
+
+        swal({
+      title: "Return Successful!", // More descriptive title
+      text: "The product has been returned and a refund has been initiated to your wallet.", // Clearer message
+      icon: "success",
+      button: "OK",
+    }).then(() => { // This callback executes only after user clicks "OK"
+      window.location.reload(); // Reload the page after confirmation
+    });
+    
+
     })
     .catch(error => {
        

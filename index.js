@@ -122,5 +122,10 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 
+app.use((req, res, next) => {
+    res.status(404).render('users/error');
+  });
+  
+
 
 

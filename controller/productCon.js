@@ -79,10 +79,6 @@ const addProduct = async (req, res) => {
     }
 };
 
- 
-
-
-
 
 //to load edit product page
 const loadEditProduct = async (req, res) => {

@@ -1,7 +1,21 @@
 <%- include('../layouts/userHeader') %>
 
 
+<style>
+  .btn.add_cart {
+    background-color: transparent;
+    color: #ff1493; /* Dark pink color */
+    padding: 5px 10px; /* Adjust padding as needed */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold; /* Adding font-weight */
+}
 
+.btn.add_cart:hover {
+    background-color: #ff1493; /* Dark pink color */
+    color: white;
+}
+</style>
 
     <!-- banner part start-->
    
@@ -192,53 +206,44 @@
     <!-- awesome_shop part start-->
 
     <!-- product_list part start-->
-    <section class="product_list best_seller section_padding">
+    <section class="product_list section_padding">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="section_tittle text-center">
-                        <h2>Best Sellers <span>shop</span></h2>
+                        <h2>awesome <span>shop</span></h2>
                     </div>
                 </div>
             </div>
-            <div class="row align-items-center justify-content-between">
+            <div class="row">
                 <div class="col-lg-12">
-                    <div class="best_product_slider owl-carousel">
-                        <div class="single_product_item">
-                            <img src="/assets/img/product/product_1.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
+                    <div class="product_list_slider owl-carousel">
+                        <div class="single_product_list_slider">
+                            <div class="row align-items-center justify-content-between">
+                               
+                                  
+                                        <% products.forEach((product) => { %>
+                                            <% if (!product.is_blocked && !product.categoryId.is_blocked) { %>
+                                                <div class="col-lg-3 col-sm-6">
+                                              <div class="single_product_item">
+                                                <a href="/productdetails/<%= product._id %>">
+                                                  <img src="userImages/<%= product.images[0] %>" alt="<%= product.name %>">
+                                                </a>
+                                                <div class="single_product_text">
+                                                  <h4><%= product.productName %></h4>
+                                                  <h3><span id="price"  value="<%= product.price %>"  class="sale-price">₹<%= product.price %></span></h3>
+                                                  <input type="hidden"  id="productId" name="" value="<%=product._id%>">
+                                                  <button class="btn add_cart" value="<%= product._id %>" price="<%= product.price %>"><span style="color: pink;">+ Add to Cart</span></button>
+
+                                                 <!-- <button class="btn add_cart" id="addToCart"><span style="color: pink;">+ Add to Cart</span></button> -->
+                                                 <a href="#" class="add_to_wishlist"><i class="ti-heart"></i> </a>
+                                                </div>
+                                              </div>
+                                            </div> 
+                                            <% } %>
+                                          <% }) %>
                         </div>
-                        <div class="single_product_item">
-                            <img src="/assets/img/product/product_2.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="/assets/img/product/product_3.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="/assets/img/product/product_4.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
-                        <div class="single_product_item">
-                            <img src="/assets/img/product/product_5.png" alt="">
-                            <div class="single_product_text">
-                                <h4>Quartz Belt Watch</h4>
-                                <h3>$150.00</h3>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -263,7 +268,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
     </section>
@@ -316,3 +321,64 @@
 
 
     <%- include('../layouts/userFooter') %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" 
+    integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <script>
+       cument.addEventListener('DOMContentLoaded', function () {
+    const addCartButtons = document.querySelectorAll('.add_cart');
+
+    addCartButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            alert('clicked'); // For testing purposes
+
+            const productId = this.getAttribute('value');
+            const price = this.getAttribute('price');
+
+            // Check if productId and price are valid
+            if (!productId || !price) {
+                console.log('Product ID or price not found.');
+                return;
+            }
+
+            axios.post('/addToCart', { productId, price })
+                .then(res => {
+                    console.log('success');
+                    console.log(res);
+
+                    if (res.data.success) {
+                        // Product successfully added to cart
+                        swal({
+                            title: "Added to Cart!",
+                            text: "The product has been successfully added to your cart.",
+                            icon: "success",
+                            button: "OK",
+                        });
+                    } else if (res.data.addedToCart) {
+                        // Product already in cart
+                        swal({
+                            title: "Already in Cart!",
+                            text: "The product is already in your cart.",
+                            icon: "warning",
+                            button: "OK",
+                        });
+                    } else if (res.data.outOfStock) {
+                        // Product out of stock
+                        swal({
+                            title: "Out Of Stock!",
+                            text: "The product is out of stock. Sorry for the inconvenience.",
+                            icon: "warning",
+                            button: "OK",
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log('error in cart axios', err);
+                });
+        });
+    });
+});
+    </script>
+        

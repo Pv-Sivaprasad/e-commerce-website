@@ -168,7 +168,7 @@
     </div>
  
 </section>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -188,6 +188,14 @@
             })
             .then((data)=>{
                 console.log("data",data);
+                swal({
+      title: "status !", // More descriptive title
+      text: "The product status has been changed.", // Clearer message
+      icon: "success",
+      button: "OK",
+    }).then(() => { // This callback executes only after user clicks "OK"
+      window.location.reload(); // Reload the page after confirmation
+    });
             })
             .catch(function (error) {
                 console.error(error);

@@ -25,7 +25,7 @@ const paymentSchema= new mongoose.Schema({
     paymentMethod:{
         type:String,
         required:true,
-        enum: ['COD',"online",'credit','Wallet']
+        enum: ['COD',"Razorpay",'credit','Wallet']
     },
     transactionId:{
         type:String,

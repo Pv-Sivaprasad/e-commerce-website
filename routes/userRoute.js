@@ -95,6 +95,11 @@ userRoute.get('/singleorder',auth.isLogin,orderController.singleOrder)
 userRoute.patch('/cancelorder',auth.isLogin,orderController.cancelOrder)
 userRoute.patch('/returnorder',auth.isLogin,orderController.returnOrder)
 
+userRoute.get('/wallet',auth.isLogin,paymentController.wallet)
+userRoute.post('/addfunds',auth.isLogin,paymentController.addFunds)
+userRoute.post('/fundVerification',auth.isLogin,paymentController.fundverification)
+userRoute.post('/addwallet',auth.isLogin,paymentController.addToWallet)
+userRoute.post('/placeorderwallet',paymentController.placeOrderWallet)
 
 
 
@@ -103,6 +108,7 @@ userRoute.patch('/returnorder',auth.isLogin,orderController.returnOrder)
 
 
 
+  
 
 
 
