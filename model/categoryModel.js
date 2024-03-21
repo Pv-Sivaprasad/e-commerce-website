@@ -8,13 +8,13 @@ const categorySchema=mongoose.Schema({
     catName:{
         type:String,
         required:true
-    },
+    },  
     description:{
      type:String,
      required:true
     },
     is_Blocked:{
-        type:String,
+        type:Boolean,
         default:false
     },
     image:{

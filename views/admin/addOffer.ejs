@@ -1,0 +1,69 @@
+<%- include('../layouts/adminHeader') %>
+
+<h1>Add Offer !!!</h1>
+
+<div class="container">
+    <form action="addoffer" method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="offerName" class="form-label">Offer Name</label>
+                    <input type="text" class="form-control" name="offerName" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="discount" class="form-label">Discount</label>
+                    <input type="number" class="form-control" name="discount" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" name="startDate">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input type="date" class="form-control" name="endDate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="offerType" class="form-label">Offer Type</label>
+                    <select class="form-select" name="offerType" required>
+                        <option value="category">Category</option>
+                        <option value="product">Product</option>
+                        <option value="referral">Referral</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="productId" class="form-label">Product ID</label>
+                    <input type="text" class="form-control" name="productId">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="categoryId" class="form-label">Category ID</label>
+                    <input type="text" class="form-control" name="categoryId">
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Offer</button>
+    </form>
+</div>
+
+
+
+
+<br><br><br>
+<%- include('../layouts/adminFooter') %>

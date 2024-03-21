@@ -13,6 +13,10 @@ const { log } = require('console')
 const   loadProduct = async (req, res) => {
     try {
         const products = await Product.find({}).populate('categoryId')
+
+       
+        console.log('products',products);
+
         res.render('allProduct', { products })
     } catch (error) {
         console.log('error loading product page');
@@ -48,7 +52,7 @@ const addProduct = async (req, res) => {
         if (isNaN(price) || price < 0) {
             return res.status(400).json({ success: false, message: 'Product price must be a non-negative number' });
         }
-        
+            
         // Validate quantity
         const quantity = parseInt(details.quantity);
         if (isNaN(quantity) || quantity < 0) {

@@ -42,7 +42,7 @@ const addCategory = async (req, res) => {
         console.log("req", req.body, req.file); // Check if file is properly received
         const { catName, description } = req.body;
     const cat=await Category.findOne({catName:catName})
-        // Validation: Check if category name and description have at least one character
+       
         if (!catName || !description || catName.trim().length === 0 || description.trim().length === 0) {
             console.log('Category name or description is empty');
             return res.render('addCategory', { category:cat,error: 'Category name and description must have at least one character' });

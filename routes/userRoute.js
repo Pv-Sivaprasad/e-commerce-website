@@ -86,6 +86,7 @@ userRoute.post('/checkaddress',auth.isLogin,addressController.checkoutAddAddress
 userRoute.get('/ordersuccess',auth.isLogin,cartController.orderSuccess)
 userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 
+//razorpay checkout
 userRoute.post('/createorder',auth.isLogin,paymentController.createOrder)
 userRoute.post('/verification',auth.isLogin,paymentController.verifypayment)
 
@@ -95,11 +96,18 @@ userRoute.get('/singleorder',auth.isLogin,orderController.singleOrder)
 userRoute.patch('/cancelorder',auth.isLogin,orderController.cancelOrder)
 userRoute.patch('/returnorder',auth.isLogin,orderController.returnOrder)
 
+
+// all wallet related
 userRoute.get('/wallet',auth.isLogin,paymentController.wallet)
 userRoute.post('/addfunds',auth.isLogin,paymentController.addFunds)
 userRoute.post('/fundVerification',auth.isLogin,paymentController.fundverification)
 userRoute.post('/addwallet',auth.isLogin,paymentController.addToWallet)
 userRoute.post('/placeorderwallet',paymentController.placeOrderWallet)
+
+//all wishlist related
+userRoute.get('/wishlist',auth.isLogin,userController.wishlist)
+userRoute.post('/addToWishlist',auth.isLogin,userController.addToWishlist)
+userRoute.patch('/removeFromWishlist',auth.isLogin,userController.removeFromWishlist)
 
 
 

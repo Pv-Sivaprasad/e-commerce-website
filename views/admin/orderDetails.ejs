@@ -44,7 +44,7 @@
                             <tr>
                                 <td><%= i + 1 %></td>
                                 <td><%= order._id %></td>
-                                <td><%= item.productId.productName %></td>
+                                <td><%= order.productName %></td>
                                 <td><%= order.formattedCreatedAt %></td>
                                 <td><%= order.deliveryAddress ? order.deliveryAddress.name : 'N/A' %></td>
                                 <td>₹<%= order.orderAmount %></td>

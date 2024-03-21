@@ -4,7 +4,7 @@ const Products = require('../model/productModel');
 const Address = require('../model/addressModel')
 const mongoose = require('mongoose')
 const Order=require('../model/orderModel')
-
+const Coupon=require('../model/couponModel')
 
 
 const loadCartPage = async (req, res) => {
@@ -50,6 +50,7 @@ const addProductsToCart = async (req, res) => {
         console.log(` productId ${productId},  `);
         const userId = req.session.user_id;
         console.log(userId);
+        
         const existingProduct = await Cart.findOne({ userId: userId, 'product.productId': productId }, { 'product.$': 1 });
         console.log('existingProduct:', existingProduct);
 
@@ -154,6 +155,13 @@ const loadCheckoutPage = async (req, res) => {
         const address = await Address.find({ userId: userId })
         console.log('address', address);
 
+        const coupon =await Coupon.find({})
+            console.log('coupon',coupon);  
+
+            const  minAmounts = coupon.map(couponItem => couponItem.minimumAmount);
+
+            console.log('minAmounts',minAmounts);
+
         const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
         console.log("cartDetails", cartDetails);
 
@@ -167,8 +175,17 @@ const loadCheckoutPage = async (req, res) => {
 
         console.log('Total:', total);
 
+      if(total>=minAmounts){
 
-        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total })
+    
+        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon })
+      
+    }else{
+        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon })
+    }
+
+
+       
     } catch (error) {
         console.log('error rendering checkoutpage');
         console.log(error);

@@ -25,6 +25,8 @@
                                 </div>
                                 <div class="feed-item-list">
                                     <div>
+
+                                        <!-- Billing info from here -->
                                         <h5 class="font-size-16 mb-1">Billing Info</h5>
                                         <p class="text-muted text-truncate mb-4">please enter or select the address</p>
                                         <div class="mb-3">
@@ -142,6 +144,8 @@
                                     </div>
                                     <div class="feed-item-list">
                                         <div>
+
+                                            <!-- shipping info from here -->
                                             <h5 class="font-size-16 mb-1">Shipping Info</h5>
                                             <p class="text-muted text-truncate mb-4">Select the address that needs to be
                                                 delivered</p>
@@ -189,7 +193,7 @@
                             </form>
 
 
-
+                                <!-- new Address adding -->
                             <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
                                 data-bs-target="#addAddressModal">
                                 + Add New
@@ -340,9 +344,16 @@
                                                 <td>₹ <%= subTotal %>
                                                 </td>
                                             </tr>
+                                           
+                                               
+                                                        
                                 </tbody>
+                               
                             </table>
+                            <button id="couponsButton" class="btn btn-primary rounded-pill lightBlueButton" 
+                            data-bs-toggle="modal" data-bs-target="#couponsModal">Coupons</button>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -729,6 +740,36 @@
     </div>
 
 
+
+    <!-- add coupons modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="couponsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="couponsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="couponsModalLabel">Available Coupons</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        
+
+          <% couponData.forEach(function(coupon) { %>
+            <% if (coupon.minimumAmount) { %>
+              <p>Coupon Code: <%= coupon.couponCode %> - Discount: <%= coupon.discountAmount %></p>
+            <% } else { %>
+              <p>No coupons available.</p>
+            <% } %>
+          <% }); %>
+          <textarea id="couponInput" class="form-control" rows="3" placeholder="Enter coupon code..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
     <%- include('../layouts/userfooter') %>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

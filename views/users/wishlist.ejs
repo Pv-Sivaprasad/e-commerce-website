@@ -1,0 +1,187 @@
+<%- include('../layouts/userHeader') %>
+
+<br><br><br>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td colspan="2">
+                <h1 class="text-center">My Wishlist</h1>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">   
+                <!-- Wishlist Item 1 -->
+                <% wishlist.forEach(item => { %>
+                    <div class="cart-item d-md-flex justify-content-between mb-4">
+                        <span class="remove-item" data-product-id="<%= item._id%>"><i class=" fa fa-times"  ></i></span>
+                        <div class="px-3 my-3">
+                            <a class="cart-item-product" href="#">
+                                <div class="cart-item-product-thumb"><img src="userImages/<%= item.productId.images[0] %>" alt="<%= item.productName %>"></div>
+                                <div class="cart-item-product-info">
+                                      <h4 class="cart-item-product-title"><%= item.productId.productName %></h4>
+                                    <div class="text-lg text-body font-weight-medium pb-1">$<%= item.productId.price  %></div>
+                                   <span>Availability: <span class="text-success font-weight-medium">In Stock  --></span><%=item.productId.quantity %></span>
+                                </div>
+                                <br><br>
+                                <%=item.productId._id%> <div class="buttons"> <button id="addToCart" class="btn btn-outline-warning btn-long cart"
+                                    value="<%=item.productId._id%>">Add to Cart</button>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
+                
+              
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br><br><br>
+
+
+<%- include('../layouts/userFooter') %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+                const addcartBtn = document.getElementById('addToCart')
+
+                const productId = document.getElementById('productId').value
+                console.log(productId);
+
+                addcartBtn.addEventListener('click', function () {
+                    const price = document.getElementById('price').value
+                    console.log(price);
+
+
+                    axios.post('/addToCart', { productId, price })
+                        .then(res => {
+                            console.log('success');
+                            console.log(res);
+
+                            if (res.data.success) {
+                                // Product successfully added to cart
+                                swal({
+                                    title: "Added to Cart!",
+                                    text: "The product has been successfully added to your cart.",
+                                    icon: "success",
+                                    button: "OK",
+                                });
+                            } else if (res.data.addedToCart) {
+                                // Product already in cart
+                                swal({
+                                    title: "Already in Cart!",
+                                    text: "The product is already in your cart.",
+                                    icon: "warning",
+                                    button: "OK",
+                                });
+                            } else if (res.data.outOfStock) {
+                                // Product out of stock
+                                swal({
+                                    title: "Out Of Stock!",
+                                    text: "The product is out of stock. Sorry for the inconvenience.",
+                                    icon: "warning",
+                                    button: "OK",
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            console.log('error in cart axios', err);
+                        });
+
+                })
+            })
+
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+           document.querySelectorAll('.remove-item').forEach(icon => {
+            icon.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productId = this.getAttribute('data-product-id')
+            console.log(this);
+               
+            // Show confirmation prompt before removing item from wishlist
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this item from your wishlist!",
+                icon: "warning",
+                buttons: ["Cancel", "Delete"],
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    // User confirmed deletion, proceed with removing item from wishlist
+                    axios.patch('/removeFromWishlist', { productId })
+                        .then((res) => {
+                            console.log(res);
+                            if (res.data.removed) {
+                                window.location.href = '/wishlist';
+                            }
+                        })
+                        .catch(err => {
+                            console.log('error in remove wishlist axios', err);
+                        });
+                } else {
+                    // User canceled deletion, do nothing
+                    console.log("Deletion canceled.");
+                }
+            });
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+const addcartBtn = document.getElementById('addToCart')
+
+const productId = document.getElementById('productId').value
+console.log(productId);
+
+addcartBtn.addEventListener('click', function () {
+    const price = document.getElementById('price').value
+    console.log(price);
+
+alert('clicked')
+    axios.post('/addToCart', { productId, price })
+        .then(res => {
+            console.log('success');
+            console.log(res);
+
+            if (res.data.success) {
+                // Product successfully added to cart
+                swal({
+                    title: "Added to Cart!",
+                    text: "The product has been successfully added to your cart.",
+                    icon: "success",
+                    button: "OK",
+                });
+            } else if (res.data.addedToCart) {
+                // Product already in cart
+                swal({
+                    title: "Already in Cart!",
+                    text: "The product is already in your cart.",
+                    icon: "warning",
+                    button: "OK",
+                });
+            } else if (res.data.outOfStock) {
+                // Product out of stock
+                swal({
+                    title: "Out Of Stock!",
+                    text: "The product is out of stock. Sorry for the inconvenience.",
+                    icon: "warning",
+                    button: "OK",
+                });
+            }
+        })
+        .catch(err => {
+            console.log('error in cart axios', err);
+        });
+
+})
+})
+
+
+</script>

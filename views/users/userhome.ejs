@@ -149,7 +149,7 @@
                         <div class="col-lg-12">
                             <div class="best_product_slider owl-carousel">
                                 <% products.forEach((product) => { %>
-                                    <% if (!product.is_blocked && !product.categoryId.is_blocked) { %>
+                                    <% if (!product.is_blocked && !product.categoryId.is_Blocked) { %>
                                         <div class="single_product_item">
                                         <a href="/productdetails/<%=product._id%>" >   <img src="userImages/<%= product.images[0] %>" alt="<%= product.name %>"></a> 
                                             <div class="single_product_text">
@@ -222,26 +222,25 @@
                             <div class="row align-items-center justify-content-between">
                                
                                   
-                                        <% products.forEach((product) => { %>
-                                            <% if (!product.is_blocked && !product.categoryId.is_blocked) { %>
-                                                <div class="col-lg-3 col-sm-6">
-                                              <div class="single_product_item">
+                                <% products.forEach((product) => { %>
+                                    <% if (!product.is_blocked && !product.categoryId.is_Blocked) { %>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="single_product_item">
                                                 <a href="/productdetails/<%= product._id %>">
-                                                  <img src="userImages/<%= product.images[0] %>" alt="<%= product.name %>">
+                                                    <img src="userImages/<%= product.images[0] %>" alt="<%= product.productName %>">
                                                 </a>
                                                 <div class="single_product_text">
-                                                  <h4><%= product.productName %></h4>
-                                                  <h3><span id="price"  value="<%= product.price %>"  class="sale-price">₹<%= product.price %></span></h3>
-                                                  <input type="hidden"  id="productId" name="" value="<%=product._id%>">
-                                                  <button class="btn add_cart" value="<%= product._id %>" price="<%= product.price %>"><span style="color: pink;">+ Add to Cart</span></button>
-
-                                                 <!-- <button class="btn add_cart" id="addToCart"><span style="color: pink;">+ Add to Cart</span></button> -->
-                                                 <a href="#" class="add_to_wishlist"><i class="ti-heart"></i> </a>
+                                                    <h4><%= product.productName %></h4>
+                                                    <h3><span id="price" value="<%= product.price %>" class="sale-price">₹<%= product.price %></span></h3>
+                                                    <input type="hidden" id="productId" name="" value="<%= product._id %>">
+                                                    <button class="btn add_cart" value="<%= product._id %>" price="<%= product.price %>"><span style="color: pink;">+ Add to Cart</span></button>
+                                                    <a href="#" class="add_to_wishlist"><i class="ti-heart"></i> </a>
                                                 </div>
-                                              </div>
-                                            </div> 
-                                            <% } %>
-                                          <% }) %>
+                                            </div>
+                                        </div> 
+                                    <% } %>
+                                <% }) %>
+                                
                         </div>
                        
                     </div>

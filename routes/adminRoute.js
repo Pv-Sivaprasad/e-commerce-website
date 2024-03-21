@@ -7,6 +7,8 @@ const config = require('../config/config')
 const adminController = require('../controller/adminCon')
 const productController=require('../controller/productCon')
 const categoryController=require('../controller/categoryCon')
+const copuonController=require('../controller/couponCon')
+const offerController=require('../controller/offerCon')
 const auth=require('../middleware/adminAuth')
 const upload=require('../middleware/upload')
 const multer = require('multer')
@@ -63,6 +65,17 @@ adminRoute.get('/singleorderview',adminController.singleProduct)
 adminRoute.post('/updatestatus',adminController.updateStatus)
 
 
+//coupon related details
+adminRoute.get('/coupon',copuonController.couponPage)
+adminRoute.get('/addcoupon',copuonController.loadAddCoupon)
+adminRoute.post('/addcoupon',copuonController.addCoupon)
+adminRoute.get('/editcoupon',copuonController.loadEditCoupon)
+adminRoute.post('/editcoupon',copuonController.editCoupon)
+adminRoute.post('/deletecoupon',copuonController.deleteCoupon)
+
+//offer related details
+adminRoute.get('/offer',offerController.offerPage)
+adminRoute.get('/addoffer',offerController.addOffer)
 
 
 

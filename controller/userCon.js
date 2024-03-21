@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const config = require('../config/config')
 const Category = require('../model/categoryModel')
 const Product = require('../model/productModel')
+const Wishlist = require('../model/wishlistModel')
 const nodemailer = require('nodemailer')
 const speakeasy = require('speakeasy');
 const otpGenerator = require('otp-generator')
@@ -32,14 +33,14 @@ const securePassword = async (password) => {
 // for loading the home page
 const home = async (req, res) => {
     try {
-   if(req.session.user_id){
-    const products = await Product.find({});
-    res.render('users/userhome',{products:products})
-   }else{
-    res.render('users/home')
-   }
-   
- 
+        if (req.session.user_id) {
+            const products = await Product.find({});
+            res.render('users/userhome', { products: products })
+        } else {
+            res.render('users/home')
+        }
+
+
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
@@ -61,7 +62,7 @@ const login = async (req, res) => {
 // to logout 
 const logout = async (req, res) => {
     try {
-      req.session.user_id=false
+        req.session.user_id = false
         res.redirect('/')
     } catch (error) {
         console.log('error louserhomeing out');
@@ -120,7 +121,7 @@ const createUser = async (req, res) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,}$/;
 
 
-        
+
 
 
         console.log(name, email, mobile, password, confirmPassword);
@@ -150,7 +151,7 @@ const createUser = async (req, res) => {
             if (existingUser) {
                 console.log('Existing email');
                 res.json('Email already exists');
-            } else if ( email.includes(" ") || mobile.includes(" ")) {
+            } else if (email.includes(" ") || mobile.includes(" ")) {
                 console.log("Please Avoid Spaces");
                 res.json("Please avoid spaces");
             } else {
@@ -194,7 +195,7 @@ const createUser = async (req, res) => {
                     to: email,
                     subject: 'Your OTP Verification for Royal Oak Login',
                     text: `Your OTP for verification is ${otp}`
-                    
+
                 };
 
                 console.log('Mail options:', mailOptions);
@@ -224,7 +225,7 @@ const createUser = async (req, res) => {
 const verifyOtp = async (req, res) => {
     try {
         console.log('OTP verification');
-       
+
         const currentOtp = req.body.otp.join('');
         console.log(currentOtp);
 
@@ -302,51 +303,51 @@ const resendOtp = async (req, res) => {
 }
 
 //to verify the user login
-const verifyLogin=async (req,res)=>{
+const verifyLogin = async (req, res) => {
     try {
         console.log('user login with details');
-        const email=req.body.email;
-        const password=req.body.password;
-        console.log(email,password);
+        const email = req.body.email;
+        const password = req.body.password;
+        console.log(email, password);
 
-        const userData=await User.findOne({email:email})
+        const userData = await User.findOne({ email: email })
         console.log('User Data:', userData);
-        if(userData){
-            const passwordMatch=await bcrypt.compare(password,userData.password)
+        if (userData) {
+            const passwordMatch = await bcrypt.compare(password, userData.password)
             console.log(`updated email${email} userdata email ${userData.email}`);
             console.log(`updated password ${password} userdata password ${userData.password}`);
 
-            if(passwordMatch){
-                 if(!userData.is_blocked){
-                    if(userData.is_verified){
+            if (passwordMatch) {
+                if (!userData.is_blocked) {
+                    if (userData.is_verified) {
                         console.log('success-log in');
-                       
+
 
                         // const loginStatus=req.session.loginStatus
-                        res.set('Cache-control','no-store')
-                        req.session.user_id=userData._id
+                        res.set('Cache-control', 'no-store')
+                        req.session.user_id = userData._id
                         res.redirect('/userhome')
-                    }else{
+                    } else {
                         console.log('is_verified error');
-                        req.session.login_error='Account Does Not Exsist'
+                        req.session.login_error = 'Account Does Not Exsist'
                         res.redirect('/login')
                     }
-                 }else{
+                } else {
                     console.log(' user is blocked');
-                    req.session.login_error='Account Is Blocked'
+                    req.session.login_error = 'Account Is Blocked'
                     res.redirect('/login')
-                 }
-            }else{
+                }
+            } else {
                 console.log('pasword not matching');
-                req.session.login_error='Invalid Password'
+                req.session.login_error = 'Invalid Password'
                 res.redirect('/login')
             }
 
-          }else{
+        } else {
             console.log('account issue ');
-            req.session.login_error='Account Does not Exsist'
+            req.session.login_error = 'Account Does not Exsist'
             res.redirect('/login')
-          }
+        }
     } catch (error) {
         console.log('error louserhomeing in with user details');
 
@@ -354,7 +355,7 @@ const verifyLogin=async (req,res)=>{
 }
 
 // to load homepage after login
-const loginHome=async(req,res)=>{       
+const loginHome = async (req, res) => {
     try {
         res.render('users/userhome')
     } catch (error) {
@@ -365,7 +366,7 @@ const loginHome=async(req,res)=>{
 // to load login product listed page
 const allProducts = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Product.find({}).populate('categoryId')
         res.render('users/userhome', { products: products });
     } catch (error) {
         console.log('Error loading all products');
@@ -375,19 +376,19 @@ const allProducts = async (req, res) => {
 }
 
 // to load all the product details from products
-const loadProductDetails=async(req,res)=>{
+const loadProductDetails = async (req, res) => {
     try {
-        const id=req.params.id
-    const users=req.session.user_id
-    
-    console.log(users);
-     const user=await User.findOne({_id:users})
-     console.log(user);
-        const proData = await Product.findById({_id:id})
+        const id = req.params.id
+        const users = req.session.user_id
 
-   console.log('proData',proData);
-        if(proData){
-            res.render('users/productDetail',{product:proData})
+        console.log(users);
+        const user = await User.findOne({ _id: users })
+        console.log(user);
+        const proData = await Product.findById({ _id: id })
+
+        console.log('proData', proData);
+        if (proData) {
+            res.render('users/productDetail', { product: proData })
         }
 
 
@@ -398,7 +399,7 @@ const loadProductDetails=async(req,res)=>{
 }
 
 
-const errorPage=async(req,res)=>{
+const errorPage = async (req, res) => {
     try {
         res.render('users/error')
     } catch (error) {
@@ -407,23 +408,23 @@ const errorPage=async(req,res)=>{
     }
 }
 
-const loadProfilePage=async(req,res)=>{
-try {
-    let userData= await User.findOne({_id:req.session.user_id , is_blocked:0})
-
-    console.log('userData is :',userData);
-    res.render('users/profile',{user:userData})
-} catch (error) {
-    console.log('error loading profile page view only');
-    console.log(error);
-}
-}
-
-const loadEditProfile=async(req,res)=>{
+const loadProfilePage = async (req, res) => {
     try {
-        const userData=await User.findOne({_id:req.session.user_id})
+        let userData = await User.findOne({ _id: req.session.user_id, is_blocked: 0 })
 
-        res.render('users/editprofile',{user:userData})
+        console.log('userData is :', userData);
+        res.render('users/profile', { user: userData })
+    } catch (error) {
+        console.log('error loading profile page view only');
+        console.log(error);
+    }
+}
+
+const loadEditProfile = async (req, res) => {
+    try {
+        const userData = await User.findOne({ _id: req.session.user_id })
+
+        res.render('users/editprofile', { user: userData })
     } catch (error) {
         console.log('error loading editingpage');
         console.log(error)
@@ -448,14 +449,14 @@ const editProfile = async (req, res) => {
 
         const { name, email, mobile, password, confirmPassword } = req.body;
 
-        console.log(name, email, mobile, password, confirmPassword );
+        console.log(name, email, mobile, password, confirmPassword);
 
         // Check if any of the fields are being updated
         if (
-            req.session.name=name,
-            req.session.email=email,
-            req.session.mobile=mobile,
-            req.session.password=password,
+            req.session.name = name,
+            req.session.email = email,
+            req.session.mobile = mobile,
+            req.session.password = password,
 
             existingData.mobile !== mobile ||
             existingData.email !== email ||
@@ -483,7 +484,7 @@ const editProfile = async (req, res) => {
             };
 
             console.log('Mail options:', mailOptions);
-           
+
             res.redirect('/profileotp')
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
@@ -491,8 +492,8 @@ const editProfile = async (req, res) => {
                     return res.status(500).json({ error: "Failed to send OTP" });
                 } else {
                     console.log('Email sent:', info.response);
-                   
-                   
+
+
                 }
             });
         } else {
@@ -516,58 +517,141 @@ const editProfile = async (req, res) => {
 
 
 
-const verifyProfileOtp=async(req,res)=>{
-    
-        try {
-            console.log('OTP verification');
-           
-            const currentOtp = req.body.otp.join('')
-            console.log(currentOtp);
-    
-            const actualOtp = await OTP.findOne({ otp: currentOtp });
-            console.log(actualOtp);
-            if (!actualOtp) {
-                console.log('Invalid OTP');
-                return res.status(400).send('Invalid OTP');
-            }
-    
-            const actualUser = await User.findById(actualOtp.userId);
-            if (!actualUser) {
-                console.log('User not found');
-                return res.status(404).send('User not found');
-            }
-    
-            console.log('OTP verified successfully');
-            actualUser.is_verified = true;
-            await actualUser.save();
+const verifyProfileOtp = async (req, res) => {
 
-            // Hash the new password before updating the user profile
+    try {
+        console.log('OTP verification');
+
+        const currentOtp = req.body.otp.join('')
+        console.log(currentOtp);
+
+        const actualOtp = await OTP.findOne({ otp: currentOtp });
+        console.log(actualOtp);
+        if (!actualOtp) {
+            console.log('Invalid OTP');
+            return res.status(400).send('Invalid OTP');
+        }
+
+        const actualUser = await User.findById(actualOtp.userId);
+        if (!actualUser) {
+            console.log('User not found');
+            return res.status(404).send('User not found');
+        }
+
+        console.log('OTP verified successfully');
+        actualUser.is_verified = true;
+        await actualUser.save();
+
+        // Hash the new password before updating the user profile
         const hashedPassword = await bcrypt.hash(req.session.password, 10);
 
-            const updatedUser = await User.findByIdAndUpdate(
-                { _id: req.session.user_id },
-                { $set:{
-                    name:req.session.name,
-                    mobile:req.session.mobile,
-                    email:req.session.email,
-                    password:hashedPassword
+        const updatedUser = await User.findByIdAndUpdate(
+            { _id: req.session.user_id },
+            {
+                $set: {
+                    name: req.session.name,
+                    mobile: req.session.mobile,
+                    email: req.session.email,
+                    password: hashedPassword
                 }
 
-                 }
-            );
-    
-            console.log('Redirecting to user profile page');
-            // Redirect to user login page after OTP verification
-            res.redirect('/profile');
-        } catch (error) {
-            console.error('Error verifying OTP:', error);
-            res.status(500).send('Internal Server Error');
-        }
+            }
+        );
+
+        console.log('Redirecting to user profile page');
+        // Redirect to user login page after OTP verification
+        res.redirect('/profile');
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        res.status(500).send('Internal Server Error');
     }
+}
+
+
+const wishlist = async (req, res) => {
+    try {
+        const userId = req.session.user_id
+
+        const wishlist = await Wishlist.find({ userId: userId }).populate('productId')
+
+        console.log('wishlist', wishlist);
+
+        res.render('users/wishlist', { user: userId, wishlist: wishlist })
+
+    } catch (error) {
+        console.log('error loaading wishlist page');
+    }
+}
 
 
 
+const addToWishlist = async (req, res) => {
+    try {
+        console.log('Adding to wishlist starts here');
+        console.log(req.body);
 
+        const { productId } = req.body;
+        const userId = req.session.user_id;
+
+
+        const existingWishlistItem = await Wishlist.findOne({ productId, userId });
+        console.log('existingWishlistItem', existingWishlistItem);
+
+        if (existingWishlistItem) {
+            console.log('Product already exists in the wishlist');
+            return res.json({ alreadyExists: true });
+        } else {
+
+            const product = await Product.findById(productId);
+            if (!product || product.quantity === 0) {
+                console.log('Product is out of stock');
+                return res.json({ outOfStock: true });
+            }
+
+
+            const newWishlistItem = new Wishlist({
+                productId,
+                userId
+            });
+            await newWishlistItem.save();
+            console.log('newWishlistItem', newWishlistItem);
+            console.log('Product added to wishlist successfully');
+            return res.json({ success: true });
+        }
+    } catch (error) {
+        console.log('Error adding to wishlist:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+
+const removeFromWishlist = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { productId } = req.body;
+        console.log(productId);
+
+        const user = req.session.user_id;
+        console.log(user);
+
+        const deletedProduct = await Wishlist.deleteOne({ _id:productId });
+
+       
+        if (deletedProduct.deletedCount === 1) {
+            console.log(`Product with productId ${productId} deleted from wishlist.`);
+         
+            res.status(200).json({ removed: true });
+        } else {
+            console.log(`Product with productId ${productId} not found in wishlist.`);
+            
+            res.status(404).json({ success: false, message: 'Product not found in wishlist.' });
+        }
+
+    } catch (error) {
+        console.log('deleting the product from wishlist', wishlist);
+    }
+}
 
 module.exports =
 {
@@ -591,10 +675,11 @@ module.exports =
     loadEditProfile,
     editProfile,
     renderProfileOTPPage,
-    verifyProfileOtp
+    verifyProfileOtp,
 
-
-    
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
 
 }
 
