@@ -9,6 +9,7 @@ const productController=require('../controller/productCon')
 const categoryController=require('../controller/categoryCon')
 const copuonController=require('../controller/couponCon')
 const offerController=require('../controller/offerCon')
+const salesController=require('../controller/salesCon')
 const auth=require('../middleware/adminAuth')
 const upload=require('../middleware/upload')
 const multer = require('multer')
@@ -75,13 +76,20 @@ adminRoute.post('/deletecoupon',copuonController.deleteCoupon)
 
 //offer related details
 adminRoute.get('/offer',offerController.offerPage)
-adminRoute.get('/addoffer',offerController.addOffer)
+adminRoute.get('/addoffer',offerController.loadAddOffer)
+adminRoute.post('/addoffer',offerController.addOffer)
 
 
+// sales report details
 
-
-
-
+adminRoute.get('/salesreport',salesController.loadSalesReport)
+adminRoute.get('/salesDaily',salesController.dailySalesReport)
+adminRoute.get('/salesWeekly',salesController.generateWeeklyReport)
+adminRoute.get('/salesMonthly',salesController.generateMonthlyReport)
+adminRoute.get('/salesYearly',salesController.generateYearlyReport)
+adminRoute.get('/customDateReport',salesController.generateCustomDateReport)
+adminRoute.get('/excel',salesController.downloadAsExcel)
+adminRoute.get('/pdf', salesController.downloadAsPDF);
 
 
 

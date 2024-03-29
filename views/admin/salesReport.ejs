@@ -1,0 +1,126 @@
+<%- include('../layouts/adminHeader') %>
+
+
+<h1>Sales Report Page</h1>
+  <!-- Custom Date Report -->
+  <div class="text-center mt-3" style="width: 400px; height: 100px;">
+    <h3>Custom Date Report</h3>
+    <form action="/admin/customDateReport" method="GET">
+        <div class="mb-3">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startDate" name="startDate" required>
+        </div>
+        <div class="mb-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" name="endDate" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate Report</button>
+    </form>
+</div>
+<br><br><br>
+<div class="d-flex justify-content-end pe-4 pt-2">
+    <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="salesReportDropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sales Report
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="salesReportDropdown">
+            <li><a class="dropdown-item" href="/admin/salesDaily"><i
+                        class="fas fa-calendar-day me-2"></i>Daily</a>
+            </li>
+            <li><a class="dropdown-item" href="/admin/salesWeekly"><i
+                        class="fas fa-calendar-week me-2"></i>Weekly</a>
+            </li>
+            <li><a class="dropdown-item" href="/admin/salesMonthly"><i
+                        class="fas fa-calendar-alt me-2"></i>Monthly</a></li>
+            <li><a class="dropdown-item" href="/admin/salesYearly"><i
+                        class="fas fa-calendar me-2"></i>Yearly</a></li>
+        </ul>
+    </div>
+</div>
+
+<section class="content-main">
+    <div class="content-header">
+       
+        <div>
+           
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-4 col-md-6 me-auto">
+                   
+                </div>
+                
+                
+            </div>
+        </header>
+     
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th>Order Number</th>
+                          <th>Order Status</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total Price</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < orderDetails.length; i++) { %>
+                            <% const order = orderDetails[i]; %>
+                            <% const item = order.orderedItem[0]; %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td style="color: green;"><%= order._id %></td>
+
+                                <td style="color:
+                                <% if (order.orderStatus === 'cancelled' || order.orderStatus === 'returned') { %>
+                                    red;
+                                <% } else if (order.orderStatus === 'pending') { %>
+                                    blue;
+                                <% } else if (order.orderStatus === 'delivered') { %>
+                                    green;
+                                <% } else { %>
+                                    black; 
+                                <% } %>">
+                                <%= order.orderStatus %>
+                            </td>
+                                <td><%= order.formattedCreatedAt %></td>
+                                <td><%= order.deliveryAddress ? order.deliveryAddress.name : 'N/A' %></td>
+                                <td>₹<%= order.orderAmount %></td>
+                                
+                            </tr>
+                        <% } %>
+                    </tbody>
+                   
+                </table>
+            </div>
+           
+        </div>
+       
+    </div>
+   
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+<br><br><br>
+<%- include('../layouts/adminFooter') %> 

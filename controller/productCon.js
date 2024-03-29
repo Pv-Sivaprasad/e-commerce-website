@@ -281,7 +281,7 @@ module.exports = {
     addProduct,
     loadEditProduct,
     editProduct,
-    blockProduct,
+    blockProduct,    
     lowhigh,
     highlow,
     AToZ,

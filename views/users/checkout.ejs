@@ -316,7 +316,7 @@
                                         <% }); %>
                                             <tr>
                                                 <td colspan="2">
-                                                    <h5 class="font-size-14 m-0">Sub Total :</h5>
+                                                    <h5 class="font-size-14 m-0"> Total :</h5>
                                                 </td>
                                                 <td>₹ <%= subTotal %>
                                                 </td>
@@ -339,15 +339,15 @@
                                             </tr>
                                             <tr class="bg-light">
                                                 <td colspan="2">
-                                                    <h5 id="orderTotal" class="font-size-14 m-0">Total:</h5>
+                                                    <h5 id="orderTotal" class="font-size-14 m-0">Sub Total:</h5>
                                                 </td>
-                                                <td>₹ <%= subTotal %>
+                                                <td>₹ <span id="subTotal"><%= subTotal %></span>
                                                 </td>
                                             </tr>
-                                           
+                                            <!--  -->
                                                
                                                         
-                                </tbody>
+                                </tbody> 
                                
                             </table>
                             <button id="couponsButton" class="btn btn-primary rounded-pill lightBlueButton" 
@@ -983,19 +983,7 @@
                             })
                     } else {
                         const status = 'success'
-                        // axios.post('/placeorderwallet',{ selectedAddressValue,paymentOptionValue })
-                        // .then(res=>{
-                        //     if(res.data.message){
-                        //         document.getElementById('errormsg').innerHTML=res.data.message
-                        //     }else{
-                        //         const orderId=res.data.orderId
-
-                        //         window.location.href=`/ordersuccess?orderId=${orderId}`
-                        //     }
-                        // })
-                        // .catch(err=>{
-                        //     console.log('errr in wallet axios',err);
-                        // })
+                        
                         axios.post('/placeorderwallet', { selectedAddressValue, paymentOptionValue })
                             .then(res => {
                                 if (res.data.message) {
@@ -1026,5 +1014,32 @@
             });
 
 
+            document.addEventListener('DOMContentLoaded',function(){
+                 
+                var applyBtn=document.querySelector("#couponsModal button.btn-primary")
+
+                applyBtn.addEventListener('click',function(){
+                    var couponValue=document.querySelector('#couponInput').value
+                 
+
+                    var data={
+                        couponCode:couponValue
+                    }
+                    axios.patch('/applyCoupon',data)
+                    .then((res)=>{
+                        console.log(res)
+                  
+
+                        var totalPriceElement = document.querySelector('#subTotal');
+                           var subTotal = res.data.cartResult.product.totalPrice;
+                          totalPriceElement.innerHTML = subTotal;
+                    })
+                    .catch((err)=>{
+                        console.log('error in axios coupon',err);
+                    })
+                })
+            })
+
+         
 
         </script>

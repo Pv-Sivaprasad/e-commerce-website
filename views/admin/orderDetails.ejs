@@ -29,7 +29,7 @@
                         <tr>
                             <th style="width: 50px;">ID</th>
                             <th>Order Number</th>
-                            <th>Product Name</th>
+                            <th>Status</th>
                             <th>Date</th>
                             <th>Customer</th>
                             <th>Total Price</th>
@@ -44,7 +44,7 @@
                             <tr>
                                 <td><%= i + 1 %></td>
                                 <td><%= order._id %></td>
-                                <td><%= order.productName %></td>
+                                <td><%= order.orderStatus %></td>
                                 <td><%= order.formattedCreatedAt %></td>
                                 <td><%= order.deliveryAddress ? order.deliveryAddress.name : 'N/A' %></td>
                                 <td>₹<%= order.orderAmount %></td>

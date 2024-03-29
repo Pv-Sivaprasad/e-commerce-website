@@ -1,7 +1,73 @@
 <%- include('../layouts/adminHeader') %>
 
 
+    <h1>All Offers</h1>
 
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Offers</h2>
+                <p>Here are the offers.</p>
+            </div>
+            <div>
+                <a type="button" class="btn btn-primary" href="/admin/addOffer">Add Offer</a>
+            </div>
+        </div>
+    
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <% if (offers.length > 0) { %>
+                                    <thead>
+                                        <tr>
+                                            <th>S no</th>
+                                            <th>Offer Name</th>
+                                            <th>Discount</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Offer Type</th>
+                                            <th>Category Name</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% offers.forEach((offer, i) => { %>
+                                            <tr>
+                                                <td><%= i + 1 %></td>
+                                                <td><%= offer.offerName %></td>
+                                                <td><%= offer.discount %></td>
+                                                <td><%= offer.startDate ? offer.startDate.toDateString() : 'N/A' %></td>
+                                                <td><%= offer.endDate ? offer.endDate.toDateString() : 'N/A' %></td>
+                                                <td><%=offer.offerType%></td>
+                                                <!-- <td><%= offer.productId.map(product => product.productName).join(', ') %></td> -->
+                                                <td><%= offer.categoryId.map(category => category.catName).join(', ') %></td>
+                                                <td>
+                                                    <a href="/admin/editOffer?id=<%= offer._id %>"
+                                                        class="badge rounded-pill alert-dark">Edit</a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="8" class="text-center">No offers to display</td>
+                                    </tr>
+                                <% } %>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- .col// -->
+                </div>
+                <!-- .row // -->
+            </div>
+            <!-- card body .// -->
+        </div>
+        <!-- card .// -->
+    </section>
+    
 
 
 

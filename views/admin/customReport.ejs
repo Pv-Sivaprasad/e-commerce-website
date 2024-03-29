@@ -1,0 +1,42 @@
+<%- include('../layouts/adminHeader') %>
+
+
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                  
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Orders</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+              
+                    <tr>
+                        <td><%= startDate %></td>
+                        <td><%= endDate %></td>
+                        <td><%= totalOrders %></td>
+                        <td>₹<%= totalAmount %></td>
+                    </tr>
+              
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="text-center mb-4">
+    <!-- <a href="pdf" class="btn btn-success mr-2">Download as PDF</a>
+    <a href="excel" class="btn btn-success">Download as Excel</a> -->
+    <a href="/pdf?startDate=<%= startDate %>&endDate=<%= endDate %>&totalOrders=<%= totalOrders %>&totalAmount=<%= totalAmount %>" class="btn btn-success mr-2">Download as PDF</a>
+<a href="/download/excel?startDate=<%= startDate %>&endDate=<%= endDate %>&totalOrders=<%= totalOrders %>&totalAmount=<%= totalAmount %>" class="btn btn-success">Download as Excel</a>
+
+</div>
+
+
+
+<br><br><br>
+
+<%- include('../layouts/adminFooter') %>

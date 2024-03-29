@@ -32,7 +32,7 @@ const loadOrderDetails = async (req, res) => {
 const placeOrder = async (req, res) => {
     try {
         console.log('starting order placing');
-
+   
         const {transactionId}=req.query
 
         console.log(req.body);

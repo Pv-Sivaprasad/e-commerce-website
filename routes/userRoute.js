@@ -7,6 +7,7 @@ const productController=require('../controller/productCon')
 const cartController=require('../controller/cartCon')
 const orderController=require('../controller/orderCon')
 const paymentController=require('../controller/paymentCon')
+const couponController=require('../controller/couponCon')
 
 const config = require('../config/config')
 const auth = require('../middleware/userAuth')   
@@ -108,6 +109,9 @@ userRoute.post('/placeorderwallet',paymentController.placeOrderWallet)
 userRoute.get('/wishlist',auth.isLogin,userController.wishlist)
 userRoute.post('/addToWishlist',auth.isLogin,userController.addToWishlist)
 userRoute.patch('/removeFromWishlist',auth.isLogin,userController.removeFromWishlist)
+
+//userside coupon related
+userRoute.patch('/applyCoupon',auth.isLogin,couponController.verifyCoupon)
 
 
 

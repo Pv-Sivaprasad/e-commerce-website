@@ -1,12 +1,14 @@
 const Coupon=require('../model/couponModel')
 
+const Cart=require('../model/cartModel')
+
 const moment=require('moment')
 
 
 
 
 
-
+/// to load the coupon page
 const couponPage=async(req,res)=>{
     try {
         
@@ -31,7 +33,7 @@ const couponPage=async(req,res)=>{
     }
 }
 
-
+//to load the add copon page
 const loadAddCoupon=async(req,res)=>{
     try {
         res.render('addCoupon')
@@ -41,35 +43,49 @@ const loadAddCoupon=async(req,res)=>{
     }
 }
 
-const addCoupon=async(req,res)=>{
+// to add a coupon
+const addCoupon = async (req, res) => {
     try {
         console.log('adding coupon started');
-
         console.log(req.body);
-        const details=req.body
-        console.log('details',details);
+        const details = req.body;
+        console.log('details', details);
 
+        // Validate expiry date format
+        const expiryDate = new Date(details.expiryDate);
+        if (isNaN(expiryDate.getTime())) {
+            // Invalid date format
+            return res.status(400).render('addCoupon',{errorMessage:"Invalid expiry date format"})
+        }
 
-        const coupon=new Coupon({
+        // Check if expiry date is in the future
+        const currentDate = new Date();
+        if (expiryDate <= currentDate) {
+            return res.status(400).render('addCoupon',{errorMessage:"Expiry date must be in the future"})
+        }
+
+        const coupon = new Coupon({
             couponCode: details.couponCode,
-            discountAmount:details.discountAmount,
-            minimumAmount:details.minimumAmount,
-            description:details.description,
-            expireDate:details.expiryDate
-        })
-            await coupon.save()
-        console.log('coupon',coupon);
-            if(coupon){
-                res.redirect('/admin/coupon')
-            }else{
-                console.log('no coupon for you');
-            }
+            discountAmount: details.discountAmount,
+            minimumAmount: details.minimumAmount,
+            description: details.description,
+            expireDate: expiryDate // Use validated expiry date
+        });
+
+        await coupon.save();
+        console.log('coupon', coupon);
+        if (coupon) {
+            res.redirect('/admin/coupon');
+        } else {
+            console.log('no coupon for you');
+        }
     } catch (error) {
-        console.log('error in adding coupon');        
+        console.log('error in adding coupon:', error);
+        res.status(500).send("Internal server error");
     }
-}
+};
 
-
+// to load the  edit  coupon
 const loadEditCoupon=async(req,res)=>{
     try {
         console.log('starting to laod the edit coupon page');
@@ -85,35 +101,49 @@ const loadEditCoupon=async(req,res)=>{
     }
 }
 
-const editCoupon= async(req,res)=>{
+// to edit the selected coupon
+const editCoupon = async (req, res) => {
     try {
         console.log('starting to edit the coupon');
+        const details = req.body;
+        console.log('details', details);
 
-        const details=req.body;
+        const id = details.id;
+        console.log('id', id);
 
-        console.log('details',details);
+        // Validate expiry date format
+        const expiryDate = new Date(details.expireDate);
+        if (isNaN(expiryDate.getTime())) {
+            // Invalid date format
+            return res.status(400).render('editCoupon', { errorMessage: "Invalid expiry date format" });
+        }
 
-        const id=details.id
+        // Check if expiry date is in the future
+        const currentDate = new Date();
+        if (expiryDate <= currentDate) {
+            return res.status(400).render('editCoupon', { errorMessage: "Expiry date must be in the future" });
+        }
 
-        console.log('id',id);
-
-        const couponData=await Coupon.findByIdAndUpdate(
+        const couponData = await Coupon.findByIdAndUpdate(
             { _id: id },
             { $set: details }, // Use modified details object
             { new: true }
         );
-        console.log('couponData',couponData);
 
-        if(couponData){
-            res.redirect('/admin/coupon')
-        }else{
+        console.log('couponData', couponData);
+
+        if (couponData) {
+            res.redirect('/admin/coupon');
+        } else {
             console.log('no coupon for you');
         }
     } catch (error) {
-        console.log('error in editing coupon',error);
+        console.log('error in editing coupon', error);
+        res.status(500).send("Internal server error");
     }
-}
+};
 
+// to delete the specific coupon
 const deleteCoupon=async(req,res)=>{
     try {
         console.log('enetered deleting');
@@ -132,11 +162,50 @@ const deleteCoupon=async(req,res)=>{
         console.log('error deleting the coupon',error);
     }
 }
+
+
+
+//user user coupon
+const verifyCoupon=async(req,res)=>{
+
+console.log(req.body)
+
+const userId=req.session.user_id
+
+console.log('userId',userId);
+
+const cart=await Cart.findOne({userId:userId})
+
+console.log('cart',cart);
+
+const { couponCode } = req.body; 
+
+console.log(`CouponCode: ${couponCode}`); 
+
+const couponData = await Coupon.findOne({ couponCode: couponCode }); 
+
+console.log('couponData :', couponData);
+
+const cartResult = await Cart.findOneAndUpdate(
+    { userId: userId },
+    { 
+        $set: { 
+          couponDiscount: couponData.discountAmount,
+          'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
+        } 
+      },
+    { new: true }
+  );
+  console.log('cartResult',cartResult);
+  res.json({ cartResult });
+
+}
 module.exports={
     couponPage,
     loadAddCoupon,
     addCoupon,
     loadEditCoupon,
     editCoupon,
-    deleteCoupon
+    deleteCoupon,
+    verifyCoupon,
 }

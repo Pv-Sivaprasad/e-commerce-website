@@ -75,7 +75,7 @@ const addProductsToCart = async (req, res) => {
             product: {
                 productId: productDetails._id,
                 price: productDetails.price,
-                quantity: 1,
+                quantity: 1,          
                 totalPrice: productDetails.price
             }
         }]);
@@ -144,6 +144,10 @@ const removeProduct = async (req, res) => {
 
 const loadCheckoutPage = async (req, res) => {
     try {
+          console.log(req.body)
+          const {CouponCOde}=req.body
+
+
         console.log('entering the checkout page');
 
         const userId = req.session.user_id

@@ -2,7 +2,7 @@
 
 <h1>Add Offer !!!</h1>
 
-<div class="container">
+<div class="container">   
     <form action="addoffer" method="POST">
         <div class="row">
             <div class="col-md-6">
@@ -45,25 +45,30 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="productId" class="form-label">Product ID</label>
-                    <input type="text" class="form-control" name="productId">
+                    <label for="productId" class="form-label">Product</label>
+                    <select class="form-select" name="productId">
+                        <% products.forEach((item) => { %>
+                            <option value="<%=item._id%>" ><%= item.productName %></option>
+                        <% }); %>
+                    </select>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="categoryId" class="form-label">Category ID</label>
-                    <input type="text" class="form-control" name="categoryId">
+                    <label for="categoryId" class="form-label">Category</label>
+                    <select class="form-select" name="categoryId">
+                        <% categories.forEach((item) => { %>
+                            <option  value="<%=item._id%>" ><%= item.catName %></option>
+                        <% }); %>
+                    </select>
                 </div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Add Offer</button>
     </form>
 </div>
-
-
-
 
 <br><br><br>
 <%- include('../layouts/adminFooter') %>

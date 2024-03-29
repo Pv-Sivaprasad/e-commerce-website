@@ -20,17 +20,17 @@ const offerSchema = new mongoose.Schema({
 
     offerType: {
         type: String,
-        enum:['category','product','refferal'],
+        enum:['category','product','referral'],
         required: true
 
-    },
+    },  
     productId: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'product'
+        ref:'Product'
     }],
     categoryId:[ {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'categories'
+        ref:'Category'
     }]
 
 

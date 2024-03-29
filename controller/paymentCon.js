@@ -19,10 +19,6 @@ const mongoose = require('mongoose')
 const moment = require('moment');
 
 
-
-
-
-
 require('dotenv').config()
 
 const createOrder = async (req, res) => {

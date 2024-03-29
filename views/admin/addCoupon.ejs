@@ -3,16 +3,22 @@
 <h1>Add Coupon !!!!</h1>
 
     
-       
+           
     <main>
         <div class="row">
             <!-- Add Coupon Form -->
             <form action="addcoupon" method="POST">
                 <div class="mb-3">
                     <label for="couponCode" class="form-label">Coupon Code</label>
-                    <input type="text" class="form-control"  name="couponCode" required
-                        style="background-color: #f0f0f0;" >
+                    <input type="text" class="form-control" name="couponCode" 
+                    required pattern="^(?!\s)(?!.*\s$)(?!.*?\s\s)[A-Za-z\s]{1,}$" 
+                        title="Only spaces between characters are allowed, no leading or trailing spaces, and at least one character should be entered."
+                        style="background-color: #f0f0f0;">
+                    <div class="invalid-feedback">
+                        Please enter a valid coupon code.
+                    </div>
                 </div>
+                
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         <p id="discountErrorMsg" style="color: red;"></p>
@@ -36,6 +42,9 @@
                 <div class="mb-3">
                     <label for="expiryDate" class="form-label">Expiry Date</label>
                     <input type="date" class="form-control"  name="expiryDate" required style="background-color: #f0f0f0;">
+                    <% if(typeof errorMessage !== 'undefined') { %>
+                        <p style="color: red;"><%= errorMessage %></p>
+                    <% } %>
                 </div>
                 <button type="submit" id="Addbutton" class="btn btn-primary">Add Coupon</button>
             </form>
