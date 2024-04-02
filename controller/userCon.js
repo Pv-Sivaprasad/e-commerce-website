@@ -4,6 +4,7 @@ const config = require('../config/config')
 const Category = require('../model/categoryModel')
 const Product = require('../model/productModel')
 const Wishlist = require('../model/wishlistModel')
+const Offer=require('../model/offerModel')
 const nodemailer = require('nodemailer')
 const speakeasy = require('speakeasy');
 const otpGenerator = require('otp-generator')
@@ -364,16 +365,80 @@ const loginHome = async (req, res) => {
 }
 
 // to load login product listed page
+// const allProducts = async (req, res) => {
+//     try {
+//         const products = await Product.find({}).populate('categoryId')
+//         res.render('users/userhome', { products: products });
+//     } catch (error) {
+//         console.log('Error loading all products');
+//         console.log(error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
 const allProducts = async (req, res) => {
     try {
-        const products = await Product.find({}).populate('categoryId')
-        res.render('users/userhome', { products: products });
+        console.log('reached here');
+        
+   
+        const id=req.session.user_id
+    let userdata = await User.findOne({ _id: id})
+    let offerData = await Offer.find({
+        startDate: { $lte: new Date() },
+        endDate: { $gte: new Date() }
+    });
+
+    let productData = await Product.find({is_blocked: false, is_categoryBlocked: false })
+    .sort({ _id: -1 })
+    .populate('categoryId');
+
+    productData = productData.map(product => {
+        let productDiscountedPrice = product.price;
+        let categoryDiscountedPrice = product.price;
+        let appliedOffer = null;
+
+
+        offerData.forEach(offer => {
+            if (offer.offerType === 'product' && offer.productId.includes(product._id.toString())) {
+                productDiscountedPrice = product.price - (product.price * offer.discount / 100);
+            }
+        });
+
+
+        offerData.forEach(offer => {
+            if (offer.offerType === 'category' && offer.categoryId.includes(product.categoryId._id.toString())) {
+                categoryDiscountedPrice = product.price - (product.price * offer.discount / 100);
+            }
+        });
+
+
+        if (productDiscountedPrice <= categoryDiscountedPrice) {
+            appliedOffer = offerData.find(offer => offer.offerType === 'product' && offer.productId.includes(product._id.toString()));
+            discountedPrice = Math.round(productDiscountedPrice);
+        } else {
+            appliedOffer = offerData.find(offer => offer.offerType === 'category' && offer.categoryId.includes(product.categoryId._id.toString()));
+            discountedPrice = Math.round(categoryDiscountedPrice);
+        }
+
+        return {
+            ...product.toObject(),
+            originalPrice: product.price,
+            discountedPrice,
+            appliedOffer: appliedOffer ? {
+                offerName: appliedOffer.offerName,
+                discount: appliedOffer.discount
+            } : null,
+            offerText: appliedOffer ? `${appliedOffer.discount}% Off` : ''
+        };
+    });
+
+    res.render('users/userhome', { products: productData });
     } catch (error) {
         console.log('Error loading all products');
         console.log(error);
         res.status(500).send('Internal Server Error');
     }
 }
+
 
 // to load all the product details from products
 const loadProductDetails = async (req, res) => {

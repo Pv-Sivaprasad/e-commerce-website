@@ -1,13 +1,13 @@
 
 
-<%- include('../layouts/adminHeader'),{pageTitle:'Add coupon'} %>
+<%- include('../layouts/adminHeader') %>
 
 <h1>Edit Coupon !!!!</h1>
 
 <main>
     <div class="row">
         <!-- Edit Coupon Form -->
-        <form id="editCouponForm">
+        <form id="editCouponForm" action="editcoupon" method="POST">
             <div class="mb-3">
                 <label for="couponCode" class="form-label">Coupon Code</label>
                 <input type="text" class="form-control" name="couponCode" value='<%= coupons.couponCode %> ' required pattern="^(?!\s)(?!.*\s$)(?!.*?\s\s)[A-Za-z\s]{1,}$" 
@@ -16,7 +16,7 @@
                 <div class="invalid-feedback">
                     Please enter a valid coupon code.
                 </div>
-            </div>
+            </div>    
             <div class="row">
                 <div class="mb-3 col-md-6">
                     <p id="discountErrorMsg" style="color: red;"></p>
@@ -48,7 +48,7 @@
             </div>
             <div class="mb-3">
                 <label for="expiryDate" class="form-label">Expiry Date</label>
-                <input type="date" class="form-control" value="<%=coupons.expireDate%>" name="expireDate" required style="background-color: #f0f0f0;">
+                <input type="date" class="form-control"  value="<%=coupons.expireDate.toISOString().split('T')[0]%>"  name="expireDate" required style="background-color: #f0f0f0;">
                 <div class="invalid-feedback">
                     Please enter a valid expiry date.
                 </div>

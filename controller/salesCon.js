@@ -3,7 +3,9 @@ const User = require('../model/orderModel')
 const excel = require('exceljs');
 const PDFDocument = require('pdfkit');
 const moment = require('moment')
+// const excelJS=require('exceljs')
 
+// to load the sales report page 
 const loadSalesReport = async (req, res) => {
     try {
         const orders = await Orders.find({})
@@ -27,14 +29,11 @@ const loadSalesReport = async (req, res) => {
     }
 }
 
-
+// to load the daily report
 const dailySalesReport = async (req, res) => {
     try {
-
-
         const startDate = moment().startOf('day');
         const endDate = moment().endOf('day');
-
 
         const dailyReport = await Orders.aggregate([
             {
@@ -51,23 +50,25 @@ const dailySalesReport = async (req, res) => {
             }
         ]);
 
+  
+        const totalOrders = dailyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
+        const totalAmount = dailyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+
         console.log('dailyReport', dailyReport);
 
-        res.render('reports', { report: dailyReport })
+        res.render('reports', { report: dailyReport, totalOrders, totalAmount });
 
     } catch (error) {
         console.log('error loading daily sales report', error);
+        throw error; 
     }
 }
 
-
-
+//to load the weekly report
 const generateWeeklyReport = async (req, res) => {
     try {
-
         const startDate = moment().startOf('week');
         const endDate = moment().endOf('week');
-
 
         const weeklyReport = await Orders.aggregate([
             {
@@ -84,14 +85,21 @@ const generateWeeklyReport = async (req, res) => {
             }
         ]);
 
+        // Calculate total orders and total amount for the entire week
+        const totalOrders = weeklyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
+        const totalAmount = weeklyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+
         console.log('weeklyReport', weeklyReport);
 
-        res.render('reports', { report: weeklyReport })
+        res.render('reports', { report: weeklyReport, totalOrders, totalAmount });
     } catch (error) {
         console.error('Error generating weekly report:', error);
         throw error;
     }
-};const generateMonthlyReport = async (req, res) => {
+};
+
+// to load the monthly report
+const generateMonthlyReport = async (req, res) => {
     try {
         const monthlyReport = await Orders.aggregate([
             {
@@ -103,7 +111,6 @@ const generateWeeklyReport = async (req, res) => {
             }
         ]);
 
-     
         const formattedReport = monthlyReport.map(report => ({
             _id: moment().month(report._id - 1).format('MMMM'), 
             totalOrders: report.totalOrders,
@@ -111,35 +118,46 @@ const generateWeeklyReport = async (req, res) => {
         }));
 
         console.log('monthlyReport', formattedReport);
-        res.render('reports', { report: formattedReport });
+
+        // Calculate total orders and total amount
+        const totalOrders = formattedReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
+        const totalAmount = formattedReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+
+        // Pass report data and totals to the EJS template
+        res.render('reports', { report: formattedReport, totalOrders, totalAmount });
     } catch (error) {
         console.error('Error generating monthly report:', error);
         throw error;
     }
 };
 
-
+// for yearly repory
 const generateYearlyReport = async (req, res) => {
     try {
         const yearlyReport = await Orders.aggregate([
             {
                 $group: {
-                    _id: { $year: "$createdAt" }, // Grouping by year
+                    _id: { $year: "$createdAt" }, 
                     totalOrders: { $sum: 1 },
                     totalAmount: { $sum: "$orderAmount" } 
                 }
             }
         ]);
 
+        
+        const totalOrders = yearlyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
+        const totalAmount = yearlyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+
         console.log('yearlyReport', yearlyReport);
 
-        res.render('reports', { report: yearlyReport });
+        res.render('reports', { report: yearlyReport, totalOrders, totalAmount });
     } catch (error) {
         console.error('Error generating yearly report:', error);
         throw error;
     }
 };
 
+// for custom report
 const generateCustomDateReport = async (req, res) => {
     try {
         const startDate = moment(req.query.startDate).startOf('day'); 
@@ -188,17 +206,17 @@ const generateCustomDateReport = async (req, res) => {
 
 const downloadAsExcel = (req, res) => {
     try {
-        const { startDate, endDate, totalOrders, totalAmount } = req.query;
+     
+   
 
-        // Create Excel workbook and worksheet
         const workbook = new excel.Workbook();
         const worksheet = workbook.addWorksheet('Report');
 
-        // Populate worksheet with data
+       
         worksheet.addRow(['Start Date', 'End Date', 'Total Orders', 'Total Amount']);
         worksheet.addRow([startDate, endDate, totalOrders, totalAmount]);
 
-        // Set response headers for Excel file
+    
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
 
@@ -214,9 +232,10 @@ const downloadAsExcel = (req, res) => {
 };
 
 const downloadAsPDF = (req, res) => {
-    try {
+    try {  
+       
         const { startDate, endDate, totalOrders, totalAmount } = req.query;
-
+        console.log(startDate, endDate, totalOrders, totalAmount );
         // Create PDF document
         const doc = new PDFDocument();
 
@@ -244,6 +263,54 @@ const downloadAsPDF = (req, res) => {
 
 
 
+const downloadReport = async (req, res) => {
+    try {
+        const { type, data } = req.body;
+
+        console.log(type, data);
+
+        if (type === 'pdf') {
+            // Generate PDF
+            const doc = new pdfkit();
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
+            doc.pipe(res);
+
+            doc.fontSize(16).text('Sales Report', { align: 'center' }).moveDown();
+            doc.fontSize(12).text('ID\tDate\tTotal Orders\tTotal Amount', { align: 'center' }).moveDown();
+
+            data.forEach((row) => {
+                doc.text(`${row.id}\t${row.date}\t${row.totalOrders}\t₹${row.totalAmount}`, { align: 'center' }).moveDown();
+            });
+
+            doc.end();
+        } else if (type === 'excel') {
+            // Generate Excel
+            const workbook = new exceljs.Workbook();
+            const worksheet = workbook.addWorksheet('Sales Report');
+            worksheet.columns = [
+                { header: 'ID', key: 'id' },
+                { header: 'Date', key: 'date' },
+                { header: 'Total Orders', key: 'totalOrders' },
+                { header: 'Total Amount', key: 'totalAmount' }
+            ];
+
+            data.forEach((row) => {
+                worksheet.addRow(row);
+            });
+
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.setHeader('Content-Disposition', 'attachment; filename="report.xlsx"');
+            await workbook.xlsx.write(res);
+            res.end();
+        }
+    } catch (error) {
+        console.log('error in downloading:', error);
+        res.status(500).send('Error in downloading report');
+    }
+};
+
+
 module.exports = {
     loadSalesReport,
     dailySalesReport,
@@ -252,7 +319,9 @@ module.exports = {
     generateYearlyReport,
     generateCustomDateReport,
     downloadAsExcel,
-     downloadAsPDF
+     downloadAsPDF,downloadReport,
+
+   
 
 }
 

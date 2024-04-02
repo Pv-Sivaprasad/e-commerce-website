@@ -751,20 +751,28 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        
-
+            <% const currentDate = new Date(); %>
+            <% couponData.filter(coupon => coupon.expireDate > currentDate).forEach(function(coupon) { %>
+              <% if (coupon.minimumAmount) { %>
+                <p>Coupon Code: <%= coupon.couponCode %> - Discount: <%= coupon.discountAmount %></p>
+              <% } else { %>
+                <p>No coupons available.</p>
+              <% } %>
+            <% }); %>
+            
+<!-- 
           <% couponData.forEach(function(coupon) { %>
             <% if (coupon.minimumAmount) { %>
               <p>Coupon Code: <%= coupon.couponCode %> - Discount: <%= coupon.discountAmount %></p>
             <% } else { %>
               <p>No coupons available.</p>
             <% } %>
-          <% }); %>
+          <% }); %> -->
           <textarea id="couponInput" class="form-control" rows="3" placeholder="Enter coupon code..."></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply Coupon</button>
         </div>
       </div>
     </div>
@@ -846,7 +854,6 @@
 
 
             })
-
 
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -1016,30 +1023,48 @@
 
             document.addEventListener('DOMContentLoaded',function(){
                  
-                var applyBtn=document.querySelector("#couponsModal button.btn-primary")
-
-                applyBtn.addEventListener('click',function(){
-                    var couponValue=document.querySelector('#couponInput').value
-                 
-
-                    var data={
-                        couponCode:couponValue
-                    }
-                    axios.patch('/applyCoupon',data)
-                    .then((res)=>{
-                        console.log(res)
+                 var applyBtn=document.querySelector("#couponsModal button.btn-primary")
+ 
+                 applyBtn.addEventListener('click',function(){
+                     var couponValue=document.querySelector('#couponInput').value
                   
+ 
+                     var data={
+                         couponCode:couponValue
+                     }
+                     axios.patch('/applyCoupon',data)
+                     .then((res)=>{
+                         console.log(res)
+                   
+ 
+                         var totalPriceElement = document.querySelector('#subTotal');
+                            var subTotal = res.data.cartResult.product.totalPrice;
+                           totalPriceElement.innerHTML = subTotal;
+                           if (res.data.verify) {
+                                        swal({
+                                           title: "Coupon Applied Successfully",
+                                          text: "Congratulations, the coupon has been applied successfully.",
+                                         icon: "success",
+                                         button: "OK",
+                                     });
+                                     applyBtn.innerText = 'Remove Coupon';
+                            } else if (res.data.added === 'already used') {
+                                   
+                                       swal({
+                                          title: "Coupon Already Used",
+                                          text: "Sorry, this coupon has already been used.",
+                                         icon: "warning",
+                                           button: "OK",
+                                       });
+                                 }
+                     })
+                     .catch((err)=>{
+                         console.log('error in axios coupon',err);
+                     })
+                 })
+             })
+ 
 
-                        var totalPriceElement = document.querySelector('#subTotal');
-                           var subTotal = res.data.cartResult.product.totalPrice;
-                          totalPriceElement.innerHTML = subTotal;
-                    })
-                    .catch((err)=>{
-                        console.log('error in axios coupon',err);
-                    })
-                })
-            })
 
-         
-
+//          
         </script>

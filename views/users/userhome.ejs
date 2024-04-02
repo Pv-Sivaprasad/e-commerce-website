@@ -70,7 +70,7 @@
     <!-- banner part start-->
 
     <!-- feature_part start-->
-    <section class="feature_part padding_top">
+    <!-- <section class="feature_part padding_top">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -114,7 +114,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- upcoming_event part start-->
 
     <!-- product_list start-->
@@ -222,7 +222,7 @@
                             <div class="row align-items-center justify-content-between">
                                
                                   
-                                <% products.forEach((product) => { %>
+                                <% products.forEach((product) => { %>   
                                     <% if (!product.is_blocked && !product.categoryId.is_Blocked) { %>
                                         <div class="col-lg-3 col-sm-6">
                                             <div class="single_product_item">
@@ -231,9 +231,12 @@
                                                 </a>
                                                 <div class="single_product_text">
                                                     <h4><%= product.productName %></h4>
+                                                    <input type="hidden" id="productId" name="" value="<%=product._id%>">
+
                                                     <h3><span id="price" value="<%= product.price %>" class="sale-price">₹<%= product.price %></span></h3>
                                                     <input type="hidden" id="productId" name="" value="<%= product._id %>">
-                                                    <button class="btn add_cart" value="<%= product._id %>" price="<%= product.price %>"><span style="color: pink;">+ Add to Cart</span></button>
+
+                                                    <button class="btn add_cart" id="addToCart" value="<%= product._id %>" price="<%= product.price %>"><span style="color: pink;">+ Add to Cart</span></button>
                                                     <a href="#" class="add_to_wishlist"><i class="ti-heart"></i> </a>
                                                 </div>
                                             </div>
@@ -320,27 +323,25 @@
 
 
     <%- include('../layouts/userFooter') %>
+   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" 
     integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-     <script>
-       cument.addEventListener('DOMContentLoaded', function () {
-    const addCartButtons = document.querySelectorAll('.add_cart');
-
+    
+    
+    <script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+    const addCartButtons = document.querySelectorAll('#adddToCart');
+ 
     addCartButtons.forEach(button => {
         button.addEventListener('click', function (e) {
+            alert('clicked'); 
             e.preventDefault();
-
-            alert('clicked'); // For testing purposes
-
             const productId = this.getAttribute('value');
             const price = this.getAttribute('price');
 
-            // Check if productId and price are valid
-            if (!productId || !price) {
-                console.log('Product ID or price not found.');
-                return;
-            }
+           
 
             axios.post('/addToCart', { productId, price })
                 .then(res => {

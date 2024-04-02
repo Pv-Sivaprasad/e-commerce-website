@@ -78,6 +78,9 @@ adminRoute.post('/deletecoupon',copuonController.deleteCoupon)
 adminRoute.get('/offer',offerController.offerPage)
 adminRoute.get('/addoffer',offerController.loadAddOffer)
 adminRoute.post('/addoffer',offerController.addOffer)
+adminRoute.get('/editOffer',offerController.loadEditOffer)
+adminRoute.post('/editOffer',offerController.editOffer)
+adminRoute.post('/deleteoffer',offerController.deleteOffer)
 
 
 // sales report details
@@ -88,8 +91,10 @@ adminRoute.get('/salesWeekly',salesController.generateWeeklyReport)
 adminRoute.get('/salesMonthly',salesController.generateMonthlyReport)
 adminRoute.get('/salesYearly',salesController.generateYearlyReport)
 adminRoute.get('/customDateReport',salesController.generateCustomDateReport)
-adminRoute.get('/excel',salesController.downloadAsExcel)
+adminRoute.post('/excel',salesController.downloadAsExcel)
 adminRoute.get('/pdf', salesController.downloadAsPDF);
+
+
 
 
 

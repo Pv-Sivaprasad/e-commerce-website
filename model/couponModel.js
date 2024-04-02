@@ -26,9 +26,15 @@ const couponSchema= mongoose.Schema ({
         type: Date,
         default: Date.now
 
-    }
+    },
+    usedUser:{
+        type:Array,
+        ref:'User',
+        default:[]
+    },
 
 },
+
 
     {
         timestamps: true

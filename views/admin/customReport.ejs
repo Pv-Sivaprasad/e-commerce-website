@@ -1,7 +1,26 @@
 <%- include('../layouts/adminHeader') %>
 
 
-
+<div class="d-flex justify-content-end pe-4 pt-2">
+    <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="salesReportDropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sales Report
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="salesReportDropdown">
+            <li><a class="dropdown-item" href="/admin/salesDaily"><i
+                        class="fas fa-calendar-day me-2"></i>Daily</a>
+            </li>
+            <li><a class="dropdown-item" href="/admin/salesWeekly"><i
+                        class="fas fa-calendar-week me-2"></i>Weekly</a>
+            </li>
+            <li><a class="dropdown-item" href="/admin/salesMonthly"><i
+                        class="fas fa-calendar-alt me-2"></i>Monthly</a></li>
+            <li><a class="dropdown-item" href="/admin/salesYearly"><i
+                        class="fas fa-calendar me-2"></i>Yearly</a></li>
+        </ul>
+    </div>
+</div>
 <div class="card-body">
     <div class="table-responsive">
         <table class="table table-hover">
@@ -27,6 +46,7 @@
         </table>
     </div>
 </div>
+
 <div class="text-center mb-4">
     <!-- <a href="pdf" class="btn btn-success mr-2">Download as PDF</a>
     <a href="excel" class="btn btn-success">Download as Excel</a> -->

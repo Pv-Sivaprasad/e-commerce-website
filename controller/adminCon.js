@@ -86,7 +86,12 @@ const verifyLogin = async (req, res) => {
 const loadDasboard = async (req, res) => {
   try {
 
-    res.render('dashboard')
+    const orders=await Order.find({})
+    const categories=await Category.find({})
+    const products=await Product.find({})
+    const totalRevenue = orders.reduce((acc, order) => acc + order.orderAmount, 0);
+
+    res.render('dashboard' ,{orders:orders,categories:categories,products:products,totalRevenue})
   } catch (error) {
     console.log(error);
     console.log('error rendering loadDashoard');

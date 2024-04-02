@@ -112,6 +112,7 @@ userRoute.patch('/removeFromWishlist',auth.isLogin,userController.removeFromWish
 
 //userside coupon related
 userRoute.patch('/applyCoupon',auth.isLogin,couponController.verifyCoupon)
+userRoute.patch('removeCoupon',auth.isLogin,couponController.removeCoupon)
 
 
 

@@ -19,7 +19,8 @@
                                     <img src="userImages/<%=el.product.productId.images[0] %> " alt=""
                                         class="avatar-lg rounded">
                                 </div>
-                               <input type="hidden" class="productId" name="" id="productId" value="<%=el.product.productId._id%>">
+                                <input type="hidden" class="productId" name="" id="productId" value="<%= el.product.productId ? el.product.productId._id : '' %>">
+
                                <input type="hidden" name="" id="cartId" value="<%=el._id%>">
                                 <div class="flex-grow-1 align-self-center overflow-hidden">
                                     <div>

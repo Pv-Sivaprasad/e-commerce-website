@@ -7,6 +7,8 @@ const Order=require('../model/orderModel')
 const Coupon=require('../model/couponModel')
 
 
+
+
 const loadCartPage = async (req, res) => {
     try {
         console.log('cart loading page');
@@ -23,14 +25,16 @@ const loadCartPage = async (req, res) => {
         let total = 0;
 
         cartDetails.forEach(item => {
-
-            total += item.product.totalPrice;
+            if (item.product.productId) { // Check if productId is not null
+                total += item.product.totalPrice;
+            }
         });
 
         console.log('Total:', total);
 
         // Get the count of products
         const productsCount = cartDetails.length;
+        console.log('productsCount',productsCount);
 
         // res.render('users/cart', { user, cartDetails: cartDetails, subTotal: total, productsCount });
         res.render('users/newCart', { user, cartDetails: cartDetails, subTotal: total, productsCount })

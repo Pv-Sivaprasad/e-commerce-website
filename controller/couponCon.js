@@ -93,6 +93,7 @@ const loadEditCoupon=async(req,res)=>{
         console.log("id", id);
 
         const couponData= await Coupon.findOne({_id:id})
+        console.log('couponData',couponData);
 
         res.render('editCoupon',{coupons:couponData})
 
@@ -105,6 +106,7 @@ const loadEditCoupon=async(req,res)=>{
 const editCoupon = async (req, res) => {
     try {
         console.log('starting to edit the coupon');
+
         const details = req.body;
         console.log('details', details);
 
@@ -164,42 +166,80 @@ const deleteCoupon=async(req,res)=>{
 }
 
 
-
-//user user coupon
 const verifyCoupon=async(req,res)=>{
 
-console.log(req.body)
+    console.log(req.body)
+    
+    const userId=req.session.user_id
+    
+    console.log('userId',userId);
+    
+    const cart=await Cart.findOne({userId:userId})
+    
+    console.log('cart',cart);
+    
+    const { couponCode } = req.body; 
+    
+    console.log(`CouponCode: ${couponCode}`); 
+    
+    const couponData = await Coupon.findOne({ couponCode: couponCode }); 
+    
+    console.log('couponData :', couponData);
+    
+    
+    const cartResult = await Cart.findOneAndUpdate(
+        { userId: userId },
+        { 
+            $set: { 
+              couponDiscount: couponData.discountAmount,
+              'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
+            } 
+          },
+        { new: true }
+      );
+      console.log('cartResult',cartResult);
+      res.json({ cartResult });
+    
+    }
 
-const userId=req.session.user_id
 
-console.log('userId',userId);
 
-const cart=await Cart.findOne({userId:userId})
 
-console.log('cart',cart);
 
-const { couponCode } = req.body; 
 
-console.log(`CouponCode: ${couponCode}`); 
 
-const couponData = await Coupon.findOne({ couponCode: couponCode }); 
+const removeCoupon = async (req, res) => {
+    const userId = req.session.user_id;
 
-console.log('couponData :', couponData);
+    try {
+       
+        const cart = await Cart.findOne({ userId: userId });
 
-const cartResult = await Cart.findOneAndUpdate(
-    { userId: userId },
-    { 
-        $set: { 
-          couponDiscount: couponData.discountAmount,
-          'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
-        } 
-      },
-    { new: true }
-  );
-  console.log('cartResult',cartResult);
-  res.json({ cartResult });
+       
+        if (cart) {
+          
+            cart.couponDiscount = 0;
 
+           
+            cart.product.totalPrice = cart.product.totalPrice + cart.couponDiscount;
+
+       
+            const updatedCart = await cart.save();
+
+       
+            return res.json({ success: true, cart: updatedCart });
+        } else {
+        
+            return res.status(404).json({ success: false, message: "Cart not found for the user" });
+        }
+    } catch (error) {
+      
+        console.error("Error removing coupon:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
 }
+
+
 module.exports={
     couponPage,
     loadAddCoupon,
@@ -208,4 +248,5 @@ module.exports={
     editCoupon,
     deleteCoupon,
     verifyCoupon,
+    removeCoupon,
 }
