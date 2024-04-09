@@ -1,15 +1,10 @@
 <%- include('../layouts/adminHeader') %>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.3/css/buttons.dataTables.min.css">
+<!-- Include html2pdf and xlsx CDNs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.3/js/buttons.html5.min.js"></script>
+
 
 <div class="d-flex justify-content-end pe-4 pt-2">
     <div class="dropdown">
@@ -39,7 +34,10 @@
                     <th style="width: 50px;">ID</th>
                     <th>Date</th>
                     <th>Total Orders</th>
-                    <th>Total Amount</th>
+                    <th>Total Revenue</th>
+                    <th>Total Offer Discount </th>
+                    <th>Total Coupon Discount</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +47,7 @@
                         <td><%= order._id %></td>
                         <td><%= order.totalOrders %></td>
                         <td>₹<%= order.totalAmount.toFixed(2) %></td>
+                      
                     </tr>
                 <% }); %>
                 <tr> 
@@ -57,60 +56,53 @@
                     <td>₹<%= totalAmount.toFixed(2) %></td> 
                 </tr>
             </tbody>   
-            </table>
+        </table>
     </div>
 </div>
 
 <div class="text-center mb-4">
-    <!-- Add these buttons will be handled by DataTables -->
-    <a id="pdfButton" class="btn btn-success mr-2" href="/pdf" role="button" aria-controls="myTable">
+    
+    <button id="download-pdf" class="btn btn-success mr-2" aria-controls="myTable">
         Download as PDF
-    </a>
-    <a id="excelButton" class="btn btn-success" href="/excel" role="button" aria-controls="myTable">
+    </button>
+    <a id="download-excel" class="btn btn-success" aria-controls="myTable">
         Download as Excel
     </a>
-    
 </div>
-<br><br><br>
 <%- include('../layouts/adminFooter') %>
-
-
 <script>
-    $(document).ready(function() {
-    $('#myTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'pdfHtml5',
-                className: 'buttons-pdf',
-                text: 'Download as PDF',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                className: 'buttons-excel',
-                text: 'Download as Excel',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }
-        ]
+   
+    function downloadExcel() {
+       
+        const table = document.getElementById('myTable');
+        
+        
+        const wb = XLSX.utils.table_to_book(table);
+
+      
+        XLSX.writeFile(wb, 'sales_report.xlsx');
+    }
+
+   
+    document.getElementById('download-excel').addEventListener('click', function() {
+        downloadExcel();
     });
 
-    // Custom button click events
-    $('#pdfButton').click(function() {
-        $('#myTable').DataTable().buttons('pdfHtml5').trigger();
-    });
+    
+    document.getElementById('download-pdf').addEventListener('click', function() {
+       
+        const element = document.getElementById('myTable');
 
-    $('#excelButton').click(function() {
-        $('#myTable').DataTable().buttons('excelHtml5').trigger();
-    });
-});
+        
+        const opt = {
+            margin: 0.5,
+            filename: 'sales_report.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
 
+       
+        html2pdf().from(element).set(opt).save();
+    });
 </script>
-
-
-
-

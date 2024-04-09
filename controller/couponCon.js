@@ -166,41 +166,47 @@ const deleteCoupon=async(req,res)=>{
 }
 
 
-const verifyCoupon=async(req,res)=>{
 
-    console.log(req.body)
-    
-    const userId=req.session.user_id
-    
-    console.log('userId',userId);
-    
-    const cart=await Cart.findOne({userId:userId})
-    
-    console.log('cart',cart);
-    
-    const { couponCode } = req.body; 
-    
-    console.log(`CouponCode: ${couponCode}`); 
-    
-    const couponData = await Coupon.findOne({ couponCode: couponCode }); 
-    
-    console.log('couponData :', couponData);
-    
-    
-    const cartResult = await Cart.findOneAndUpdate(
-        { userId: userId },
-        { 
-            $set: { 
-              couponDiscount: couponData.discountAmount,
-              'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
-            } 
-          },
-        { new: true }
-      );
-      console.log('cartResult',cartResult);
-      res.json({ cartResult });
-    
+const verifyCoupon = async (req, res) => {
+    console.log('entered verifying coupon entered by the user');
+
+    const userId = req.session.user_id;
+
+    console.log('userId', userId);
+
+    const cart = await Cart.findOne({ userId: userId });
+
+    console.log('cart', cart);
+
+    const { couponCode } = req.body;
+
+    console.log(`CouponCode: ${couponCode}`);
+
+    const couponData = await Coupon.findOne({ couponCode: couponCode });
+
+    console.log('couponData:', couponData);
+
+
+
+    if (couponData) {
+        const cartResult = await Cart.findOneAndUpdate(
+            { userId: userId },
+            {
+                $set: {
+                    couponDiscount: couponData.discountAmount,
+                    'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
+                }
+            },
+            { new: true }
+        );
+        console.log('cartResult', cartResult);
+        res.json({ cartResult });
+    } else {
+        // Coupon not found
+        res.status(404).json({ error: 'Coupon not found' });
     }
+};
+
 
 
 
@@ -209,20 +215,29 @@ const verifyCoupon=async(req,res)=>{
 
 
 const removeCoupon = async (req, res) => {
+
+    console.log('starting');
     const userId = req.session.user_id;
+
+    console.log('userId',userId);
+
+    console.log('entering to remove the coupon');
 
     try {
        
+        console.log('eneterd the try block');
         const cart = await Cart.findOne({ userId: userId });
 
+        console.log('cart in remove',cart);
        
         if (cart) {
           
-            cart.couponDiscount = 0;
+           
 
            
             cart.product.totalPrice = cart.product.totalPrice + cart.couponDiscount;
-
+            
+            cart.couponDiscount = 0;
        
             const updatedCart = await cart.save();
 

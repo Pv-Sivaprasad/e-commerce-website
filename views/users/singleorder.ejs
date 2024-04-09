@@ -28,8 +28,12 @@
                                     <span
                                         class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
                                         <%= orderDetails.orderStatus %>
+                                      
                                     </span>
+                                    <% if(orderDetails.orderStatus === 'delivered') { %>
+                                        <a href="invoice" class="btn btn-sm btn-primary" style="background-color: blue; width: 200px; height: 30px;">Invoice</a>
 
+                                    <% } %>
 
                                 </div>
                                 <div class="d-flex">
@@ -204,7 +208,9 @@
             text-decoration: none;
         }
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" 
+integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
 

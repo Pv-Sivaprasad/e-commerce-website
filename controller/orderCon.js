@@ -173,6 +173,7 @@ const cancelOrder=async(req,res)=>{
     }
 }
 
+//to return the order
 const returnOrder=async(req,res)=>{
 console.log('entering returing product');
 
@@ -265,11 +266,19 @@ console.log('entering returing product');
     }
 }
 
+//to load the invoice page
+const loadInvoice=async(req,res)=>{
+
+    console.log('entering invoice page');
+    
+    res.render('users/invoice')
+}
 
 module.exports = {
     loadOrderDetails,
     placeOrder,
     singleOrder,
     cancelOrder,
-    returnOrder
+    returnOrder,
+    loadInvoice,
 }

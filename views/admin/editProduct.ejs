@@ -39,6 +39,7 @@
                         </div>
                     </div>
                 </div>
+            
                 <!-- card end// -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -63,7 +64,7 @@
                             <div class="close-icon" onclick="deleteImage('image1', 'preview1');">&times;
                             </div>
                             <label for="image1" class="form-label">
-                                <img id="preview1" src="https://bit.ly/3ubuq5o" alt="">
+                                <img id="preview1" src="/userImages/<%=product.images[0]%>" alt="">
                             </label>
                             <input type="file" class="form-control" id="image1" name="cropImages"
                                 style="display: none;">
@@ -75,7 +76,7 @@
                             <div class="close-icon" onclick="deleteImage('image2', 'preview2');">&times;
                             </div>
                             <label for="image2" class="form-label">
-                                <img id="preview2" src="https://bit.ly/3ubuq5o" alt="images">
+                                <img id="preview2" src="/userImages/<%=product.images[1]%>" alt="images">
                             </label>
                             <input type="file" class="form-control" id="image2" name="cropImages"
                                 style="display: none;">
@@ -87,7 +88,7 @@
                             <div class="close-icon" onclick="deleteImage('image3', 'preview3');">&times;
                             </div>
                             <label for="image3" class="form-label">
-                                <img id="preview3" src="https://bit.ly/3ubuq5o" alt="">
+                                <img id="preview3" src="/userImages/<%=product.images[2]%>" alt="">
                             </label>
                             <input type="file" class="form-control" id="image3" name="cropImages"
                                 style="display: none;">
@@ -98,7 +99,7 @@
                             <div class="close-icon" onclick="deleteImage('image4', 'preview4');">&times;
                             </div>
                             <label for="image4" class="form-label">
-                                <img id="preview4" src="https://bit.ly/3ubuq5o" alt="">
+                                <img id="preview4" src="/userImages/<%=product.images[3]%>" alt="">
                             </label>
                             <input type="file" class="form-control" id="image4" name="cropImages"
                                 style="display: none;">

@@ -111,8 +111,11 @@ userRoute.post('/addToWishlist',auth.isLogin,userController.addToWishlist)
 userRoute.patch('/removeFromWishlist',auth.isLogin,userController.removeFromWishlist)
 
 //userside coupon related
-userRoute.patch('/applyCoupon',auth.isLogin,couponController.verifyCoupon)
-userRoute.patch('removeCoupon',auth.isLogin,couponController.removeCoupon)
+userRoute.patch('/applyCoupon',auth.isLogin,couponController.verifyCoupon)    
+userRoute.patch('/removeCoupon',auth.isLogin,couponController.removeCoupon)
+
+//invoice
+userRoute.get('/invoice',auth.isLogin,orderController.loadInvoice)
 
 
 
