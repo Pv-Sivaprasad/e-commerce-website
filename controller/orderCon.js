@@ -130,8 +130,7 @@ const singleOrder = async (req, res) => {
 
         console.log('products', products);
 
-        // const matchedItem = await Product.find(item => item.productId._id.toString() === productId)
-
+        
         res.render('users/singleorder', { orderDetails: orderDetails, user: userId })
 
     } catch (error) {
@@ -267,11 +266,34 @@ console.log('entering returing product');
 }
 
 //to load the invoice page
-const loadInvoice=async(req,res)=>{
+const loadInvoice=async(req,res)=>{ 
+  try {
+        console.log('entering invoice page');
 
-    console.log('entering invoice page');
+        const orderId = req.query.orderId;
+        console.log('orderId', orderId);
+
+        const userId = req.session.user_id;
+        console.log('userid ', userId);
+
+        const orderDetails = await Order.findOne({ _id: orderId })
+        .populate('userId')
+        .populate({ path: 'orderedItem.productId', model: 'Product' })
+        .populate('deliveryAddress')
+
+    console.log('orderDetails', orderDetails);
+
+    const products = orderDetails.orderedItem
+
+    console.log('products', products);
+
     
-    res.render('users/invoice')
+        res.render('users/invoice',{order:orderDetails});
+      
+    } catch (error) {
+        console.log('error',error)
+       }
+        
 }
 
 module.exports = {

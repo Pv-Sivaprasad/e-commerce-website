@@ -21,9 +21,9 @@
                             <div class="mb-3 d-flex justify-content-between">
                                 <div>
                                     <span class="me-3">
-                                        <%= orderDetails.createdAt.toLocaleDateString() %>
+                                       Date:  <%= orderDetails.createdAt.toLocaleDateString() %>
                                     </span>
-                                    <span class="me-3">#<%= orderDetails._id %></span>
+                                  
                                     <span class="me-3">Payment Method: <%= orderDetails.paymentMethod %></span>
                                     <span
                                         class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
@@ -32,7 +32,7 @@
                                     </span>
                                     <% if(orderDetails.orderStatus === 'delivered') { %>
                                         <a href="invoice" class="btn btn-sm btn-primary" style="background-color: blue; width: 200px; height: 30px;">Invoice</a>
-
+                                            <input type="hidden" name="orderId" value="<%= orderDetails._id%>">
                                     <% } %>
 
                                 </div>

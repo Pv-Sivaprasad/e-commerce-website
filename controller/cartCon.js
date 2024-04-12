@@ -157,7 +157,7 @@ const loadCheckoutPage = async (req, res) => {
         const userId = req.session.user_id
         console.log('userid', userId);
 
-        const user = await User.findOne({ _id: userId })
+        const user = await User.findOne({ _id: userId })   
         console.log('user', user);
 
         const address = await Address.find({ userId: userId })
@@ -183,13 +183,13 @@ const loadCheckoutPage = async (req, res) => {
 
         console.log('Total:', total);
 
-      if(total>=minAmounts){
+      if(total>=minAmounts  && total>1000){
 
     
-        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon })
+        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon,showCOD:true })
       
     }else{
-        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon })
+        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon,showCOD:false })
     }
 
 
@@ -226,7 +226,7 @@ const orderSuccess = async (req, res) => {
                 user: userId,
                 address: address,
                 product: proData,
-                orderDetails:orderDetails
+                orderDetails:orderDetails,
             })
     } catch (error) {
         console.log('error loading success ');

@@ -27,6 +27,7 @@
                             <th>Price</th>
                             <!-- <th>Status</th> -->
                             <th>Details</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,22 +42,25 @@
                                             <td><%= item.productId.productName %></td>
                                             <td><%= item.quantity %></td>
                                             <td>₹<%= item.totalProductAmount %></td>
-                                            <!-- <td>
-                                                <% if(orderDetails.orderStatus === 'pending'){ %>
-                                                    <span class="badge rounded-pill alert-warning">Pending</span>
-                                                <% } else if(orderDetails.orderStatus === 'processing'){ %>
-                                                    <span class="badge rounded-pill alert-primary">Processing</span>
-                                                <% } else if(orderDetails.orderStatus === 'shipped'){ %>
-                                                    <span class="badge rounded-pill alert-info">Shipped</span>
-                                                <% } else if(orderDetails.orderStatus === 'delivered'){ %>
-                                                    <span class="badge rounded-pill alert-success">Delivered</span>
-                                                <% } else if(orderDetails.orderStatus === 'cancelled'){ %>
-                                                    <span class="badge rounded-pill alert-danger">Cancelled</span>
-                                                <% } %>
-                                            </td> -->
+                                          
                                             <td>
                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm view-btn font-sm text-white" data-id="<%= order._id %>">View</a>
                                             </td>
+                                            <% if(order.orderStatus === 'delivered') { %>
+                                               
+                                                <td>
+                                                    <a href="/invoice?orderId=<%= order._id %>" class="btn btn-sm btn-primary" style="background-color: blue; width: 100px; height: 30px;">Invoice</a>
+                                                </td>
+                                              
+                                                
+                                            <% } else { %>
+                                                <!-- Display order status with conditional color -->
+                                                <td style="<%= order.orderStatus === 'pending' ? 'color: blue;' : (order.orderStatus === 'cancelled' || order.orderStatus === 'returned' ? 'color: red;' : '') %>">
+                                                    <%= order.orderStatus %>
+                                                </td>
+                                            <% } %>
+                                            
+                                            
                                         </tr>
                                     <% } %>
                                 <% }); %>
@@ -94,29 +98,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', function(event) {
                 if (event.target.classList.contains('view-btn')) {
-                    // Get the order ID from the data-id attribute of the clicked element
+                   
                     var orderId = event.target.getAttribute('data-id');
                     console.log("orderId", orderId);
-                    // Redirect to the single order page with the order ID as a query parameter
+                   
                     window.location.href = '/singleorder?orderId=' + orderId;
                 }
             });
         });
     </script>
-<!-- <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('view-btn')) {
-            alert('sdffhsdf')
-            var orderId = event.target.getAttribute('data-id');
-            console.log("orderId", orderId);
-      
-            window.location.href = '/singleorder?orderId=' + orderId;
-        }
-    });
-})
-
-</script> -->
 
 <%- include('../layouts/profileFooter') %>

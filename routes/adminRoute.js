@@ -33,8 +33,8 @@ adminRoute.get('/logoout', adminController.logout)
 adminRoute.post('/login', adminController.verifyLogin)
 
 //dashboard /login load
-adminRoute.get('/dashboard', adminController.loadDasboard)   
-adminRoute.post('/dashboard', adminController.loadDasboard)
+adminRoute.get('/dashboard', adminController.loadDashboard)   
+adminRoute.post('/dashboard', adminController.loadDashboard)
 
 //to block and unblock user and userlist
 adminRoute.get('/users', adminController.allUsers)

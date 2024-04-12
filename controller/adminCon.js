@@ -83,20 +83,36 @@ const verifyLogin = async (req, res) => {
 };
 
 //loading admin dashboard
-const loadDasboard = async (req, res) => {
+// const loadDasboard = async (req, res) => {
+//   try {
+
+//     const orders=await Order.find({})
+//     const categories=await Category.find({})
+//     const products=await Product.find({})
+//     const totalRevenue = orders.reduce((acc, order) => acc + order.orderAmount, 0);
+
+//     res.render('dashboard' ,{orders:orders,categories:categories,products:products,totalRevenue})
+//   } catch (error) {
+//     console.log(error);
+//     console.log('error rendering loadDashoard');
+//   }
+// }
+const loadDashboard = async (req, res) => {
   try {
+    const deliveredOrders = await Order.find({ orderStatus: 'delivered' });
+    const categories = await Category.find({});
+    const products = await Product.find({});
 
-    const orders=await Order.find({})
-    const categories=await Category.find({})
-    const products=await Product.find({})
-    const totalRevenue = orders.reduce((acc, order) => acc + order.orderAmount, 0);
+    // Calculate total revenue from delivered orders
+    const totalRevenue = deliveredOrders.reduce((acc, order) => acc + order.orderAmount, 0);
 
-    res.render('dashboard' ,{orders:orders,categories:categories,products:products,totalRevenue})
+    res.render('dashboard', { orders: deliveredOrders, categories, products, totalRevenue });
   } catch (error) {
     console.log(error);
-    console.log('error rendering loadDashoard');
+    console.log('Error rendering loadDashboard');
   }
 }
+
 
 // to display the users in admin dahboard
 const allUsers = async (req, res) => {
@@ -222,7 +238,7 @@ console.log('orderStatus',orderStatus);
 module.exports = {
   loginPage,
   verifyLogin,
-  loadDasboard,
+  loadDashboard,
   logout,
   allUsers,
   userBlock,

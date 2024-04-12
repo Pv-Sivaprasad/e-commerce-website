@@ -19,7 +19,7 @@ const loadAddressPage=async(req,res)=>{
         res.render('users/alladdress',{user:user,address:address})
     } catch (error) {
         console.log('error loading address page');
-        console.log(error);
+        console.log(error); 
     }
 }
 
@@ -41,7 +41,7 @@ const addAddress = async (req, res) => {
         const details = req.body;
        
 
-        const address = new Address({
+        const addres = new Address({
             name: details.name,
             mobile: details.mobile,
             pincode: details.pincode,
@@ -55,9 +55,14 @@ const addAddress = async (req, res) => {
             userId:req.session.user_id
         });
 
-        const savedAddress = await address.save();
-
-        res.json({success:true})
+        const savedAddress = await addres.save();
+        const id=req.session.user_id
+        const user=await User.findById({_id:id})  
+     
+        const address=await Address.find({userId:id})
+      
+       
+        res.render('users/alladdress',{user:user,address:address})
 
     } catch (error) {
         console.log('Error adding address');
@@ -161,34 +166,7 @@ const deleteAddress = async (req, res) => {
     }
 }
 
-// const checkoutAddAddress=async(req,res)=>{
-//     try {
-//             console.log(req.body);
-//         const details = req.body;
-//        console.log('details',details);
 
-//         const address = new Address({
-//             name: details.name,
-//             mobile: details.mobile,
-//             pincode: details.pincode,
-//             locality: details.locality,
-//             streetAddress: details.streetAddress,
-//             city: details.city,
-//             state: details.state,
-//             landmark: details.landmark,
-//             alterPhone: details.alterPhone,
-//             addressType: details.addressType,
-//             userId:req.session.user_id
-//         });
-
-//         const savedAddress = await address.save();
-
-//         res.json({success:true})
-//     } catch (error) {
-//         console.log('checkout address adding issue');
-//         console.log(error);
-//     }
-// }
 const checkoutAddAddress = async (req, res) => {
     try {
         console.log(req.body);
