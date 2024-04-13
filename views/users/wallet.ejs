@@ -186,11 +186,11 @@
 
                                 axios.post('/addfunds', { Amount })
                                     .then(res => {
-                                        alert('reached then of add funds')
+                                      
                                         if (res.data.success) {
-                                            alert('reached then of add funds data.res.success')
+                                           
                                             const { orderId } = res.data
-                                            alert(`orderID  ${orderId}`)
+                                           
                                             console.log(res.data);
 
                                             var options = {
@@ -212,10 +212,10 @@
                                                     })
                                                         .then(res => {
                                                             if (res.data.success) {
-                                                                alert('fundverificaation completed')
+                                                              
                                                                 axios.post('/addwallet', { Amount })
                                                                     .then(res => {
-                                                                        alert('reached add wallet')
+                                                                      
                                                                         if (res.data.success) {
                                                                             Swal.fire('Added!', `Amount added:`, 'success')
                                                                                 .then((result) => {
@@ -240,11 +240,11 @@
                                                                         }
                                                                     })
                                                             } else {
-                                                                alert('Payment verification failed');
+                                                               
                                                             }
                                                         }).catch(err => {
                                                             console.error('Verification request failed', error);
-                                                            alert('Payment verification failed');
+                                                           
                                                         })
                                                 },
                                                 prefill: {
@@ -256,7 +256,7 @@
                                             };
                                             var razorpayObject = new Razorpay(options)
                                             razorpayObject.on('payment.failed', function (res) {
-                                                alert('payment failed')
+                                               
                                             })
                                             razorpayObject.open()
                                         }

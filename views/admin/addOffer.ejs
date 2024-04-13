@@ -1,7 +1,11 @@
 <%- include('../layouts/adminHeader') %>
 
 <h1>Add Offer !!!</h1>
-
+<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <div class="alert alert-danger" role="alert">
+        <%= errorMessage %>
+    </div>
+<% } %>
 <div class="container">   
     <form action="addoffer" method="POST">
         <div class="row">

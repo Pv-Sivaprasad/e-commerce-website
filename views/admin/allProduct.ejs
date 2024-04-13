@@ -78,6 +78,55 @@
     </div>
     <!-- card .// -->
 </section>
+<h3>Best selling products</h3>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="reloadPart" class="table table-hover">
+                        <% if(sold.length> 0) { %>
+                        <thead>
+                            <tr>
+                                <th>S no</th>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Revenue</th>
+                               
+                             
+                               
+                              
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <% sold.forEach((product, i)=> { %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td><img width="90px" height="90px" class="rounded-3"
+                                        src="userImages/<%= product.images[0] %>" alt="not "></td>
+                                <td><%= product.productName %></td>
+                                <td><%= product.sold %></td>
+                                <td><%= product.sold * product.price %></td>
+                                
+                                
+                              
+                                
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                        <% } else { %>
+                        <h4 class="text-center">No products </h4>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+            <!-- .col// -->
+        </div>
+        <!-- .row // -->
+    </div>
+    <!-- card body .// -->
+</div>
 <div class="pagination-area mt-30 mb-50">
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-start">

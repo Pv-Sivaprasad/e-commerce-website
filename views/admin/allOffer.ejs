@@ -29,8 +29,8 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Offer Type</th>
-                                            <th>Category Name</th>
                                             <th>Edit</th>
+                                            <th>Remove</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -42,16 +42,14 @@
                                                 <td><%= offer.startDate ? offer.startDate.toDateString() : 'N/A' %></td>
                                                 <td><%= offer.endDate ? offer.endDate.toDateString() : 'N/A' %></td>
                                                 <td><%=offer.offerType%></td>
-                                                <!-- <td><%= offer.productId.map(product => product.productName).join(', ') %></td> -->
-                                                <td><%= offer.categoryId.map(category => category.catName).join(', ') %></td>
                                                 <td>
                                                      <a href="/admin/editOffer?id=<%= offer._id %>"
                                                         class="badge rounded-pill  btn btn-success">Edit</a>
-                                                     
-                                                        <a href="" id="deletebtn" value="<%= offer._id %>"
-                                                            class="btn btn-danger btn-sm deletebtn badge rounded-pill text-decoration-none ms-2">Delete</a>
-                                                             <input type="hidden"  id="offerId" name="" value=" <%=offer._id%>">
                                                 </td>
+                                                <td> <a href="" id="deletebtn" value="<%= offer._id %>"
+                                                    class="btn btn-danger btn-sm deletebtn badge rounded-pill text-decoration-none ms-2">Delete</a>
+                                                     <input type="hidden"  id="offerId" name="" value=" <%=offer._id%>">
+                                                    </td>
                                             </tr>
                                         <% }) %>
                                     </tbody>

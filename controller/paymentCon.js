@@ -118,7 +118,7 @@ const verifypayment = async (req, res) => {
         console.log(error);
     }
 }
-
+  
 
 const wallet = async (req, res) => {
     try {
@@ -302,6 +302,9 @@ const placeOrderWallet=async(req,res)=>{
         const Amount = cartItems.reduce((total, item) => total + (item.product.price * item.product.quantity), 0);
 
 
+      
+        console.log('req.session.couponAmount',req.session.couponAmount)
+        let coupon=req.session.couponAmount
 
         const walletFund = await Wallet.updateOne({ userId: userId }, 
             { $inc: { balance: -Amount }, $push: { transaction: { amount: Amount, transactionsMethod: "Wallet" } } })
@@ -321,7 +324,8 @@ const placeOrderWallet=async(req,res)=>{
             orderAmount: Amount,
             deliveryAddress: selectedAddressValue,
             paymentMethod: paymentOptionValue,
-            orderStatus: 'pending'
+            orderStatus: 'pending',
+            coupon:coupon
         });
 
         const save = await order.save();

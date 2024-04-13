@@ -5,9 +5,6 @@ const Cart=require('../model/cartModel')
 const moment=require('moment')
 
 
-
-
-
 /// to load the coupon page
 const couponPage=async(req,res)=>{
     try {
@@ -189,6 +186,10 @@ const verifyCoupon = async (req, res) => {
 
 
     if (couponData) {
+
+        req.session.couponAmount = couponData.discountAmount;
+
+        console.log('req.session.couponAmount',req.session.couponAmount)
         const cartResult = await Cart.findOneAndUpdate(
             { userId: userId },
             {
@@ -206,12 +207,6 @@ const verifyCoupon = async (req, res) => {
         res.status(404).json({ error: 'Coupon not found' });
     }
 };
-
-
-
-
-
-
 
 
 const removeCoupon = async (req, res) => {

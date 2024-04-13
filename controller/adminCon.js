@@ -56,15 +56,15 @@ const verifyLogin = async (req, res) => {
     const adminData = await Admin.findOne({ email: email });
 
     if (adminData) {
-      console.log('Stored Password:', adminData); // Log the stored password
+      console.log('Stored Password:', adminData); 
       const passwordMatch = await bcrypt.compare(password, adminData.password);
 
-      console.log('Password Match:', passwordMatch); // Log the result of password comparison
+      console.log('Password Match:', passwordMatch); 
 
       if (passwordMatch) {
         res.set('Cache-control', 'no-store');
-        // req.session.admin_id = adminData.admin_id;
-        return res.redirect('/admin/dashboard'); // Redirect if password matches
+       
+        return res.redirect('/admin/dashboard'); 
       } else {
         req.session.loginError = 'Invalid password';
         console.log('Password does not match');
@@ -82,21 +82,6 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-//loading admin dashboard
-// const loadDasboard = async (req, res) => {
-//   try {
-
-//     const orders=await Order.find({})
-//     const categories=await Category.find({})
-//     const products=await Product.find({})
-//     const totalRevenue = orders.reduce((acc, order) => acc + order.orderAmount, 0);
-
-//     res.render('dashboard' ,{orders:orders,categories:categories,products:products,totalRevenue})
-//   } catch (error) {
-//     console.log(error);
-//     console.log('error rendering loadDashoard');
-//   }
-// }
 const loadDashboard = async (req, res) => {
   try {
     const deliveredOrders = await Order.find({ orderStatus: 'delivered' });
@@ -112,7 +97,6 @@ const loadDashboard = async (req, res) => {
     console.log('Error rendering loadDashboard');
   }
 }
-
 
 // to display the users in admin dahboard
 const allUsers = async (req, res) => {
@@ -204,8 +188,6 @@ const singleProduct = async (req, res) => {
     console.log(error);
   }
 }
-
-
 
 const updateStatus = async (req, res) => {
   try {

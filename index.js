@@ -120,6 +120,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/', userRoute);
+
 app.use('/admin', adminRoute);
 
 app.use((req, res, next) => {

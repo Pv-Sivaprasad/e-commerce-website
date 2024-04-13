@@ -32,10 +32,10 @@
             <thead>
                 <tr>
                     <th style="width: 50px;">ID</th>
-                    <th>Date</th>
+                  
                     <th>Total Orders</th>
                     <th>Total Revenue</th>
-                    <th>Total Offer Discount </th>
+                  
                     <th>Total Coupon Discount</th>
                     
                 </tr>
@@ -44,16 +44,18 @@
                 <% report.forEach((order, index) => { %>
                     <tr>
                         <td><%= index + 1 %></td>
-                        <td><%= order._id %></td>
+                       
                         <td><%= order.totalOrders %></td>
                         <td>₹<%= order.totalAmount.toFixed(2) %></td>
+                      
+                        <td><%= totalCouponAmount %></td>
                       
                     </tr>
                 <% }); %>
                 <tr> 
                     <td colspan="2"><strong>Total:</strong></td> 
                     <td><%= totalOrders %></td> 
-                    <td>₹<%= totalAmount.toFixed(2) %></td> 
+                    <td>₹<%= totalAmount.toFixed(2) - totalCouponAmount %></td> 
                 </tr>
             </tbody>   
         </table>
@@ -69,6 +71,7 @@
         Download as Excel
     </a>
 </div>
+<br><br><br>
 <%- include('../layouts/adminFooter') %>
 <script>
    

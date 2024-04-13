@@ -1,5 +1,5 @@
 <%- include('../layouts/adminHeader') %>
-
+   
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -64,6 +64,27 @@
     </div>
     <!-- card .// -->
 </section>
+<h3>Top selling Categories</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">S no</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Total Sold</th>
+        </tr>
+    </thead>
+    <tbody id="categoriesTableBody">
+        <% for(let i=0; i < topCategories.length; i++) { %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= topCategories[i].catName %></td>
+                <td><%= topCategoryData[i].totalSold %></td>
+            </tr>
+        <% } %>
+    </tbody>
+    </tbody>
+</table>
+
 <div class="pagination-area mt-30 mb-50">
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-start">

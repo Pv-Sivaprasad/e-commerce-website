@@ -45,7 +45,8 @@ const dailySalesReport = async (req, res) => {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                     totalOrders: { $sum: 1 },
-                    totalAmount: { $sum: "$orderAmount" }
+                    totalAmount: { $sum: "$orderAmount" },
+                    totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
@@ -53,10 +54,11 @@ const dailySalesReport = async (req, res) => {
   
         const totalOrders = dailyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = dailyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+        const totalCouponAmount = dailyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         console.log('dailyReport', dailyReport);
 
-        res.render('reports', { report: dailyReport, totalOrders, totalAmount });
+        res.render('reports', { report: dailyReport, totalOrders, totalAmount ,totalCouponAmount });
 
     } catch (error) {
         console.log('error loading daily sales report', error);
@@ -64,7 +66,7 @@ const dailySalesReport = async (req, res) => {
     }
 }
 
-//to load the weekly report
+//to load the weekly report  
 const generateWeeklyReport = async (req, res) => {
     try {
         const startDate = moment().startOf('week');
@@ -80,18 +82,20 @@ const generateWeeklyReport = async (req, res) => {
                 $group: {
                     _id: { $week: "$createdAt" },
                     totalOrders: { $sum: 1 },
-                    totalAmount: { $sum: "$orderAmount" }
+                    totalAmount: { $sum: "$orderAmount" },
+                    totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
 
-        // Calculate total orders and total amount for the entire week
+        // Calculate total orders and total amount and applied coupons  for the entire week
         const totalOrders = weeklyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = weeklyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+        const totalCouponAmount = weeklyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         console.log('weeklyReport', weeklyReport);
 
-        res.render('reports', { report: weeklyReport, totalOrders, totalAmount });
+        res.render('reports', { report: weeklyReport, totalOrders, totalAmount ,totalCouponAmount});
     } catch (error) {
         console.error('Error generating weekly report:', error);
         throw error;
@@ -106,7 +110,8 @@ const generateMonthlyReport = async (req, res) => {
                 $group: {
                     _id: { $month: "$createdAt" }, 
                     totalOrders: { $sum: 1 }, 
-                    totalAmount: { $sum: "$orderAmount" } 
+                    totalAmount: { $sum: "$orderAmount" } ,
+                    totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
@@ -122,9 +127,10 @@ const generateMonthlyReport = async (req, res) => {
         // Calculate total orders and total amount
         const totalOrders = formattedReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = formattedReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+        const totalCouponAmount = monthlyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         // Pass report data and totals to the EJS template
-        res.render('reports', { report: formattedReport, totalOrders, totalAmount });
+        res.render('reports', { report: formattedReport, totalOrders, totalAmount ,totalCouponAmount });
     } catch (error) {
         console.error('Error generating monthly report:', error);
         throw error;
@@ -139,7 +145,8 @@ const generateYearlyReport = async (req, res) => {
                 $group: {
                     _id: { $year: "$createdAt" }, 
                     totalOrders: { $sum: 1 },
-                    totalAmount: { $sum: "$orderAmount" } 
+                    totalAmount: { $sum: "$orderAmount" } ,
+                    totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
@@ -147,10 +154,11 @@ const generateYearlyReport = async (req, res) => {
         
         const totalOrders = yearlyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = yearlyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
+        const totalCouponAmount = yearlyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         console.log('yearlyReport', yearlyReport);
 
-        res.render('reports', { report: yearlyReport, totalOrders, totalAmount });
+        res.render('reports', { report: yearlyReport, totalOrders, totalAmount, totalCouponAmount });
     } catch (error) {
         console.error('Error generating yearly report:', error);
         throw error;
@@ -193,7 +201,7 @@ const generateCustomDateReport = async (req, res) => {
             report: customDateReport, 
             startDate: startDate.format('YYYY-MM-DD'), 
             endDate: endDate.format('YYYY-MM-DD'),
-            totalAmount: totalAmount.toFixed(2), // Convert totalAmount to fixed decimal format
+            totalAmount: totalAmount.toFixed(2), 
             totalOrders: totalOrders
         });
     } catch (error) {
@@ -201,7 +209,6 @@ const generateCustomDateReport = async (req, res) => {
         res.status(500).send('Error generating custom date report');
     }
 };
-
 
 
 const downloadAsExcel = (req, res) => {
@@ -259,8 +266,6 @@ const downloadAsPDF = (req, res) => {
         res.status(500).send('Error generating PDF report');
     }
 };
-
-
 
 
 const downloadReport = async (req, res) => {

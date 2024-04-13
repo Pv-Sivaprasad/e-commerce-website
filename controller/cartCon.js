@@ -145,60 +145,54 @@ const removeProduct = async (req, res) => {
     }
 }
 
-
 const loadCheckoutPage = async (req, res) => {
     try {
-          console.log(req.body)
-          const {CouponCOde}=req.body
+        console.log(req.body);
+        const { CouponCode } = req.body;
 
+        console.log('Entering the checkout page');
 
-        console.log('entering the checkout page');
+        const userId = req.session.user_id;
+        console.log('UserID:', userId);
 
-        const userId = req.session.user_id
-        console.log('userid', userId);
+        const user = await User.findOne({ _id: userId });
+        console.log('User:', user);
 
-        const user = await User.findOne({ _id: userId })   
-        console.log('user', user);
+        const address = await Address.find({ userId: userId });
+        console.log('Address:', address);
 
-        const address = await Address.find({ userId: userId })
-        console.log('address', address);
+        const coupon = await Coupon.find({});
+        console.log('Coupon:', coupon);
 
-        const coupon =await Coupon.find({})
-            console.log('coupon',coupon);  
+        // Extracting minimum amounts from coupons
+        const minAmounts = coupon.map(couponItem => couponItem.minimumAmount);
+        console.log('Minimum Amounts:', minAmounts);
 
-            const  minAmounts = coupon.map(couponItem => couponItem.minimumAmount);
-
-            console.log('minAmounts',minAmounts);
-
-        const cartDetails = await Cart.find({ userId: user }).populate('product.productId')
-        console.log("cartDetails", cartDetails);
-
+        const cartDetails = await Cart.find({ userId: user }).populate('product.productId');
+        console.log("Cart Details:", cartDetails);
 
         let total = 0;
-
         cartDetails.forEach(item => {
-
             total += item.product.totalPrice;
         });
-
         console.log('Total:', total);
 
-      if(total>=minAmounts  && total>1000){
+        
+        const showCOD = total >= 1000;
 
-    
-        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon,showCOD:true })
-      
-    }else{
-        res.render('users/checkout', { address: address, user: userId, address: address, cartDetails: cartDetails, subTotal: total, couponData:coupon,showCOD:false })
-    }
-
-
-       
+        res.render('users/checkout', {
+            address,
+            user: userId,
+            address,
+            cartDetails,
+            subTotal: total,
+            couponData: coupon,
+            showCOD 
+        });
     } catch (error) {
-        console.log('error rendering checkoutpage');
-        console.log(error);
+        console.log('Error rendering checkout page:', error);
     }
-}
+};
 
 const orderSuccess = async (req, res) => {
     try {

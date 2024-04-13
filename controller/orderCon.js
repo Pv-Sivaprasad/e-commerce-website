@@ -5,7 +5,7 @@ const Order = require('../model/orderModel')
 const Category = require('../model/categoryModel')
 const Payment = require('../model/paymentModel')
 const Cart = require('../model/cartModel')
-const Wallet=require('../model/walletModel')
+const Wallet = require('../model/walletModel')
 
 
 //load the full orders of user
@@ -32,8 +32,8 @@ const loadOrderDetails = async (req, res) => {
 const placeOrder = async (req, res) => {
     try {
         console.log('starting order placing');
-   
-        const {transactionId}=req.query
+
+        const { transactionId } = req.query
 
         console.log(req.body);
         const { selectedAddressValue, paymentOptionValue } = req.body;
@@ -44,7 +44,7 @@ const placeOrder = async (req, res) => {
         if (!selectedAddressValue) {
             return res.json({ success: false, message: 'Please select an address' });
         }
-
+ 
         const userId = req.session.user_id;
         console.log('userId', userId);
 
@@ -54,14 +54,23 @@ const placeOrder = async (req, res) => {
         const orderedItem = cartItems.map(item => ({
             productId: item.product.productId,
             quantity: item.product.quantity,
-            totalPrice: item.product.price * item.product.quantity,// Calculate totalPrice correctly
+            totalPrice: item.product.price * item.product.quantity,
             totalProductAmount: item.product.price * item.product.quantity
         }));
 
         for (let item of orderedItem) {
             const { productId, quantity } = item;
-            const products = await Product.updateOne({ _id: productId }, { $inc: { quantity: -quantity } });
+            const products = await Product.updateOne({ _id: productId }, {
+                $inc: {
+                    quantity: -quantity, 
+                    sold: quantity 
+                }
+            });
         }
+
+        console.log('req.session.couponAmount',req.session.couponAmount)
+
+            let coupon=req.session.couponAmount
 
         const orderAmount = cartItems.reduce((total, item) => total + (item.product.price * item.product.quantity), 0);
 
@@ -72,11 +81,12 @@ const placeOrder = async (req, res) => {
             orderAmount: orderAmount,
             deliveryAddress: selectedAddressValue,
             paymentMethod: paymentOptionValue,
-            orderStatus: 'pending'
+            orderStatus: 'pending',
+            coupon:coupon
         });
 
         const save = await order.save();
-
+    
         await Cart.deleteMany({ userId: userId });
 
 
@@ -130,7 +140,7 @@ const singleOrder = async (req, res) => {
 
         console.log('products', products);
 
-        
+
         res.render('users/singleorder', { orderDetails: orderDetails, user: userId })
 
     } catch (error) {
@@ -140,105 +150,81 @@ const singleOrder = async (req, res) => {
 }
 
 //to cancel the product 
-const cancelOrder=async(req,res)=>{
+const cancelOrder = async (req, res) => {
     try {
-        
+
         console.log('starting to cancel the product ');
 
-        const userId=req.session.user_id
-        console.log('userId',userId);
+        const userId = req.session.user_id
+        console.log('userId', userId);
 
-        const {orderId}=req.body
+        const { orderId } = req.body
 
         console.log(`orderId ${orderId}`);
 
-      
-        const orderStatus = await Order.updateOne(
-            { 
-              _id: orderId,
-            },
-            { 
-              $set: { orderStatus:'cancelled '} // Update the order status directly
-            }
-          );
 
-          console.log('orderStatus',orderStatus);
-           res.status(200).json({success:true})
+        const orderStatus = await Order.updateOne(
+            {
+                _id: orderId,
+            },
+            {
+                $set: { orderStatus: 'cancelled ' } // Update the order status directly
+            }
+        );
+
+        console.log('orderStatus', orderStatus);
+        res.status(200).json({ success: true })
     } catch (error) {
         console.log('error cancelling order');
         res.status(302).json({ success: false })
         console.log(error);
-        
+
     }
 }
 
 //to return the order
-const returnOrder=async(req,res)=>{
-console.log('entering returing product');
+const returnOrder = async (req, res) => {
+    console.log('entering returing product');
 
     try {
-        
+
         console.log(req.body);
-
-        const userId=req.session.user_id
-        
-        const {selectedReason,orderId}=req.body
-
-        console.log('selectedReason',selectedReason  );
-
-        console.log('orderId',orderId);
-
-        // if(!selectedReason){
-        //    return res.json({success:false})
-        // }
-
-        const orderStatus= await Order.updateOne({_id:orderId},{
-            $set:{
-                orderStatus:'returned'
+        const userId = req.session.user_id
+        const { selectedReason, orderId } = req.body
+        console.log('selectedReason', selectedReason);
+        console.log('orderId', orderId);
+        const orderStatus = await Order.updateOne({ _id: orderId }, {
+            $set: {
+                orderStatus: 'returned'
             }
         })
 
-        
-        const order=await Order.findOne({_id:orderId})
-
-        console.log('order',order);
-
+        const order = await Order.findOne({ _id: orderId })
+        console.log('order', order);
         for (const item of order.orderedItem) {
             const product = await Product.findById(item.productId);
             if (!product) {
                 return res.status(404).json({ success: false, error: `Product ${item.productId} not found` });
             }
             product.quantity += item.quantity;
+            product.sold -= item.quantity;
             await product.save();
         }
-
         console.log('product quantity updated successfully');
-
-        const orderAmount=order.orderAmount
-
-        const isexistWallet= await Wallet.findOne({userId:userId})
-
-        if(!isexistWallet){
-            const newWallet= new Wallet({
-                userId:userId,
-                balance:orderAmount,
-                transaction:[{
-                    amount:orderAmount,
-                    transactionsMethod:'Refund'
+        const orderAmount = order.orderAmount
+        const isexistWallet = await Wallet.findOne({ userId: userId })
+        if (!isexistWallet) {
+            const newWallet = new Wallet({
+                userId: userId,
+                balance: orderAmount,
+                transaction: [{
+                    amount: orderAmount,
+                    transactionsMethod: 'Refund'
                 }]
             })
             await newWallet.save()
-        }
-        // else{
-        //      await Wallet.updateOne({userId:userId},
-        //         {$inc:{
-        //             balance:orderAmount, $push:{transaction:{amount:orderAmount,transactionsMethod:'Refund'}}
-        //         }}
+        } else {
 
-        //         )
-        // }
-        else {
-            // Update wallet balance and push a new transaction
             await Wallet.updateOne(
                 { userId: userId },
                 {
@@ -247,16 +233,11 @@ console.log('entering returing product');
                 }
             );
         }
-
-        const productStatus=await Order.findOne({})
-
-
-        
-
-        if(orderStatus){
+        const productStatus = await Order.findOne({})
+        if (orderStatus) {
             res.json({ success: true })
-        }else{
-            res.json({success:false})
+        } else {
+            res.json({ success: false })
         }
 
     } catch (error) {
@@ -266,8 +247,8 @@ console.log('entering returing product');
 }
 
 //to load the invoice page
-const loadInvoice=async(req,res)=>{ 
-  try {
+const loadInvoice = async (req, res) => {
+    try {
         console.log('entering invoice page');
 
         const orderId = req.query.orderId;
@@ -277,23 +258,23 @@ const loadInvoice=async(req,res)=>{
         console.log('userid ', userId);
 
         const orderDetails = await Order.findOne({ _id: orderId })
-        .populate('userId')
-        .populate({ path: 'orderedItem.productId', model: 'Product' })
-        .populate('deliveryAddress')
+            .populate('userId')
+            .populate({ path: 'orderedItem.productId', model: 'Product' })
+            .populate('deliveryAddress')
 
-    console.log('orderDetails', orderDetails);
+        console.log('orderDetails', orderDetails);
 
-    const products = orderDetails.orderedItem
+        const products = orderDetails.orderedItem
 
-    console.log('products', products);
+        console.log('products', products);
 
-    
-        res.render('users/invoice',{order:orderDetails});
-      
+
+        res.render('users/invoice', { order: orderDetails });
+
     } catch (error) {
-        console.log('error',error)
-       }
-        
+        console.log('error', error)
+    }
+
 }
 
 module.exports = {

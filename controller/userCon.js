@@ -364,17 +364,7 @@ const loginHome = async (req, res) => {
     }
 }
 
-// to load login product listed page
-// const allProducts = async (req, res) => {
-//     try {
-//         const products = await Product.find({}).populate('categoryId')
-//         res.render('users/userhome', { products: products });
-//     } catch (error) {
-//         console.log('Error loading all products');
-//         console.log(error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
+
 const allProducts = async (req, res) => {
     try {
         console.log('reached here');
@@ -463,7 +453,7 @@ const loadProductDetails = async (req, res) => {
     }
 }
 
-
+//common error page
 const errorPage = async (req, res) => {
     try {
         res.render('users/error')
@@ -473,6 +463,7 @@ const errorPage = async (req, res) => {
     }
 }
 
+//to load the profile page
 const loadProfilePage = async (req, res) => {
     try {
         let userData = await User.findOne({ _id: req.session.user_id, is_blocked: 0 })
@@ -485,6 +476,7 @@ const loadProfilePage = async (req, res) => {
     }
 }
 
+//to  load edit the profile
 const loadEditProfile = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.session.user_id })
@@ -496,7 +488,7 @@ const loadEditProfile = async (req, res) => {
     }
 }
 
-
+// to render the otp page after changing the details
 const renderProfileOTPPage = (req, res) => {
     try {
         // Render the profile OTP page
@@ -506,6 +498,8 @@ const renderProfileOTPPage = (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+// to edit the profile
 const editProfile = async (req, res) => {
     try {
         console.log('Starting editing profile');
@@ -581,7 +575,7 @@ const editProfile = async (req, res) => {
 };
 
 
-
+// to verify the profile otp
 const verifyProfileOtp = async (req, res) => {
 
     try {
@@ -632,7 +626,7 @@ const verifyProfileOtp = async (req, res) => {
     }
 }
 
-
+// add load  wishlist page
 const wishlist = async (req, res) => {
     try {
         const userId = req.session.user_id
@@ -648,8 +642,7 @@ const wishlist = async (req, res) => {
     }
 }
 
-
-
+//to add to wishlist
 const addToWishlist = async (req, res) => {
     try {
         console.log('Adding to wishlist starts here');
@@ -689,8 +682,7 @@ const addToWishlist = async (req, res) => {
     }
 }
 
-
-
+//to remove from wishlist
 const removeFromWishlist = async (req, res) => {
     try {
         console.log(req.body);

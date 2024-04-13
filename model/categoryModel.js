@@ -21,7 +21,11 @@ const categorySchema=mongoose.Schema({
     image:{
         type:String,
        
- },
+    },
+    sold:{
+        type: Number,
+        default: 0
+    }
  
 
 })

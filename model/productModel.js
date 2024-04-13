@@ -54,10 +54,13 @@ const productSchema = new mongoose.Schema({
     },
     categoryDiscount:{
         type:Number
+    },
+    sold: {
+        type: Number,
+        default: 0
     }
-
-
 },
+
 {
     timestamps:true
 })

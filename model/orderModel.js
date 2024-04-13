@@ -37,7 +37,7 @@ const orderSchema= new mongoose.Schema({
         required: true,
 
     },
-    deliveryAddress: {
+    deliveryAddress: {  
         type: mongoose.Schema.Types.ObjectId,
         ref:"Address",
         required: true,
@@ -57,9 +57,14 @@ const orderSchema= new mongoose.Schema({
         type: String,
         required: true,
    
+    },
+    coupon: {
+        type: Number
     }
     
+
 },
+
 {
     timestamps:true
 

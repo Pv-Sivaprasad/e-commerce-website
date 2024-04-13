@@ -20,7 +20,7 @@
                         data: [18, 17, 4, 3, 2, 20, 25, 31, 25, 22, 20, 9]
                     },
                     {
-                        label: 'Visitors',
+                        label: 'Revenue',
                         tension: 0.3,
                         fill: true,
                         backgroundColor: 'rgba(4, 209, 130, 0.2)',

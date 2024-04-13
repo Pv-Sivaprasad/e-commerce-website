@@ -65,7 +65,8 @@ const addOffer = async (req, res) => {
 
         // Check if start date is less than end date
         if (new Date(startDate) >= new Date(endDate)) {
-            throw new Error('Start date must be before end date');
+            // throw new Error('Start date must be before end date');
+            return res.status(400).json({ success: false, errorMessage: 'Start date must be before end date' });
         }
         const newOffer = new Offer({
             offerName,
@@ -192,24 +193,6 @@ const editOffer = async (req, res) => {
     }
 }
 
-//to delete the offer
-// const deleteOffer = async (req, res) => {
-//     try {
-
-//         console.log('enetered deleting');
-//         const { offerId } = req.body
-
-//         const offer = await Offer.deleteOne({ _id: offerId })
-
-//         if (offer.deletedCount > 0) {
-//             res.status(200).json({ success: true })
-//         } else {
-//             res.json({ success: false })
-//         }
-//     } catch (error) {
-//         console.log('error in deleting the offer', error)
-//     }
-// }
 const deleteOffer = async (req, res) => {
     try {
         console.log('entered deleting');

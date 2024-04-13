@@ -257,7 +257,8 @@
                                                                 <i class="bx bx-money d-block h2 mb-3"></i>
                                                                 <span>Cash on Delivery</span>
                                                             </span>
-                                                            <% } %>
+                                                        <% } %>
+                                                        
                                                     </label>
                                                 </div>
                                             </div>
@@ -292,10 +293,10 @@
                         </div>
                         <div class="table-responsive">
                             <table class="table table-centered mb-0 table-nowrap">
-                                <thead>
+                                <thead>  
                                     <tr>
                                         <th class="border-top-0" style="width: 110px;" scope="col">Product</th>
-                                        <th class="border-top-0" scope="col">Product Desc</th>
+                                        <th class="border-top-0" scope="col">Product Quantity</th>
                                         <th class="border-top-0" scope="col">Price</th>
                                     </tr>
                                 </thead>
@@ -316,7 +317,7 @@
                                                             el.product.quantity %>
                                                 </p>
                                             </td>
-                                            <td>₹ <%= el.subTotal %>
+                                            <td>₹ <%= subTotal %>
                                             </td>
                                         </tr>
                                         <% }); %>
@@ -332,7 +333,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <h5 class="font-size-14 m-0">Shipping Charge :</h5>
+                                                      <h5 class="font-size-14 m-0">Shipping Charge :</h5>
                                                 </td>
                                                 <td><span class="text-success" id="free-shipping">Free Shipping</span>
                                                 </td>

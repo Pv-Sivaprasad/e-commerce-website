@@ -120,21 +120,6 @@ userRoute.get('/invoice',auth.isLogin,orderController.loadInvoice)
 
 
 
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
 // Google OAuth routes
 userRoute.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 

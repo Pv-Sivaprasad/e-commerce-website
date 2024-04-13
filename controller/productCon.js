@@ -14,10 +14,13 @@ const   loadProduct = async (req, res) => {
     try {
         const products = await Product.find({}).populate('categoryId')
 
+        const sold = await Product.find({}).sort({ sold: -1 }).populate('categoryId');
        
         console.log('products',products);
+        
+        console.log('sold',sold)
 
-        res.render('allProduct', { products })
+        res.render('allProduct', { products,sold})
     } catch (error) {
         console.log('error loading product page');
         console.log(error);

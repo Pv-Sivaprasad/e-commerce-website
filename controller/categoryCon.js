@@ -12,15 +12,42 @@ const validator=require('validator')
 
 // to showcase all the categories
 const allCategory = async (req, res) => {
-    try {
-      const categories = await Category.find();
-  
-      res.render('allCategories', { categories });
-    } catch (error) {
+  try {
+      
+      console.log('entered all categories');
+      const allCategories = await Category.find();
+      console.log('allCategories',allCategories);
+     
+      const topCategoryData = await Product.aggregate([
+          {
+              $group: {
+                  _id: "$categoryId",
+                  totalSold: { $sum: "$sold" }
+              }
+          },
+          {
+              $sort: { totalSold: -1 }
+          },
+          {
+              $limit: 5 // You can adjust the limit as per your requirement
+          }
+      ]);
+      console.log('topCategoryData',topCategoryData)
+
+      // Extract categoryIds of top categories
+      const topCategoryIds = topCategoryData.map(item => item._id);
+      console.log('topCategoryIds',topCategoryIds)
+
+      // Fetch details of top categories
+      const topCategories = await Category.find({ _id: { $in: topCategoryIds } });
+      console.log('topCategories',topCategories)
+
+      res.render('allCategories', { categories :allCategories, topCategories ,topCategoryData});
+  } catch (error) {
       console.log('Error loading categories:', error);
       res.status(500).send('Internal Server Error');
-    }
   }
+};
 
 // to render add category page
 const addCategory = async (req, res) => {
