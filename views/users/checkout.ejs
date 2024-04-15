@@ -792,7 +792,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script>
-
+            // to take the address from the page
             document.addEventListener('DOMContentLoaded', function () {
                 const addBtn = document.getElementById('checkAddAddress')
 
@@ -863,6 +863,7 @@
             })
 
 
+                // all payment methods
             document.addEventListener('DOMContentLoaded', function () {
                 const placeorder = document.getElementById('place-order-btn');
                 const errormsg = document.getElementById('errormsg');
@@ -872,7 +873,7 @@
                     console.log('proceed clicked ');
 
                     const selectAddress = document.querySelector('input[name="shippingAddress"]:checked');
-                    console.log('selectedAddress', selectAddress); // Corrected variable name
+                      console.log('selectedAddress', selectAddress); // Corrected variable name
 
                     if (!selectAddress) {
                         errormsg.innerHTML = 'Please select an address';
@@ -923,7 +924,7 @@
                                     console.log('orderId', orderId);
 
                                     var options = {
-                                        key: res.data.key_id,
+                                        key: res.data.key_id, 
                                         amount: res.data.amount * 100,
                                         currency: 'INR',
                                         name: 'Royal Oak',
@@ -943,12 +944,13 @@
                                                 razorpay_order_id: response.razorpay_order_id,
                                                 razorpay_signature: response.razorpay_signature
                                             }).then(res => {
+                                              
                                                 if (res.data.success) {
 
                                                     axios.post(`/placeorder?transactionId=${res.data.razorpay_payment_id}`, { selectedAddressValue, paymentOptionValue })
                                                         .then(res => {
                                                             if (!res.data.success) {
-
+                                                                alert('payment failed')
                                                                 errormsg.innerHTML = res.data.message;
                                                             } else {
                                                                 const orderId = res.data.orderId;
@@ -1028,7 +1030,7 @@
             });
 
 
-
+            //coupon adding and removal
             document.addEventListener('DOMContentLoaded', function () {
                 var applyBtn = document.querySelector("#couponsModal button.btn-primary");
                 var couponData; // Declare a variable to store coupon data

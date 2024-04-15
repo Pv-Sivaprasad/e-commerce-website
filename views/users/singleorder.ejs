@@ -11,6 +11,7 @@
                 <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orderDetails._id %>
                 </h2>
             </div>
+            <!-- payment details if failed  -->
 
             <!-- Main content -->
             <div class="row">
@@ -21,19 +22,16 @@
                             <div class="mb-3 d-flex justify-content-between">
                                 <div>
                                     <span class="me-3">
-                                       Date:  <%= orderDetails.createdAt.toLocaleDateString() %>
+                                        Date: <%= orderDetails.createdAt.toLocaleDateString() %>
                                     </span>
-                                  
+
                                     <span class="me-3">Payment Method: <%= orderDetails.paymentMethod %></span>
                                     <span
                                         class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>">
                                         <%= orderDetails.orderStatus %>
-                                      
+
                                     </span>
-                                    <% if(orderDetails.orderStatus === 'delivered') { %>
-                                        <a href="invoice" class="btn btn-sm btn-primary" style="background-color: blue; width: 200px; height: 30px;">Invoice</a>
-                                            <input type="hidden" name="orderId" value="<%= orderDetails._id%>">
-                                    <% } %>
+                                  
 
                                 </div>
                                 <div class="d-flex">
@@ -79,7 +77,7 @@
                                     <button type="button" id="cancel-btn" class="  btn btn-danger"
                                         data-id="<%= orderDetails._id %>">Cancel</button>
                                     <% } else { %>
-                                        <button type="button"    id="return-btn" class="  btn btn-primary"
+                                        <button type="button" id="return-btn" class="  btn btn-primary"
                                             data-id="<%= orderDetails._id %>">Return</button>
                                         <% } %>
                             </div>
@@ -92,245 +90,297 @@
 
         </div>
     </div>
-
-    </div>
-    <div class="col-lg-4 d-flex flex-column">
-        <!-- Payment -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h3 class="h6">Payment Method</h3>
-                        <p>
-                            <%= orderDetails.paymentMethod %> <br>
-                                Total: ₹<%= orderDetails.orderAmount %> <span
-                                        class="badge bg-success rounded-pill"></span>
-                        </p>
-                    </div>
-                    <div class="col-lg-6">
-                        <h3 class="h6">Billing Info</h3>
-                        <address>
-                            Name: <%= orderDetails.userId.name %> <br />
-                                Phone: <%= orderDetails.userId.mobile %> <br />
-                        </address>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3 class="h6">Shipping Information</h3>
-                <strong>
-                    <%= orderDetails.shippingProvider %>
-                </strong>
-                <span><a href="<%= orderDetails.trackingLink %>" class="text-decoration-underline" target="_blank">
-                        <%= orderDetails.trackingNumber %>
-                    </a> <i class="bi bi-box-arrow-up-right"></i></span>
-                <hr>
-                <h3 class="h6">Address</h3>
-                <address>
-                    City: <%= orderDetails.deliveryAddress.city %>, <%= orderDetails.deliveryAddress.locality %> <br />
-                            <%= orderDetails.deliveryAddress.streetAddress %> <br />
-                                State : <%= orderDetails.deliveryAddress.state %> <br />
-                                    PINCODE : <%= orderDetails.deliveryAddress.pincode %> 
-                                    <input type="hidden" name=""  id="orderId" value="<%=orderDetails._id %>">
-                </address>
-            </div>
-        </div>
-    </div>
-
-    </div>
-      <!-- return reason modal -->
-    <div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
-                <p id="errorMessage"></p>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="returnReasonForm">
-                    <div class="mb-3">
-                        <label for="returnReason" class="form-label">Why are you returning this item?</label>
-                        <select class="form-select" id="returnReason">
-                            <option value="" selected>Choose...</option>
-                            <option value="damaged">Item was damaged</option>
-                            <option value="incorrect">Incorrect item was sent</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="mb-3 d-none" id="otherReasonContainer">
-                        <label for="otherReason" class="form-label">Please specify:</label>
-                        <textarea class="form-control" id="otherReason" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmReturn" data-bs-dismiss="modal">Confirm Return</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-    <style>
-        body {
-            background: #eee;
-        }
-
-        .card {
-            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-        }
-
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid rgba(0, 0, 0, .125);
-            border-radius: 1rem;
-        }
-
-        .text-reset {
-            --bs-text-opacity: 1;
-            color: inherit !important;
-        }
-
-        a {
-            color: #5465ff;
-            text-decoration: none;
-        }
-    </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" 
-integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const btn = document.getElementById('cancel-btn')
-            const bdg = document.querySelector('.badge')
-            btn.addEventListener('click', function (e) {
-                e.preventDefault()
-                console.log('reached here');
-                var orderId = this.getAttribute('data-id');
-
-                console.log("orderId", orderId);
-
-                // Send a PATCH request to the backend to cancel the order
-                axios.patch('/cancelorder', {
-                    orderId: orderId
-                })
-                    .then(res => {
-                        console.log('res', res);
-
-                        window.location.href = '/singleorder'
-                    })
-                    .catch(function (error) {
-                        console.error(error);
-                        // Optionally, handle errors here
-                    });
-            })
-
-        });
-
-
-       
-
-        document.addEventListener('DOMContentLoaded', function() {
- 
-    const returnBtn = document.getElementById('return-btn');
-    const returnModal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
-    const returnReasonSelect = document.getElementById('returnReason');
-    const confirmReturnBtn = document.getElementById('confirmReturn');
-    const orderId=document.getElementById('orderId').value
-
   
-    function openReturnModal() {
-        returnModal.show();
-    }
 
+                                        </div>
+                                        <div class="col-lg-4 d-flex flex-column">
+                                            <!-- Payment -->
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <h3 class="h6">Payment Method</h3>
+                                                            <p>
+                                                                <%= orderDetails.paymentMethod %> <br>
+                                                                    Total: ₹<%= orderDetails.orderAmount %> <span
+                                                                            class="badge bg-success rounded-pill"></span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h3 class="h6">Billing Info</h3>
+                                                            <address>
+                                                                Name: <%= orderDetails.userId.name %> <br />
+                                                                    Phone: <%= orderDetails.userId.mobile %> <br />
+                                                            </address>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+
+                                            <% let paymentSuccessful=true; %>
+                                            <% for (let item of orderDetails.orderedItem) { %>
+                                                <% if (item.productStatus !=='successful' ) { %>
+                                                    <% paymentSuccessful=false; %>
+                                                        <% break; %>
+                                                            <% } %>
+                                                                <% } %>
+                                    
+                                                                    <% if (!paymentSuccessful) { %>
+                                                                        <button type="button" id="retry-btn" class="btn btn-dark"
+                                                                            data-id="<%= orderDetails._id %>">Retry Payment</button>
+                                                                        <% } %>
+                                                                    </div>
+                                                                </div>
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <h3 class="h6">Shipping Information</h3>
+                                                    <strong>
+                                                        <%= orderDetails.shippingProvider %>
+                                                    </strong>
+                                                    <span><a href="<%= orderDetails.trackingLink %>"
+                                                            class="text-decoration-underline" target="_blank">
+                                                            <%= orderDetails.trackingNumber %>
+                                                        </a> <i class="bi bi-box-arrow-up-right"></i></span>
+                                                    <hr>
+                                                    <h3 class="h6">Address</h3>
+                                                    <address>
+                                                        City: <%= orderDetails.deliveryAddress.city %>, <%=
+                                                                orderDetails.deliveryAddress.locality %> <br />
+                                                                <%= orderDetails.deliveryAddress.streetAddress %> <br />
+                                                                    State : <%= orderDetails.deliveryAddress.state %>
+                                                                        <br />
+                                                                        PINCODE : <%=
+                                                                            orderDetails.deliveryAddress.pincode %>
+                                                                            <input type="hidden" name="" id="orderId"
+                                                                                value="<%=orderDetails._id %>">
+                                                    </address>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </div>
+                                        <!-- return reason modal -->
+                                        <div class="modal fade" id="returnReasonModal" tabindex="-1"
+                                            aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="returnReasonModalLabel">Return
+                                                            Reason</h5>
+                                                        <p id="errorMessage"></p>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="returnReasonForm">
+                                                            <div class="mb-3">
+                                                                <label for="returnReason" class="form-label">Why are you
+                                                                    returning this item?</label>
+                                                                <select class="form-select" id="returnReason">
+                                                                    <option value="" selected>Choose...</option>
+                                                                    <option value="damaged">Item was damaged</option>
+                                                                    <option value="incorrect">Incorrect item was sent
+                                                                    </option>
+                                                                    <option value="other">Other</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3 d-none" id="otherReasonContainer">
+                                                                <label for="otherReason" class="form-label">Please
+                                                                    specify:</label>
+                                                                <textarea class="form-control" id="otherReason"
+                                                                    rows="3"></textarea>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" id="confirmReturn"
+                                                            data-bs-dismiss="modal">Confirm Return</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <style>
+                                            body {
+                                                background: #eee;
+                                            }
+
+                                            .card {
+                                                box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+                                            }
+
+                                            .card {
+                                                position: relative;
+                                                display: flex;
+                                                flex-direction: column;
+                                                min-width: 0;
+                                                word-wrap: break-word;
+                                                background-color: #fff;
+                                                background-clip: border-box;
+                                                border: 0 solid rgba(0, 0, 0, .125);
+                                                border-radius: 1rem;
+                                            }
+
+                                            .text-reset {
+                                                --bs-text-opacity: 1;
+                                                color: inherit !important;
+                                            }
+
+                                            a {
+                                                color: #5465ff;
+                                                text-decoration: none;
+                                            }
+                                        </style>
+                                        <script
+                                            src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+                                            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+                                            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                                        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                                        <script>
+
+
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                const btn = document.getElementById('cancel-btn')
+                                                const bdg = document.querySelector('.badge')
+                                                btn.addEventListener('click', function (e) {
+                                                    e.preventDefault()
+                                                    console.log('reached here');
+                                                    var orderId = this.getAttribute('data-id');
+
+                                                    console.log("orderId", orderId);
+
+                                                    // Send a PATCH request to the backend to cancel the order
+                                                    axios.patch('/cancelorder', {
+                                                        orderId: orderId
+                                                    })
+                                                        .then(res => {
+                                                            console.log('res', res);
+
+                                                            window.location.href = '/singleorder'
+                                                        })
+                                                        .catch(function (error) {
+                                                            console.error(error);
+                                                            // Optionally, handle errors here
+                                                        });
+                                                })
+
+                                            });
+
+
+
+
+                                            document.addEventListener('DOMContentLoaded', function () {
+
+                                                const returnBtn = document.getElementById('return-btn');
+                                                const returnModal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
+                                                const returnReasonSelect = document.getElementById('returnReason');
+                                                const confirmReturnBtn = document.getElementById('confirmReturn');
+                                                const orderId = document.getElementById('orderId').value
+
+
+                                                function openReturnModal() {
+                                                    returnModal.show();
+                                                }
+
+
+                                                function handleReturnReasonSelection() {
+
+                                                    const selectedReason = returnReasonSelect.value;
+
+                                                    console.log('Selected return reason:', selectedReason);
+
+
+                                                    const otherReasonContainer = document.getElementById('otherReasonContainer');
+                                                    if (selectedReason === 'other') {
+                                                        otherReasonContainer.classList.remove('d-none');
+                                                    } else {
+                                                        otherReasonContainer.classList.add('d-none');
+                                                    }
+                                                }
+
+
+                                                function confirmReturn() {
+
+                                                    const selectedReason = returnReasonSelect.value;
+
+
+                                                    let additionalInfo = '';
+                                                    if (selectedReason === 'other') {
+                                                        additionalInfo = document.getElementById('otherReason').value;
+                                                    }
+                                                    console.log('Selected return reason:', selectedReason);
+
+
+                                                    axios.patch('/returnorder', {
+                                                        orderId: orderId,
+                                                        reason: selectedReason,
+                                                        additionalInfo: additionalInfo
+                                                    })
+                                                        .then(res => {
+
+                                                            console.log('Return request successful:', res.data);
+
+
+
+                                                            returnModal.hide();
+
+                                                            swal({
+                                                                title: "Return Successful!", // More descriptive title
+                                                                text: "The product has been returned and a refund has been initiated to your wallet.", // Clearer message
+                                                                icon: "success",
+                                                                button: "OK",
+                                                            }).then(() => { // This callback executes only after user clicks "OK"
+                                                                window.location.reload(); // Reload the page after confirmation
+                                                            });
+
+
+                                                        })
+                                                        .catch(error => {
+
+                                                            console.error('Error sending return request:', error);
+
+                                                        });
+                                                }
+
+                                                // Add event listeners
+                                                returnBtn.addEventListener('click', openReturnModal);
+                                                returnReasonSelect.addEventListener('change', handleReturnReasonSelection);
+                                                confirmReturnBtn.addEventListener('click', confirmReturn);
+
+
+                                            });
+
+
+
+                                        </script>
+
+
+  <script>
+ document.getElementById('retry-btn').addEventListener('click', function() {
+    var orderId = this.getAttribute('data-id');
    
-    function handleReturnReasonSelection() {
-     
-        const selectedReason = returnReasonSelect.value;
-
-        console.log('Selected return reason:', selectedReason);
-
-     
-        const otherReasonContainer = document.getElementById('otherReasonContainer');
-        if (selectedReason === 'other') {
-            otherReasonContainer.classList.remove('d-none');
-        } else {
-            otherReasonContainer.classList.add('d-none');
-        }
-    }
-
-   
-    function confirmReturn() {
-       
-        const selectedReason = returnReasonSelect.value;
-
-       
-        let additionalInfo = '';
-        if (selectedReason === 'other') {
-            additionalInfo = document.getElementById('otherReason').value;
-        }
-        console.log('Selected return reason:', selectedReason);
-       
-       
-        axios.patch('/returnorder', {
-        orderId: orderId, 
-        reason: selectedReason,
-        additionalInfo: additionalInfo
-    })
-    .then(res => {
-       
-        console.log('Return request successful:', res.data);
-       
-    
-
-        returnModal.hide();
-
-        swal({
-      title: "Return Successful!", // More descriptive title
-      text: "The product has been returned and a refund has been initiated to your wallet.", // Clearer message
-      icon: "success",
-      button: "OK",
-    }).then(() => { // This callback executes only after user clicks "OK"
-      window.location.reload(); // Reload the page after confirmation
-    });
-    
-
-    })
-    .catch(error => {
-       
-        console.error('Error sending return request:', error);
-      
-    });
-    }
-
-    // Add event listeners
-    returnBtn.addEventListener('click', openReturnModal);
-    returnReasonSelect.addEventListener('change', handleReturnReasonSelection);
-    confirmReturnBtn.addEventListener('click', confirmReturn);
-
-    
+    axios.post('/retrypayment', {orderId:orderId} )
+        .then(response => {
+             // Remove the Retry Payment button from the DOM
+             var retryBtn = document.getElementById('retry-btn');
+            if (retryBtn) {
+                retryBtn.parentNode.removeChild(retryBtn);
+            }
+          
+        })
+        .catch(error => {
+           
+            console.error('Error creating order:', error);
+        });
 });
 
 
+</script>
 
-    </script>
-
-
-
-    <br><br><br>
-    <%- include('../layouts/profilefooter') %>
+                                        <br><br><br>
+                                        <%- include('../layouts/profilefooter') %>

@@ -80,8 +80,9 @@ const verifyLogin = async (req, res) => {
     req.session.loginError = 'Failed to connect to dashboard';
     return res.redirect('/admin/login');
   }
-};
+}
 
+// to load the admin dashboard
 const loadDashboard = async (req, res) => {
   try {
     const deliveredOrders = await Order.find({ orderStatus: 'delivered' });
@@ -90,8 +91,30 @@ const loadDashboard = async (req, res) => {
 
     // Calculate total revenue from delivered orders
     const totalRevenue = deliveredOrders.reduce((acc, order) => acc + order.orderAmount, 0);
+   
+    const monthlyEarnings = {};
+    deliveredOrders.forEach(order => {
+      const now = new Date();
+      const thisMonth = now.getMonth() + 1;
+      const thisYear = now.getFullYear();
+      if (order.createdAt.getMonth() + 1 === thisMonth && order.createdAt.getFullYear() === thisYear) {
+        const monthYear = `${thisMonth}-${thisYear}`;
+        if (!monthlyEarnings[monthYear]) {
+          monthlyEarnings[monthYear] = 0;
+        }
+        monthlyEarnings[monthYear] += order.orderAmount;
+      }
+    });
+    console.log('monthlyEarnings', monthlyEarnings);
 
-    res.render('dashboard', { orders: deliveredOrders, categories, products, totalRevenue });
+    // Retrieve earnings for the current month
+    const now = new Date();
+    const currentMonthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
+    const currentMonthEarnings = monthlyEarnings[currentMonthYear] || 0;
+
+    console.log('currentMonthEarnings',currentMonthEarnings)
+
+    res.render('dashboard', { orders: deliveredOrders, categories, products, totalRevenue, monthlyEarning: currentMonthEarnings });
   } catch (error) {
     console.log(error);
     console.log('Error rendering loadDashboard');
@@ -138,6 +161,7 @@ const userBlock = async (req, res) => {
   }
 }
 
+//to show all orderd details
 const orderDetails = async (req, res) => {
   try {
 
@@ -167,7 +191,7 @@ const orderDetails = async (req, res) => {
   }
 }
 
-
+//to show single order details completely
 const singleProduct = async (req, res) => {
   try {
     console.log('starting to load single product page in admin');
@@ -188,32 +212,90 @@ const singleProduct = async (req, res) => {
     console.log(error);
   }
 }
+  
 
+//to update status of products
+// const updateStatus = async (req, res) => {
+//   try {
+//     console.log('going to change the order status');
+//     const { status, orderId } = req.body; // Removed productId
+
+// console.log('status',status);
+// console.log('orderId',orderId);
+
+//     const orderStatus = await Order.updateOne(
+//       { 
+//         _id: orderId,
+//       },
+//       { 
+//         $set: { 'orderStatus': status } // Update the order status directly
+//       }
+//     );
+// console.log('orderStatus',orderStatus);
+   
+//     console.log('successfully updated the order status');
+//     res.status(200).json({ success: true });
+//   } catch (error) {
+//     console.log('Error in updating order status:', error);
+//     res.status(500).json({ success: false });
+//   }
+// };
 const updateStatus = async (req, res) => {
   try {
     console.log('going to change the order status');
-    const { status, orderId } = req.body; // Removed productId
+    const { status, orderId } = req.body;
 
-console.log('status',status);
-console.log('orderId',orderId);
+    console.log('status', status);
+    console.log('orderId', orderId);
 
-    const orderStatus = await Order.updateOne(
-      { 
-        _id: orderId,
-      },
-      { 
-        $set: { 'orderStatus': status } // Update the order status directly
-      }
+    // Update the order status
+    const orderStatusUpdate = await Order.updateOne(
+      { _id: orderId },
+      { $set: { 'orderStatus': status } }
     );
-console.log('orderStatus',orderStatus);
-   
-    console.log('successfully updated the order status');
+
+    // Update the product status within the order
+    const order = await Order.findById(orderId);
+
+    console.log('order', order);
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    for (const item of order.orderedItem) {
+      // Update the product status based on the order status
+      let productStatus = 'pending';
+      switch (status) {
+        case 'shipped':
+          productStatus = 'shipped';
+          break;
+        case 'delivered':
+          productStatus = 'delivered';
+          break;
+        case 'cancelled':
+          productStatus = 'cancelled';
+          break;
+        case 'returned':
+          productStatus = 'returned';
+          break;
+        default:
+          break;
+      }
+      item.productStatus = productStatus;
+    }
+
+    // Save the updated order
+    await order.save();
+
+    console.log('successfully updated the order status and product status');
     res.status(200).json({ success: true });
   } catch (error) {
     console.log('Error in updating order status:', error);
     res.status(500).json({ success: false });
   }
 };
+
+
 
 
 

@@ -1,5 +1,6 @@
 const Orders = require('../model/orderModel')
 const User = require('../model/orderModel')
+const Product = require('../model/productModel')
 const excel = require('exceljs');
 const PDFDocument = require('pdfkit');
 const moment = require('moment')
@@ -51,18 +52,18 @@ const dailySalesReport = async (req, res) => {
             }
         ]);
 
-  
+
         const totalOrders = dailyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = dailyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
         const totalCouponAmount = dailyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         console.log('dailyReport', dailyReport);
 
-        res.render('reports', { report: dailyReport, totalOrders, totalAmount ,totalCouponAmount });
+        res.render('reports', { report: dailyReport, totalOrders, totalAmount, totalCouponAmount });
 
     } catch (error) {
         console.log('error loading daily sales report', error);
-        throw error; 
+        throw error;
     }
 }
 
@@ -95,7 +96,7 @@ const generateWeeklyReport = async (req, res) => {
 
         console.log('weeklyReport', weeklyReport);
 
-        res.render('reports', { report: weeklyReport, totalOrders, totalAmount ,totalCouponAmount});
+        res.render('reports', { report: weeklyReport, totalOrders, totalAmount, totalCouponAmount });
     } catch (error) {
         console.error('Error generating weekly report:', error);
         throw error;
@@ -108,16 +109,16 @@ const generateMonthlyReport = async (req, res) => {
         const monthlyReport = await Orders.aggregate([
             {
                 $group: {
-                    _id: { $month: "$createdAt" }, 
-                    totalOrders: { $sum: 1 }, 
-                    totalAmount: { $sum: "$orderAmount" } ,
+                    _id: { $month: "$createdAt" },
+                    totalOrders: { $sum: 1 },
+                    totalAmount: { $sum: "$orderAmount" },
                     totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
 
         const formattedReport = monthlyReport.map(report => ({
-            _id: moment().month(report._id - 1).format('MMMM'), 
+            _id: moment().month(report._id - 1).format('MMMM'),
             totalOrders: report.totalOrders,
             totalAmount: report.totalAmount
         }));
@@ -130,7 +131,7 @@ const generateMonthlyReport = async (req, res) => {
         const totalCouponAmount = monthlyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
 
         // Pass report data and totals to the EJS template
-        res.render('reports', { report: formattedReport, totalOrders, totalAmount ,totalCouponAmount });
+        res.render('reports', { report: formattedReport, totalOrders, totalAmount, totalCouponAmount });
     } catch (error) {
         console.error('Error generating monthly report:', error);
         throw error;
@@ -143,15 +144,15 @@ const generateYearlyReport = async (req, res) => {
         const yearlyReport = await Orders.aggregate([
             {
                 $group: {
-                    _id: { $year: "$createdAt" }, 
+                    _id: { $year: "$createdAt" },
                     totalOrders: { $sum: 1 },
-                    totalAmount: { $sum: "$orderAmount" } ,
+                    totalAmount: { $sum: "$orderAmount" },
                     totalCouponAmount: { $sum: "$coupon" }
                 }
             }
         ]);
 
-        
+
         const totalOrders = yearlyReport.reduce((acc, curr) => acc + curr.totalOrders, 0);
         const totalAmount = yearlyReport.reduce((acc, curr) => acc + curr.totalAmount, 0);
         const totalCouponAmount = yearlyReport.reduce((acc, curr) => acc + curr.totalCouponAmount, 0);
@@ -168,8 +169,8 @@ const generateYearlyReport = async (req, res) => {
 // for custom report
 const generateCustomDateReport = async (req, res) => {
     try {
-        const startDate = moment(req.query.startDate).startOf('day'); 
-        const endDate = moment(req.query.endDate).endOf('day'); 
+        const startDate = moment(req.query.startDate).startOf('day');
+        const endDate = moment(req.query.endDate).endOf('day');
 
         if (!startDate.isValid() || !endDate.isValid() || startDate.isAfter(endDate)) {
             return res.status(400).send('Invalid date range');
@@ -197,11 +198,11 @@ const generateCustomDateReport = async (req, res) => {
         console.log('Total Amount:', totalAmount);
         console.log('Total Orders:', totalOrders);
 
-        res.render('customReport', { 
-            report: customDateReport, 
-            startDate: startDate.format('YYYY-MM-DD'), 
+        res.render('customReport', {
+            report: customDateReport,
+            startDate: startDate.format('YYYY-MM-DD'),
             endDate: endDate.format('YYYY-MM-DD'),
-            totalAmount: totalAmount.toFixed(2), 
+            totalAmount: totalAmount.toFixed(2),
             totalOrders: totalOrders
         });
     } catch (error) {
@@ -210,112 +211,174 @@ const generateCustomDateReport = async (req, res) => {
     }
 };
 
-
-const downloadAsExcel = (req, res) => {
+//to load the graph
+const graphData = async (req, res) => {
     try {
-     
-   
 
-        const workbook = new excel.Workbook();
-        const worksheet = workbook.addWorksheet('Report');
-
-       
-        worksheet.addRow(['Start Date', 'End Date', 'Total Orders', 'Total Amount']);
-        worksheet.addRow([startDate, endDate, totalOrders, totalAmount]);
-
-    
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
-
-        // Send Excel file as response
-        return workbook.xlsx.write(res)
-            .then(() => {
-                res.status(200).end();
-            });
-    } catch (error) {
-        console.error('Error generating Excel report:', error);
-        res.status(500).send('Error generating Excel report');
-    }
-};
-
-const downloadAsPDF = (req, res) => {
-    try {  
-       
-        const { startDate, endDate, totalOrders, totalAmount } = req.query;
-        console.log(startDate, endDate, totalOrders, totalAmount );
-        // Create PDF document
-        const doc = new PDFDocument();
-
-        // Set response headers for PDF file
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=report.pdf');
-
-        // Pipe PDF document to response
-        doc.pipe(res);
-
-        // Add content to PDF document
-        doc.text(`Start Date: ${startDate}`);
-        doc.text(`End Date: ${endDate}`);
-        doc.text(`Total Orders: ${totalOrders}`);
-        doc.text(`Total Amount: ₹${totalAmount}`);
-
-        // Finalize PDF document
-        doc.end();
-    } catch (error) {
-        console.error('Error generating PDF report:', error);
-        res.status(500).send('Error generating PDF report');
-    }
-};
-
-
-const downloadReport = async (req, res) => {
-    try {
-        const { type, data } = req.body;
-
-        console.log(type, data);
-
-        if (type === 'pdf') {
-            // Generate PDF
-            const doc = new pdfkit();
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
-            doc.pipe(res);
-
-            doc.fontSize(16).text('Sales Report', { align: 'center' }).moveDown();
-            doc.fontSize(12).text('ID\tDate\tTotal Orders\tTotal Amount', { align: 'center' }).moveDown();
-
-            data.forEach((row) => {
-                doc.text(`${row.id}\t${row.date}\t${row.totalOrders}\t₹${row.totalAmount}`, { align: 'center' }).moveDown();
-            });
-
-            doc.end();
-        } else if (type === 'excel') {
-            // Generate Excel
-            const workbook = new exceljs.Workbook();
-            const worksheet = workbook.addWorksheet('Sales Report');
-            worksheet.columns = [
-                { header: 'ID', key: 'id' },
-                { header: 'Date', key: 'date' },
-                { header: 'Total Orders', key: 'totalOrders' },
-                { header: 'Total Amount', key: 'totalAmount' }
-            ];
-
-            data.forEach((row) => {
-                worksheet.addRow(row);
-            });
-
-            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader('Content-Disposition', 'attachment; filename="report.xlsx"');
-            await workbook.xlsx.write(res);
-            res.end();
+        let salesData =
+        {
+            'labels': [],
+            'salesData': [],
+            'revenueData': [],
+            'productsData': []
         }
+
+        const { filter, time } = req.body
+
+        if (filter === 'monthly') {
+            salesData.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const contraints = {
+                $gte: new Date(`${time}-01-01T00:00:00.000Z`),
+                $lte: new Date(`${time}-12-31T00:00:00.000Z`)
+            }
+            const sales = await Orders.aggregate([
+                {
+                    $match: {
+                        createdAt: contraints
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            $month: '$createdAt'
+                        },
+                        revenueData: {
+                            $sum: "$orderAmount"
+                        },
+                        salesData: {
+                            $sum: 1
+                        }
+                    }
+                },
+                {
+                    $sort: {
+                        '_id': 1
+                    }
+                }
+            ])
+          
+            const products = await Product.aggregate([
+                {
+                    $match: {
+                        createdAt: contraints
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            $month: "$createdAt"
+                        },
+                        productsData: {
+                            $sum: 1
+                        }
+                    }
+                },
+                {
+                    $sort: {
+                        "_id": 1 // Sort by month in ascending order
+                    }
+                }
+            ])
+      
+            salesData.salesData = sales.map((item) => item.salesData)
+            salesData.revenueData = sales.map((item) => item.revenueData / 1000);
+            salesData.productsData = products.map((item) => item.productsData);
+        } else {
+          
+            salesData.labels = [`${time - 10}`, `${time - 9}`, `${time - 8}`, `${time - 7}`, `${time - 6}`, `${time - 5}`, `${time - 4}`, `${time - 3}`, `${time - 2}`, `${time - 1}`, `${time}`];
+            const contraints = {
+                $gte: new Date(`${time - 10}-01-01T00:00:00.000Z`),
+                $lte: new Date(`${time}-12-31T00:00:00.000Z`)
+            }
+
+            const sales = await Orders.aggregate([
+                {
+                    $match: {
+                        createdAt: contraints
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            $year: "$createdAt"
+                        },
+                        revenueData: {
+                            $sum: "$orderAmount"
+                        },
+                        salesData: {
+                            $sum: 1
+                        }
+                    }
+                },
+                {
+                    $sort: {
+                        "_id": 1
+                    }
+                }
+            ])
+        
+            const products = await Product.aggregate([
+                {
+                    $match: {
+                        createdAt: contraints
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            $year: "$createdAt"
+                        },
+                        productsData: {
+                            $sum: 1
+                        }
+                    }
+                },
+                {
+                    $sort: {
+                        "_id": 1
+                    }
+                }
+            ])
+
+          
+            for (let key of sales) {
+                
+                for (let data of salesData.labels) {
+                    
+                    if (key._id == data) {
+                        salesData.salesData.push(key.salesData)
+                        salesData.revenueData.push(key.revenueData / 1000)
+                    } else {
+                        salesData.salesData.push(0)
+                        salesData.revenueData.push(0)
+                    }
+                }
+            }
+
+            for (let key of products) {
+              
+                for(let data of  salesData.labels){
+                  
+
+                    if(key._id==data){
+                        salesData.productsData.push(key.productsData) 
+                    }else{
+                        salesData.productsData.push(0)
+                    }
+                }
+
+            }
+
+        }
+        res
+        .status(200)
+        .json(salesData)
+
+
     } catch (error) {
-        console.log('error in downloading:', error);
-        res.status(500).send('Error in downloading report');
+        console.log('error', error)
     }
-};
-
-
+}
 module.exports = {
     loadSalesReport,
     dailySalesReport,
@@ -323,10 +386,9 @@ module.exports = {
     generateMonthlyReport,
     generateYearlyReport,
     generateCustomDateReport,
-    downloadAsExcel,
-     downloadAsPDF,downloadReport,
+    graphData
 
-   
+
 
 }
 

@@ -55,7 +55,8 @@ const placeOrder = async (req, res) => {
             productId: item.product.productId,
             quantity: item.product.quantity,
             totalPrice: item.product.price * item.product.quantity,
-            totalProductAmount: item.product.price * item.product.quantity
+            totalProductAmount: item.product.price * item.product.quantity,
+            productStatus: paymentOptionValue === 'COD' ? 'successful' : 'pending'
         }));
 
         for (let item of orderedItem) {

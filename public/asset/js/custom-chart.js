@@ -1,14 +1,49 @@
 (function ($) {
     "use strict";
+  
+
+    function fetchDataAndUpdateChart(filter,time){
+        console.log('entering fetchDataAndUpdateChart');
+        $.ajax({
+            url: '/admin/graph',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(
+                {
+                    filter,
+                    time
+                }
+            ),
+            success: function(response) {
+                console.log("This is response",response);
+              
+                // Update chart with new data
+                chart.data.labels = response.labels;
+                chart.data.datasets[0].data = response.salesData;
+                chart.data.datasets[1].data = response.revenueData;
+                chart.data.datasets[2].data = response.productsData;
+    
+                // Update chart
+                chart.update();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data from backend:', error);
+            }
+        });
+    }
+
+
+
+
 
     /*Sale statistics Chart*/
     if ($('#myChart').length) {
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
-            // The type of chart we want to create
+           
             type: 'line',
             
-            // The data for our dataset
+           
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
@@ -48,7 +83,22 @@
                 }
             }
         });
-    } //End if
+
+        fetchDataAndUpdateChart("yearly",2024);
+    } 
+    
+    const yearlyBtn = document.getElementById("yearlyBtn");
+    const monthlyBtn = document.getElementById("monthlyBtn");
+    yearlyBtn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const time = document.getElementById("time").value;
+        fetchDataAndUpdateChart("yearly",time);
+    })
+    monthlyBtn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const time = document.getElementById("time").value;
+        fetchDataAndUpdateChart("monthly",time);
+    })
 
     /*Sale statistics Chart*/
     if ($('#myChart2').length) {

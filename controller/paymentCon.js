@@ -56,7 +56,7 @@ const createOrder = async (req, res) => {
         const options = {
             amount: amount * 100,
             currency: "INR",
-
+  
         }
 
         console.log('options', options);
@@ -68,7 +68,7 @@ const createOrder = async (req, res) => {
             } else {
                 console.log('order is being created');
                 res.status(200).send({
-                    success: true,
+                    success: true, 
                     msg: "Order created",
                     orderId: order.id,
                     amount: amount * 100,
@@ -357,6 +357,42 @@ const placeOrderWallet=async(req,res)=>{
     }
 };
 
+const retryPayment=async(req,res)=>{
+  try {
+    const userId=req.session.user_id
+    console.log('userId',userId)
+
+    const {orderId} =req.body
+    console.log('orderId',orderId)
+
+    const order=await Order.findById({_id:orderId})
+    console.log('order',order)
+// const updatedOrder=await Order.findByIdAndUpdate({_id:orderId},{
+//     $set:{
+//         'order.orderedItem.productStatus': 'succesful'
+//     },
+    
+// })
+   
+const updatedOrder = await Order.findByIdAndUpdate(
+    orderId, 
+    { $set: { 'orderedItem.$[].productStatus': 'successful' } }, 
+    { new: true } 
+  );  
+ 
+await updatedOrder.save()
+console.log('updatedOrder',updatedOrder) 
+const orderDetails = await Order.findOne({ _id: orderId })
+.populate('userId')
+.populate({ path: 'orderedItem.productId', model: 'Product' })
+.populate('deliveryAddress')
+
+    res.render('users/singleorder',{user:userId,orderDetails:orderDetails})
+  } catch (error) {
+    console.log('error in retry payment',error)
+  }
+
+}
 
 module.exports = {
     createOrder,
@@ -366,7 +402,8 @@ module.exports = {
     addToWallet,
     addFunds,
     fundverification,
-    placeOrderWallet
+    placeOrderWallet,
+    retryPayment
 
 
 }

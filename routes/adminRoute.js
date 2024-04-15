@@ -91,11 +91,11 @@ adminRoute.get('/salesWeekly',salesController.generateWeeklyReport)
 adminRoute.get('/salesMonthly',salesController.generateMonthlyReport)
 adminRoute.get('/salesYearly',salesController.generateYearlyReport)
 adminRoute.get('/customDateReport',salesController.generateCustomDateReport)
-adminRoute.post('/excel',salesController.downloadAsExcel)
-adminRoute.get('/pdf', salesController.downloadAsPDF);
 
 
 
+//graph
+adminRoute.post('/graph',salesController.graphData)
 
 
 

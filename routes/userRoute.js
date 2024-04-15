@@ -90,6 +90,7 @@ userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 //razorpay checkout
 userRoute.post('/createorder',auth.isLogin,paymentController.createOrder)
 userRoute.post('/verification',auth.isLogin,paymentController.verifypayment)
+userRoute.post('/retrypayment',auth.isLogin,paymentController.retryPayment)
 
 // my orders
 userRoute.get('/myorder',auth.isLogin,orderController.loadOrderDetails)
