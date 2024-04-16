@@ -25,8 +25,8 @@
                         <!-- Add edit and delete button if needed -->
                     </div>
                     <div class="">
-                        <a href="/editaddress?id=<%=item._id %>" class="btn btn-primary"
-                            style="width: 100px;">
+                        <a href="/editaddress?id=<%=item._id %>" class="btn"
+                            style="width: 100px;  background-color:darkviolet;">
                             <i class="fa fa-pencil" aria-hidden="true"></i> Edit <%=address._id %>
                         </a>
                         <a href="/deleteaddress?id=<%= item._id %>" class="btn"
@@ -42,7 +42,7 @@
         <!-- Button to trigger modal for adding new address -->
         <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
             data-bs-target="#addAddressModal">
-            <a href="/addAddress" style="text-decoration: none; color: white;">+ Add New
+            <a href="addaddress" style="text-decoration: none; color: white;">+ Add New
                 Address</a>
         </button>
     </div>

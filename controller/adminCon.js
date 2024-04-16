@@ -213,33 +213,6 @@ const singleProduct = async (req, res) => {
   }
 }
   
-
-//to update status of products
-// const updateStatus = async (req, res) => {
-//   try {
-//     console.log('going to change the order status');
-//     const { status, orderId } = req.body; // Removed productId
-
-// console.log('status',status);
-// console.log('orderId',orderId);
-
-//     const orderStatus = await Order.updateOne(
-//       { 
-//         _id: orderId,
-//       },
-//       { 
-//         $set: { 'orderStatus': status } // Update the order status directly
-//       }
-//     );
-// console.log('orderStatus',orderStatus);
-   
-//     console.log('successfully updated the order status');
-//     res.status(200).json({ success: true });
-//   } catch (error) {
-//     console.log('Error in updating order status:', error);
-//     res.status(500).json({ success: false });
-//   }
-// };
 const updateStatus = async (req, res) => {
   try {
     console.log('going to change the order status');

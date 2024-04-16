@@ -4,6 +4,7 @@ const config = require('../config/config')
 const Category = require('../model/categoryModel')
 const Product = require('../model/productModel')
 const Wishlist = require('../model/wishlistModel')
+const Wallet=require('../model/walletModel')
 const Offer=require('../model/offerModel')
 const nodemailer = require('nodemailer')
 const speakeasy = require('speakeasy');
@@ -248,6 +249,39 @@ const verifyOtp = async (req, res) => {
         await actualUser.save();
 
         console.log('Redirecting to user login page');
+
+
+        if( req.session.refferalId){
+            console.log(" req.session.refferalId", req.session.refferalId);
+            const walletData=await Wallet.findOne({userId:req.session.refferalId})
+                const orderAmount = 1000
+
+                console.log('walletData',walletData)
+                const userId=walletData.userId
+                console.log('userId',userId)
+
+            const isexistWallet = await Wallet.findOne({ userId: userId })
+            if (!isexistWallet) {
+                const newWallet = new Wallet({
+                    userId: refferalId,
+                    balance: orderAmount,
+                    transaction: [{
+                        amount: orderAmount,
+                        transactionsMethod: 'Refferal'
+                    }]
+                })
+                await newWallet.save()
+            } else {
+    
+                await Wallet.updateOne(
+                    { userId: userId },
+                    {
+                        $inc: { balance: orderAmount },
+                        $push: { transactions: { amount: orderAmount, transactionsMethod: 'Refferal' } }
+                    }
+                );
+            }
+        }
         // Redirect to user login page after OTP verification
         res.redirect('/login');
     } catch (error) {

@@ -116,23 +116,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="card mb-4">
-                                                <div class="card-body">
 
-                                            <% let paymentSuccessful=true; %>
-                                            <% for (let item of orderDetails.orderedItem) { %>
-                                                <% if (item.productStatus !=='successful' ) { %>
-                                                    <% paymentSuccessful=false; %>
-                                                        <% break; %>
-                                                            <% } %>
-                                                                <% } %>
-                                    
-                                                                    <% if (!paymentSuccessful) { %>
-                                                                        <button type="button" id="retry-btn" class="btn btn-dark"
-                                                                            data-id="<%= orderDetails._id %>">Retry Payment</button>
-                                                                        <% } %>
-                                                                    </div>
-                                                                </div>
+                                             
+                                        
+                                            
+
+                                         
                                             <div class="card mb-4">
                                                 <div class="card-body">
                                                     <h3 class="h6">Shipping Information</h3>

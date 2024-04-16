@@ -902,7 +902,7 @@
 
                     if (paymentOptionValue === "COD") {
 
-                        axios.post('/placeorder', { selectedAddressValue, paymentOptionValue })
+                        axios.post('/placeorder', { selectedAddressValue, paymentOptionValue,paymentStatus:true })
                             .then(res => {
                                 if (!res.data.success) {
                                     errormsg.innerHTML = res.data.message;
@@ -921,8 +921,8 @@
                                 if (res.data.success) {
                                     console.log(res.data);
                                     const { orderId } = res.data
-                                    console.log('orderId', orderId);
-
+                                   
+                                   
                                     var options = {
                                         key: res.data.key_id, 
                                         amount: res.data.amount * 100,
@@ -936,7 +936,7 @@
                                         handler: function (response) {
                                             const status = 'success'
                                             console.log('status', status);
-
+                                          
                                             axios.post('/verification', {
 
                                                 response,
@@ -947,8 +947,9 @@
                                               
                                                 if (res.data.success) {
 
-                                                    axios.post(`/placeorder?transactionId=${res.data.razorpay_payment_id}`, { selectedAddressValue, paymentOptionValue })
+                                                    axios.post(`/placeorder?transactionId=${res.data.razorpay_payment_id}`, { selectedAddressValue, paymentOptionValue ,paymentStatus:true})
                                                         .then(res => {
+
                                                             if (!res.data.success) {
                                                                 alert('payment failed')
                                                                 errormsg.innerHTML = res.data.message;
@@ -983,11 +984,14 @@
                                     var razorpayObject = new Razorpay(options)
                                     razorpayObject.on('payment.failed', function (res) {
                                         const status = 'pending'
-                                        axios.post('/placeorder', { selectedAddressValue, paymentOptionValue })
+                                      
+                                        axios.post('/placeorder', { selectedAddressValue, paymentOptionValue,paymentStatus:false })
                                             .then(res => {
-                                                if (!res.data.success) {
+                                              
+                                                if (res.data.success) {
                                                     const orderId = res.data.orderId;
-                                                    window.location.href = `/orderpage?totalOrderAmount=` + Amount;
+                                                   
+                                                    window.location.href = `/myorder?totalOrderAmount=` + Amount;
                                                 }
                                             })
                                     })

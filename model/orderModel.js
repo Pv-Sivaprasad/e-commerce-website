@@ -60,9 +60,12 @@ const orderSchema= new mongoose.Schema({
     },
     coupon: {
         type: Number
+    },
+    paymentStatus:{
+        type:Boolean,
+        default:false
     }
     
-
 },
 
 {

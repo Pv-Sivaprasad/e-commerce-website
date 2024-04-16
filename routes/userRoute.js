@@ -8,6 +8,7 @@ const cartController=require('../controller/cartCon')
 const orderController=require('../controller/orderCon')
 const paymentController=require('../controller/paymentCon')
 const couponController=require('../controller/couponCon')
+const referralController=require('../controller/referralCon')
 
 const config = require('../config/config')
 const auth = require('../middleware/userAuth')   
@@ -90,6 +91,7 @@ userRoute.post('/placeorder',auth.isLogin,orderController.placeOrder)
 //razorpay checkout
 userRoute.post('/createorder',auth.isLogin,paymentController.createOrder)
 userRoute.post('/verification',auth.isLogin,paymentController.verifypayment)
+userRoute.post('/retry',auth.isLogin,paymentController.retry)
 userRoute.post('/retrypayment',auth.isLogin,paymentController.retryPayment)
 
 // my orders
@@ -118,6 +120,9 @@ userRoute.patch('/removeCoupon',auth.isLogin,couponController.removeCoupon)
 //invoice
 userRoute.get('/invoice',auth.isLogin,orderController.loadInvoice)
   
+//referral
+userRoute.get('/refferal',referralController.refferal)
+
 
 
 

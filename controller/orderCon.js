@@ -36,7 +36,7 @@ const placeOrder = async (req, res) => {
         const { transactionId } = req.query
 
         console.log(req.body);
-        const { selectedAddressValue, paymentOptionValue } = req.body;
+        const { selectedAddressValue, paymentOptionValue ,paymentStatus} = req.body;
 
         console.log('selectedAddressValue', selectedAddressValue);
         console.log('paymentOptionValue', paymentOptionValue);
@@ -83,7 +83,8 @@ const placeOrder = async (req, res) => {
             deliveryAddress: selectedAddressValue,
             paymentMethod: paymentOptionValue,
             orderStatus: 'pending',
-            coupon:coupon
+            coupon:coupon,
+            paymentStatus:paymentStatus
         });
 
         const save = await order.save();
@@ -97,7 +98,8 @@ const placeOrder = async (req, res) => {
                 orderId: order._id,
                 amount: orderAmount,
                 status: 'pending',
-                paymentMethod: paymentOptionValue
+                paymentMethod: paymentOptionValue,
+                
             });
             await payment.save();
         }
@@ -138,11 +140,11 @@ const singleOrder = async (req, res) => {
         console.log('orderDetails', orderDetails);
 
         const products = orderDetails.orderedItem
-
         console.log('products', products);
+            const paymentStatus=orderDetails.paymentStatus
+            console.log('paymentStatus', paymentStatus);
 
-
-        res.render('users/singleorder', { orderDetails: orderDetails, user: userId })
+        res.render('users/singleorder', { orderDetails: orderDetails, user: userId ,paymentStatus:paymentStatus})
 
     } catch (error) {
         console.log('error loading user single order');

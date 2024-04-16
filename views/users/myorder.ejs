@@ -28,8 +28,10 @@
                             <!-- <th>Status</th> -->
                             <th>Details</th>
                             <th>Status</th>
+                            <th>Payment Status</th>
                         </tr>
                     </thead>
+                  
                     <tbody>
                         <% if(orderDetails){ %>
                             <% orderDetails.forEach(function(order) { %>
@@ -47,20 +49,25 @@
                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm view-btn font-sm text-white" data-id="<%= order._id %>">View</a>
                                             </td>
                                             <% if(order.orderStatus === 'delivered') { %>
-                                               
                                                 <td>
                                                     <a href="/invoice?orderId=<%= order._id %>" class="btn btn-sm btn-primary" style="background-color: blue; width: 100px; height: 30px;">Invoice</a>
                                                 </td>
-                                              
-                                                
                                             <% } else { %>
-                                                <!-- Display order status with conditional color -->
                                                 <td style="<%= order.orderStatus === 'pending' ? 'color: blue;' : (order.orderStatus === 'cancelled' || order.orderStatus === 'returned' ? 'color: red;' : '') %>">
                                                     <%= order.orderStatus %>
                                                 </td>
                                             <% } %>
                                             
-                                            
+                                            <td>
+                                                <!-- Display payment status with conditional styling -->
+                                                <% if (order.paymentStatus === true) { %>
+                                                    <span style="color: green;">Successful</span>
+                                                <% } else { %>
+                                                 
+                                                    <!-- Display Retry Payment button if payment status is false -->
+                                                    <button type="button" class="btn btn-dark btn-sm retry-payment-btn" data-id="<%= order._id %>">Retry Payment</button>
+                                                <% } %>
+                                            </td>
                                         </tr>
                                     <% } %>
                                 <% }); %>
@@ -93,6 +100,10 @@
     </section>
     <!-- content-main end// -->
   
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Include Razorpay library -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -108,5 +119,115 @@
         });
     </script>
 
+<!-- HTML code remains the same -->
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var retryButtons = document.querySelectorAll('.retry-payment-btn');
+    
+    retryButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var orderId = this.getAttribute('data-id');
+           // Log orderId to check if it's retrieved correctly
+            var order=orderId
+
+            axios.post('/retry',{ orderId: orderId })
+            .then((res)=>{
+               if(res.data.success){
+                const {orderId}=res.data
+            
+
+                
+               
+                var options={
+                                        key: res.data.key_id, 
+                                        amount: res.data.amount *100,
+                                        currency: 'INR',
+                                        name: 'Royal Oak',
+                                        description: 'Test Transaction',
+                                        order_id: orderId,
+
+
+
+                                    handler:function(response){
+
+                                        axios.post("/verification", {
+
+                                            response,
+                                            razorpay_payment_id: response.razorpay_payment_id,
+                                            razorpay_order_id: response.razorpay_order_id,
+                                            razorpay_signature: response.razorpay_signature
+                                            }).then(res=>{
+                                                if(res.data.success){
+                                                    axios.post('/retrypayment', { orderId: order })
+                                                    .then(response => {
+                                                        console.log('Payment retry successful');
+                                                         button.parentNode.removeChild(button);
+                                                            window.location.reload();
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error retrying payment:', error);
+                                                          });
+                                                }else {
+                                                alert('Payment verification failed');
+                                            }
+                                            })
+                                            .catch(err => {
+                                            console.error('Verification request failed', err);
+                                            alert('Payment verification failed');
+                                        })
+                                    },
+                                    prefill: {
+
+                                    },
+                                    theme: {
+                                    color: "#2300a3"
+                                    }
+                  }
+                  var razorpayObject = new Razorpay(options)
+                                razorpayObject.on('payment.failed', function (res) {
+
+
+                                    window.location.href = '/orderpage'
+
+
+                                })
+                                razorpayObject.open()
+               }
+            }).catch(err => {
+                            console.log('error in retry order page ', err);
+                        })
+
+        
+           
+
+                
+                
+         });
+    });
+});
+
+
+    // document.addEventListener('DOMContentLoaded', function() {
+       
+    //     var retryButtons = document.querySelectorAll('.retry-payment-btn'); //
+    
+    //     retryButtons.forEach(function(button) { 
+    //         button.addEventListener('click', function() { 
+    //             var orderId = this.getAttribute('data-id'); 
+                
+    //             axios.post('/retrypayment', { orderId: orderId }) 
+    //                 .then(response => {
+                        
+    //                     button.parentNode.removeChild(button);
+    //                     console.log('Payment retry successful');
+    //                 })
+    //                 .catch(error => {
+    //                     console.error('Error retrying payment:', error);
+    //                 });
+    //         });
+    //     });
+    // });
+    </script>
+    
 <%- include('../layouts/profileFooter') %>

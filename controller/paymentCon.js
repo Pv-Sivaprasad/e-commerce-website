@@ -40,7 +40,7 @@ const createOrder = async (req, res) => {
 
         console.log('totalPrice', totalPrice);
 
-        console.log('cretaing razor online order');
+       
 
         const instance = new Razorpay({
             key_id: process.env.RAZORPAY_ID_KEY,
@@ -88,12 +88,13 @@ const createOrder = async (req, res) => {
 
 const verifypayment = async (req, res) => {
     try {
-
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        
+       
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature,orderId } = req.body;
 
         console.log(`razorpay_order_id ${razorpay_order_id} razorpay_payment_id ${razorpay_payment_id} razorpay_signature ${razorpay_signature}`);
-
-
+        
+        console.log('orderId',orderId)
         const data = `${razorpay_order_id}|${razorpay_payment_id}`;
         console.log('data', data);
 
@@ -105,7 +106,7 @@ const verifypayment = async (req, res) => {
 
         if (generated_signature === razorpay_signature) {
 
-
+              
             res.status(200).json({ success: true, message: "Payment is successful", razorpay_payment_id });
         } else {
             console.log("Signature verification failed");
@@ -357,42 +358,102 @@ const placeOrderWallet=async(req,res)=>{
     }
 };
 
-const retryPayment=async(req,res)=>{
-  try {
-    const userId=req.session.user_id
-    console.log('userId',userId)
 
-    const {orderId} =req.body
-    console.log('orderId',orderId)
+const retry=async(req,res)=>{
+    try {
+        
+        const userId=req.session.user_id
 
-    const order=await Order.findById({_id:orderId})
-    console.log('order',order)
-// const updatedOrder=await Order.findByIdAndUpdate({_id:orderId},{
-//     $set:{
-//         'order.orderedItem.productStatus': 'succesful'
-//     },
-    
-// })
-   
-const updatedOrder = await Order.findByIdAndUpdate(
-    orderId, 
-    { $set: { 'orderedItem.$[].productStatus': 'successful' } }, 
-    { new: true } 
-  );  
- 
-await updatedOrder.save()
-console.log('updatedOrder',updatedOrder) 
-const orderDetails = await Order.findOne({ _id: orderId })
-.populate('userId')
-.populate({ path: 'orderedItem.productId', model: 'Product' })
-.populate('deliveryAddress')
+        const { orderId } = req.body;
+        console.log('orderId', orderId);
 
-    res.render('users/singleorder',{user:userId,orderDetails:orderDetails})
-  } catch (error) {
-    console.log('error in retry payment',error)
-  }
+        const order=await Order.findOne({_id:orderId})
 
+        let totalPrice=order.orderAmount
+        console.log('totalPrice',totalPrice)
+
+        const instance = new Razorpay({
+            key_id: process.env.RAZORPAY_ID_KEY,
+            key_secret: process.env.RAZORPAY_SECRET_ID
+        })
+
+        console.log(`instance ${instance}`);
+
+        let amount = totalPrice
+
+        console.log('amount', amount);
+
+        const options = {
+            amount:amount * 100 ,
+            currency: "INR",
+  
+        }
+
+        console.log('options', options);
+
+        instance.orders.create(options, (error, order) => {
+            if (error) {
+                console.log('reached here in retry ', error);
+                return res.status(500).json({ message: 'error in retrying order' })
+            } else {
+                console.log('retry completed');
+                res.status(200).send({
+                    success: true, 
+                    msg: "retry success",
+                    orderId: order.id,
+                    amount:amount * 100,
+                    key_id: process.env.KEY_ID,
+                    product_name: req.body.name,
+                    description: "Test Transaction",
+
+                })
+            }
+        })
+
+    } catch (error) {
+        console.log('error in retry opening ',error)
+    }
 }
+
+
+const retryPayment = async (req, res) => {
+    try {
+
+
+
+        console.log('Entering retry payment');
+
+      
+        const userId = req.session.user_id;
+        console.log('userId', userId);
+
+        
+        const { orderId } = req.body;
+        console.log('orderId', orderId);
+
+        
+        const order = await Order.findByIdAndUpdate(
+            { _id: orderId, userId: userId }, 
+            { $set: { paymentStatus: true } }, 
+            { new: true } 
+        );
+
+        console.log('Updated order:', order);
+
+       
+        if (order) {
+            return res.status(200).json({ success: true });
+        } else {
+           
+            return res.status(404).json({ success: false, message: 'Order not found or not updated' });
+        }
+
+    } catch (error) {
+        console.log('Error in retry:', error);
+        return res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+}
+
 
 module.exports = {
     createOrder,
@@ -403,6 +464,7 @@ module.exports = {
     addFunds,
     fundverification,
     placeOrderWallet,
+    retry,
     retryPayment
 
 
