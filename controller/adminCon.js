@@ -63,7 +63,7 @@ const verifyLogin = async (req, res) => {
 
       if (passwordMatch) {
         res.set('Cache-control', 'no-store');
-       
+        req.session.admin_id = adminData._id
         return res.redirect('/admin/dashboard'); 
       } else {
         req.session.loginError = 'Invalid password';
@@ -190,6 +190,7 @@ const orderDetails = async (req, res) => {
     console.log(error);
   }
 }
+
 
 //to show single order details completely
 const singleProduct = async (req, res) => {

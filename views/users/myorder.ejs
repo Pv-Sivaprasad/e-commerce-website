@@ -17,6 +17,7 @@
                     
             </header>
             <!-- card-header end// -->
+            <% if(orderDetails.length > 0 ) { %>
             <div class="image-container">
                 <table class="table">
                     <thead>
@@ -43,7 +44,7 @@
                                             </td>
                                             <td><%= item.productId.productName %></td>
                                             <td><%= item.quantity %></td>
-                                            <td>₹<%= item.totalProductAmount %></td>
+                                            <td>₹<%= item.orderAmount %></td>
                                           
                                             <td>
                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm view-btn font-sm text-white" data-id="<%= order._id %>">View</a>
@@ -77,12 +78,15 @@
                     
                 </table>
             </div>
-            
-            
+        
+            <% } else { %>
+
+                <h1>No orders to show</h1>
+                <% } %>
             
           
         </div>
-   
+    <% if(orderDetails.length > 0) { %>
         <div class="pagination-area mt-15 mb-50">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-start">
@@ -97,6 +101,7 @@
                 </ul>
             </nav>
         </div>
+        <% } %>
     </section>
     <!-- content-main end// -->
   

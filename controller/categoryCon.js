@@ -136,13 +136,15 @@ const editCategory = async (req, res) => {
   //to edit a category
   const editCat = async (req, res) => {
     try {
+      console.log('going to start editing category')
+      console.log('enetered')
         const { catName, description } = req.body;
         const image = req.file ? req.file.filename : req.body.image;
        const cat=await Category.findOne({catName:catName})
         // Validation: Check if category name and description have at least one character
         if (!catName || !description || catName.trim().length === 0 || description.trim().length === 0) {
             console.log('Category name or description is empty');
-            return res.render('editCategory', {category: cat, error: 'Category name and description must have at least one character' });
+            return res.render('editCategory', { error: 'Category name and description must have at least one character' });
         }
 
         // Validation: Check if the image is of the allowed formats
@@ -179,6 +181,7 @@ const editCategory = async (req, res) => {
         res.status(500).send('Error editing category');
     }
 };
+
 
 
 

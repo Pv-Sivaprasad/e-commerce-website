@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-// const ObjectId=mongoose.Schema.Types.ObjectId
+
 const { ObjectId, Timestamp } = require('mongodb');
 
 const categorySchema=mongoose.Schema({

@@ -170,6 +170,8 @@ const createUser = async (req, res) => {
                 });
                 console.log(user);
                 await user.save();
+               
+
 
                 console.log('User saved successfully:', user);
 
@@ -235,18 +237,23 @@ const verifyOtp = async (req, res) => {
         console.log(actualOtp);
         if (!actualOtp) {
             console.log('Invalid OTP');
-            return res.status(400).send('Invalid OTP');
+
+            res.render('users/otp',{error:'Invalid Otp please check and enter the otp carefully'})
         }
 
         const actualUser = await User.findById(actualOtp.userId);
         if (!actualUser) {
             console.log('User not found');
-            return res.status(404).send('User not found');
+              res.render('users/login',{error:'Invalid user'})
         }
 
         console.log('OTP verified successfully');
         actualUser.is_verified = true;
+
+
+
         await actualUser.save();
+       
 
         console.log('Redirecting to user login page');
 
@@ -282,11 +289,14 @@ const verifyOtp = async (req, res) => {
                 );
             }
         }
+
+
+
         // Redirect to user login page after OTP verification
         res.redirect('/login');
     } catch (error) {
         console.error('Error verifying OTP:', error);
-        res.status(500).send('Internal Server Error');
+        // res.status(500).send('Internal Server Error');
     }
 }
 
@@ -402,7 +412,7 @@ const loginHome = async (req, res) => {
 const allProducts = async (req, res) => {
     try {
         console.log('reached here');
-        
+         
    
         const id=req.session.user_id
     let userdata = await User.findOne({ _id: id})
@@ -622,7 +632,7 @@ const verifyProfileOtp = async (req, res) => {
         console.log(actualOtp);
         if (!actualOtp) {
             console.log('Invalid OTP');
-            return res.status(400).send('Invalid OTP');
+            return res.render('users/profileotp',{error:'Invalid Otp'})
         }
 
         const actualUser = await User.findById(actualOtp.userId);

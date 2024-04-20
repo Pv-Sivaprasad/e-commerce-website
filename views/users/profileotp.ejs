@@ -61,6 +61,11 @@
 </head>
 <body>
   
+ <% if(typeof error!=='undefined' ){ %>
+
+  <h6 id="errorMessage" style="color: red;" style="justify-content: center; text-align: center;">
+      <%= error %>
+          <%}%>
 <div class="container">
   <div class="otp-form">
     <p>Verify your OTP for registration</p>

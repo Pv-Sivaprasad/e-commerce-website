@@ -42,19 +42,20 @@ const isLogout = async (req, res, next) => {
 const isBlocked = async (req, res, next) => {
     try {
         const userData = await User.findOne({ _id: req.session.user_id })
-        if (userData) {
+        console.log('userData',userData)
+        
+        if(userData.is_blocked){
+            req.session.user_id=null
+            res.redirect('/')
+        }
+        
+         else {
             next()
-        } else {
-            console.log('user id is blocked ', userData.is_blocked);
-
-            if(userData.is_blocked){
-                req.session.user_id=null
-                res.redirect('/')
-            }
+           
         }
 
     } catch (error) {
-
+            console.log('error in isblocked ',error)
     }
 }
 
