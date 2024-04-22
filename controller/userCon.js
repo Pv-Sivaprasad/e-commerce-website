@@ -489,12 +489,13 @@ const loadProductDetails = async (req, res) => {
         const proData = await Product.findById({ _id: id })
 
         console.log('proData', proData);
-        if (proData) {
-            res.render('gfg', { product: proData })
-        }
+       
+        res.render('gfg', { product: proData })
+       
 
 
     } catch (error) {
+
         console.log('error in loading product details page');
         console.log('error');
     }
