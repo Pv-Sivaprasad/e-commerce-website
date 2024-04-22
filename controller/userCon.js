@@ -355,6 +355,9 @@ const verifyLogin = async (req, res) => {
         const password = req.body.password;
         console.log(email, password);
 
+        const user= await User.find({})
+        console.log('user',user)
+
         const userData = await User.findOne({ email: email })
         console.log('User Data:', userData);
         if (userData) {
@@ -487,7 +490,7 @@ const loadProductDetails = async (req, res) => {
 
         console.log('proData', proData);
         if (proData) {
-            res.render('users/productDetail', { product: proData })
+            res.render('users/productdetail', { product: proData })
         }
 
 
