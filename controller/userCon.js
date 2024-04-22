@@ -490,7 +490,7 @@ const loadProductDetails = async (req, res) => {
 
         console.log('proData', proData);
        
-        res.render('gfg', { product: proData })
+        res.render('user/productdetail', { product: proData })
        
 
 
