@@ -39,7 +39,8 @@ const home = async (req, res) => {
             const products = await Product.find({});
             res.render('users/userhome', { products: products })
         } else {
-            res.render('users/home')
+            const products = await Product.find({});
+            res.render('users/home',{products:products})
         }
 
 
