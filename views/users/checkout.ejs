@@ -1061,9 +1061,9 @@
                                     button: "OK",
                                 });
                                 applyBtn.innerText = 'Remove Coupon';
-                                couponData = res.data.cartResult.product.totalPrice; // Store coupon data
-                                applyBtn.removeEventListener('click', applyCouponHandler); // Remove applyCouponHandler event listener
-                                applyBtn.addEventListener('click', removeCouponHandler); // Add removeCouponHandler event listener
+                                couponData = res.data.cartResult.product.totalPrice; 
+                                applyBtn.removeEventListener('click', applyCouponHandler); 
+                                applyBtn.addEventListener('click', removeCouponHandler);
                             } else if (res.data.added === 'already used') {
                                 swal({
                                     title: "Coupon Already Used",
@@ -1071,6 +1071,15 @@
                                     icon: "warning",
                                     button: "OK",
                                 });
+                            }else if(res.data.error) {
+                              alert('here')
+                               
+                                 swal({
+                            title: "Coupon Error",
+                            text: "Sorry, this coupon has already been used.",
+                         icon: "warning",
+                                button: "OK",
+            });
                             }
                         })
                         .catch((err) => {
@@ -1088,7 +1097,7 @@
                         .then((res) => {
                             console.log(res)
                             var subTotal = res.data.cartResult.product.totalPrice;
-                            alert(`subTotal ${subTotal}`)
+                           
                             totalPriceElement.innerHTML = subTotal;
                             // Handle response after removing coupon
                             swal({

@@ -163,9 +163,8 @@ const deleteCoupon=async(req,res)=>{
 }
 
 
-
 const verifyCoupon = async (req, res) => {
-    console.log('entered verifying coupon entered by the user');
+    console.log('Entered verifying coupon entered by the user');
 
     const userId = req.session.user_id;
 
@@ -183,30 +182,77 @@ const verifyCoupon = async (req, res) => {
 
     console.log('couponData:', couponData);
 
-
-
     if (couponData) {
-
         req.session.couponAmount = couponData.discountAmount;
 
-        console.log('req.session.couponAmount',req.session.couponAmount)
+        console.log('req.session.couponAmount', req.session.couponAmount);
+
+        const updatedCart = {
+            couponDiscount: couponData.discountAmount,
+            'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
+        };
+
         const cartResult = await Cart.findOneAndUpdate(
             { userId: userId },
-            {
-                $set: {
-                    couponDiscount: couponData.discountAmount,
-                    'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
-                }
-            },
+            { $set: updatedCart },
             { new: true }
         );
+
         console.log('cartResult', cartResult);
+      
         res.json({ cartResult });
     } else {
         // Coupon not found
-        res.status(404).json({ error: 'Coupon not found' });
+        console.log('No such coupon');
+        res.status(404).json({ error: 'No such coupon' });
     }
 };
+
+// const verifyCoupon = async (req, res) => {
+//     console.log('entered verifying coupon entered by the user');
+
+//     const userId = req.session.user_id;
+
+//     console.log('userId', userId);
+
+//     const cart = await Cart.findOne({ userId: userId });
+
+//     console.log('cart', cart);
+
+//     const { couponCode } = req.body;
+
+//     console.log(`CouponCode: ${couponCode}`);
+
+//     const couponData = await Coupon.findOne({ couponCode: couponCode });
+
+//     console.log('couponData:', couponData);
+
+
+
+//     if (couponData) {
+
+//         req.session.couponAmount = couponData.discountAmount;
+
+//         console.log('req.session.couponAmount',req.session.couponAmount)
+//         const cartResult = await Cart.findOneAndUpdate(
+//             { userId: userId },
+//             {
+//                 $set: {
+//                     couponDiscount: couponData.discountAmount,
+//                     'product.totalPrice': cart.product.totalPrice - couponData.discountAmount
+//                 }
+//             },
+//             { new: true }
+//         );
+//         console.log('cartResult', cartResult);
+      
+//         res.json({ cartResult });
+//     } else {
+//         // Coupon not found
+//         const error='No such Coupon'
+//         res.json({ error });
+//     }
+// };
 
 
 const removeCoupon = async (req, res) => {

@@ -37,10 +37,10 @@
                                 <div class="cart-item-product-info">
                                       <h4 class="cart-item-product-title"><%= item.productId.productName %></h4>
                                     <div class="text-lg text-body font-weight-medium pb-1">$<%= item.productId.price  %></div>
-                                   <span>Availability: <span class="text-success font-weight-medium">In Stock  --></span><%=item.productId.quantity %></span>
+                                   <span>Availability: <span class="text-success font-weight-medium">In Stock  ----</span><%=item.productId.quantity %></span>
                                 </div>
                                 <br><br>
-                                <%=item.productId._id%> <div class="buttons"> <button id="addToCart" class="btn btn-outline-warning btn-long cart"
+                                <div class="buttons"> <button id="addToCart" class="btn btn-outline-warning btn-long cart"
                                     value="<%=item.productId._id%>">Add to Cart</button>
                                 </div>
                             </a>
@@ -68,17 +68,18 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-                const addcartBtn = document.getElementById('addToCart')
+                const addcartBtn = document.querySelectorAll('addToCart')
 
                 const productId = document.getElementById('productId').value
-                console.log(productId);
+               alert(`productId ${productId}`)
 
                 addcartBtn.addEventListener('click', function () {
+                    alert('clicked')
                     const price = document.getElementById('price').value
                     console.log(price);
 
 
-                    axios.post('/addToCart', { productId, price })
+                    axios.post('/addToCart', { productId , price })
                         .then(res => {
                             console.log('success');
                             console.log(res);

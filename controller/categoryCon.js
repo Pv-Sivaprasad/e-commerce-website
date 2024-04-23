@@ -85,6 +85,7 @@ const addCategory = async (req, res) => {
         // Check if category name already exists
         const existingCategory = await Category.findOne({ catName: catName });
         const error = 'Category with the same name already exists';
+        return res.render('addCategory',{error});
         if (existingCategory) {
             // Category with the same name already exists, render addCategory page with error message
             console.log('Category with the same name already exists');
@@ -136,31 +137,47 @@ const editCategory = async (req, res) => {
   //to edit a category
   const editCat = async (req, res) => {
     try {
+  
+
+      const id=req.body.id
+      console.log('id:',id);
+
+      const edit=await Category.findOne({_id:id})
+      console.log('edit',edit)
+
       console.log('going to start editing category')
       console.log('enetered')
         const { catName, description } = req.body;
+        console.log('catName',catName)
+        console.log('description',description)
+
         const image = req.file ? req.file.filename : req.body.image;
+
        const cat=await Category.findOne({catName:catName})
-        // Validation: Check if category name and description have at least one character
+          if(cat){
+           return  res.render('editCategory',{ category:edit,  error: 'Category already exsist' })
+          }
+       console.log('cat',cat)
+       
         if (!catName || !description || catName.trim().length === 0 || description.trim().length === 0) {
             console.log('Category name or description is empty');
-            return res.render('editCategory', { error: 'Category name and description must have at least one character' });
+            return res.render('editCategory', {category:edit, error: 'Category name and description must have at least one character' });
         }
 
-        // Validation: Check if the image is of the allowed formats
+        console.log('reached here')
         const allowedImageFormats = /\.(jpeg|jpg|png|webp)$/i;
         if (!allowedImageFormats.test(image)) {
             console.log('Invalid image format');
-            return res.render('editCategory', { category: cat,error: 'Image must be in jpeg, jpg, png, or webp format' });
+            return res.render('editCategory', {category:edit, error: 'Image must be in jpeg, jpg, png, or webp format' });
         }
-
-        // Check if the edited category name already exists
-        const existingCategory = await Category.findOne({ catName: catName, _id: { $ne: req.body.id } });
-        if (existingCategory) {
-            console.log('Category with the same name already exists');
-            return res.render('editCategory', { category: existingCategory, error: 'Category with the same name already exists' });
-        }
-
+        console.log('reached here 2')
+        // // Check if the edited category name already exists
+        // const existingCategory = await Category.findOne({ category:edit,catName: catName, _id: { $ne: req.body.id } });
+        // if (existingCategory) {
+        //     console.log('Category with the same name already exists');
+        //     return res.render('editCategory', { category:edit, error: 'Category with the same name already exists' });
+        // }
+        console.log('reached here 3')
         const catData = await Category.findByIdAndUpdate(
             { _id: req.body.id },
             {
@@ -172,7 +189,7 @@ const editCategory = async (req, res) => {
             },
             { new: true }
         );
-
+        console.log('reached here 4')
         console.log('Updated category:', catData);
         console.log('Category updated successfully');
         res.redirect('/admin/allCategory');
