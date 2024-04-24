@@ -131,6 +131,7 @@ userRoute.get('/google', passport.authenticate('google', { scope: ['profile', 'e
 
 userRoute.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
   // Successful authentication, redirect to home page or dashboard
+
   res.render('users/userhome');
 });
 
@@ -140,6 +141,7 @@ userRoute.get('/auth/facebook', passport.authenticate('facebook', { scope: 'emai
 userRoute.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   (req, res) => {
+
     // Successful authentication, redirect to a different page
     res.render('users/userHome');
   });
