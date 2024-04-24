@@ -122,7 +122,7 @@ const generateMonthlyReport = async (req, res) => {
             totalOrders: report.totalOrders,
             totalAmount: report.totalAmount
         }));
-
+  
         console.log('monthlyReport', formattedReport);
 
         // Calculate total orders and total amount

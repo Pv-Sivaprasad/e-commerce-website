@@ -27,12 +27,12 @@
     </div>
 </div>
 <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-responsive">  
         <table id="myTable" class="table table-hover">
             <thead>
                 <tr>
                     <th style="width: 50px;">ID</th>
-                  
+                    <th>TIme Line</th>
                     <th>Total Orders</th>
                     <th>Total Revenue</th>
                   
@@ -44,7 +44,7 @@
                 <% report.forEach((order, index) => { %>
                     <tr>
                         <td><%= index + 1 %></td>
-                       
+                        <td><%= order._id %></td>
                         <td><%= order.totalOrders %></td>
                         <td>₹<%= order.totalAmount.toFixed(2) %></td>
                       
@@ -72,6 +72,23 @@
     </a>
 </div>
 <br><br><br>
+<style>
+    /* CSS for table borders */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
 <%- include('../layouts/AdminFooter') %>  
 <script>
    
