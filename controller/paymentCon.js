@@ -296,13 +296,11 @@ const placeOrderWallet=async(req,res)=>{
         const orderedItem = cartItems.map(item => ({
             productId: item.product.productId,
             quantity: item.product.quantity,
-            totalPrice: item.product.price * item.product.quantity,// Calculate totalPrice correctly
+            totalPrice: item.product.price * item.product.quantity,
             totalProductAmount: item.product.price * item.product.quantity
         }));
 
-        const Amount = cartItems.reduce((total, item) => total + (item.product.price * item.product.quantity), 0);
-
-
+        const Amount = cartItems.reduce((total, item) => total + (item.product.price * item.product.quantity), 0)
       
         console.log('req.session.couponAmount',req.session.couponAmount)
         let coupon=req.session.couponAmount

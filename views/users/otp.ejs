@@ -65,11 +65,7 @@
 <body>
   
 
-  <% if(typeof error!=='undefined' ){ %>
-
-    <h6 id="errorMessage" style="color: red;" style="justify-content: center; text-align: center;">
-        <%= error %>
-            <%}%>
+ 
 
 <div class="container">
   <div class="otp-form">
@@ -83,6 +79,11 @@
       <input type="text" class="otp-input" maxlength="1" required name="otp">
       <button type="submit" class="verify-btn">Verify</button>
     </form>
+    <% if(typeof error!=='undefined' ){ %>
+
+      <h6 id="errorMessage" style="color: red;" style="justify-content: center; text-align: center;">
+          <%= error %>
+              <%}%>
     <button type="button" class="resend-btn" id="resendOtp">Resend OTP</button>
     <p id="countdown">Resend OTP in <span id="timer">20</span> seconds</p>
     <p id="resendMessage" style="display: none;">Click Resend OTP to receive a new OTP</p>

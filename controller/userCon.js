@@ -68,7 +68,7 @@ const logout = async (req, res) => {
         req.session.user_id = false
         res.redirect('/')
     } catch (error) {
-        console.log('error louserhomeing out');
+        console.log('error logging out');
     }
 }
 
@@ -170,7 +170,8 @@ const createUser = async (req, res) => {
                     is_verified: false,
                 });
                 console.log(user);
-                await user.save();
+                // await user.save();
+                req.session.user = user;
                
 
 
@@ -249,11 +250,19 @@ const verifyOtp = async (req, res) => {
         }
 
         console.log('OTP verified successfully');
-        actualUser.is_verified = true;
+       
+        const userFromSession = req.session.user;
+        userFromSession.is_verified = true;
+        const newUser = new User({
+            name: userFromSession.name,
+            email: userFromSession.email,
+            mobile: userFromSession.mobile,
+            password: userFromSession.password, // Assuming you have a password field in your User model
+            is_verified: userFromSession.is_verified,
+        });
 
 
-
-        await actualUser.save();
+        await newUser.save();
        
 
         console.log('Redirecting to user login page');
@@ -378,29 +387,29 @@ const verifyLogin = async (req, res) => {
                         res.redirect('/userhome')
                     } else {
                         console.log('is_verified error');
-                        req.session.login_error = 'Account Does Not Exsist'
-                        res.redirect('/login')
+                        const error = 'Account Does Not Exsist'
+                        res.render('users/login',{error:'Account Does Not Exsist'})
                     }
                 } else {
                     console.log(' user is blocked');
-                    req.session.login_error = 'Account Is Blocked'
-                    res.redirect('/login')
+                    const error = 'Account Is Blocked'
+                    res.render('users/login',{error})
                 }
             } else {
                 console.log('pasword not matching');
-                req.session.login_error = 'Invalid Password'
-                res.redirect('/login')
+                let error = 'Invalid Password or Email id '
+                res.render('users/login',{error})
             }
 
         } else {
             console.log('account issue ');
-            req.session.login_error = 'Account Does not Exsist'
-            res.redirect('/login')
+            let error = 'Account Does not Exsist'
+            res.render('users/login',{error})
         }
     } catch (error) {
-        console.log('error louserhomeing in with user details');
+        console.log('error userhome in with user details');
 
-    }
+    } 
 }
 
 // to load homepage after login

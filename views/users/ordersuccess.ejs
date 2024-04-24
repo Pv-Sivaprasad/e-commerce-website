@@ -2,14 +2,13 @@
 
   <br><br><br>
 
-
   <div class="order-success">
     <div class="success-circle">
       <i class="fas fa-check"></i>
     </div>
     <h1>Thank you.</h1>
     <p class="lead">Your order has been placed successfully.</p>
-    <!-- Other order details here -->
+    
   </div>
 
   </div>
@@ -19,43 +18,8 @@
     
     <p class="w-lg-50 mx-auto">Your order number is <a href="#">9237427634826</a>. We will immediately process your order, and it will be delivered in 2 - 5 business days.</p>
   </div>
-  <div class="row">
-      <div class="col-lg-12">
-          <div class="order_details_iner">
-              <h3>Order Details</h3>
-              <table class="table table-borderless">
-                  <thead>
-                      <tr>
-                          <th scope="col">Product</th>
-                       
-                          <th scope="col">Quantity</th>
-                          <th scope="col" class="text-right">Total</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <% orderDetails.forEach((el, index)=> { %>    
-                          <% el.orderedItem.forEach((item, idx) => { %>
-                              <tr>
-                                  <td><%= item.productId.productName %></td>
-                              
-                                  <td><%= item.quantity %></td>
-                                  <td class="text-right"><%= item.totalProductAmount %></td>
-                              </tr>
-                          <% }); %>
-                      <% }); %>
-                  </tbody>
-                  <tfoot>
-                      <tr>
-                          <th colspan="3" class="text-right">Total</th>
-                          
-                      </tr>
-                  </tfoot>
-              </table>
-          </div>
-      </div>
-  </div>
-  
-
+  <button id="myOrdersButton">My Orders</button>
+ 
   </div>
 
   <h2 class="h5 mb-5 text-center">You may also like these products</h2>
@@ -106,8 +70,24 @@
       color: white;
       font-size: 64px;
     }
+    button {
+      background-color: blue; 
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+    button.clicked {
+      background-color: darkblue; 
+    }
   </style>
-
+  <script>
+    const myOrdersButton = document.getElementById('myOrdersButton');
+    myOrdersButton.addEventListener('click', function() {
+      myOrdersButton.classList.add('clicked');
+      window.location.href = '/myorder';
+    });
+  </script>
   <br><br><br>
 
   <%- include('../layouts/userFooter') %>
